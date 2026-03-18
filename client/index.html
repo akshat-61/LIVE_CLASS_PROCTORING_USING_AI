@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>AI Proctoring — Room A</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      background: #0f0f1a;
+      color: #e0e0e0;
+      font-family: 'Segoe UI', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 24px 16px;
+    }
+    h2 {
+      font-size: 1.4rem;
+      margin-bottom: 16px;
+      color: #7fd3ff;
+      letter-spacing: 0.05em;
+    }
+    #videoWrap {
+      position: relative;
+      width: 90%;
+      max-width: 960px;
+    }
+    video {
+      width: 100%;
+      border-radius: 12px;
+      border: 2px solid #2a2a4a;
+      background: #000;
+    }
+    #statusBar {
+      margin-top: 12px;
+      padding: 8px 16px;
+      background: #1a1a2e;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      width: 90%;
+      max-width: 960px;
+      display: flex;
+      gap: 24px;
+      align-items: center;
+    }
+    #statusDot {
+      width: 10px; height: 10px;
+      border-radius: 50%;
+      background: #555;
+      flex-shrink: 0;
+      transition: background 0.3s;
+    }
+    #statusDot.connecting { background: #f0a500; animation: pulse 1s infinite; }
+    #statusDot.connected  { background: #22c55e; }
+    #statusDot.failed     { background: #ef4444; }
+    #statusText { flex: 1; }
+    @keyframes pulse {
+      0%, 100% { opacity: 1; } 50% { opacity: 0.3; }
+    }
+    #errorBox {
+      display: none;
+      margin-top: 12px;
+      padding: 10px 16px;
+      background: #3b0000;
+      border: 1px solid #ef4444;
+      border-radius: 8px;
+      color: #fca5a5;
+      font-size: 0.82rem;
+      width: 90%;
+      max-width: 960px;
+    }
+  </style>
+</head>
+<body>
+
+<h2>🎓 AI Proctoring — Room A</h2>
+
+<div id="videoWrap">
+  <video id="localVideo" autoplay playsinline muted></video>
+</div>
+
+<div id="statusBar">
+  <div id="statusDot" class="connecting"></div>
+  <span id="statusText">Initialising...</span>
+</div>
+
+<div id="errorBox"></div>
+
+<script>
+  const WEBRTC_SERVER = "https://10.100.103.0:8081/offer";
+
+  const videoEl   = document.getElementById("localVideo");
+  const statusDot = document.getElementById("statusDot");
+  const statusTxt = document.getElementById("statusText");
+  const errorBox  = document.getElementById("errorBox");
+
+  function setStatus(state, msg) {
+    statusDot.className = state;
+    statusTxt.textContent = msg;
+  }
+
+  function showError(msg) {
+    errorBox.style.display = "block";
+    errorBox.textContent   = "⚠️  " + msg;
+  }
+
+  async function start() {
+    setStatus("connecting", "Requesting camera access…");
+
+    let stream;
+    try {
+      stream = await navigator.mediaDevices.getUserMedia({
+        video: {
+          width:        { ideal: 1280, min: 640 },
+          height:       { ideal: 720,  min: 480 },
+          frameRate:    { ideal: 25,   max: 30  },
+          facingMode:   "user",
+        },
+        audio: false,
+      });
+    } catch (err) {
+      setStatus("failed", "Camera access denied.");
+      showError(err.message);
+      return;
+    }
+
+    videoEl.srcObject = stream;
+    setStatus("connecting", "Camera ready — connecting to proctoring server…");
+
+    const pc = new RTCPeerConnection({ iceServers: [] });
+
+    pc.onconnectionstatechange = () => {
+      const s = pc.connectionState;
+      if (s === "connected") {
+        setStatus("connected", "✅  Connected — proctoring active");
+      } else if (s === "failed" || s === "closed") {
+        setStatus("failed", `Connection ${s}.`);
+        showError(`WebRTC connection ${s}. Reload to retry.`);
+      } else {
+        setStatus("connecting", `WebRTC state: ${s}`);
+      }
+    };
+
+    const videoTrack = stream.getVideoTracks()[0];
+    const sender     = pc.addTrack(videoTrack, stream);
+
+    // Upgraded bitrate: 1500 kbps (was 800 kbps) for sharper 720p stream.
+    // The Python AI engine resizes to 640x480 internally so this extra
+    // bitrate benefits clarity without increasing AI processing cost.
+    try {
+      const params = sender.getParameters();
+      if (!params.encodings) params.encodings = [{}];
+      params.encodings[0].maxBitrate = 2_000_000;   // 2 Mbps — sharper 720p
+      await sender.setParameters(params);
+    } catch (_) { /* non-critical */ }
+
+    setStatus("connecting", "Creating WebRTC offer…");
+    const offer = await pc.createOffer();
+    await pc.setLocalDescription(offer);
+
+    setStatus("connecting", "Sending offer to Python server…");
+
+    let response;
+    try {
+      response = await fetch(WEBRTC_SERVER, {
+        method:  "POST",
+        headers: { "Content-Type": "application/json" },
+        body:    JSON.stringify({
+          sdp:  pc.localDescription.sdp,
+          type: pc.localDescription.type,
+        }),
+      });
+    } catch (err) {
+      setStatus("failed", "Could not reach proctoring server.");
+      showError(`Fetch failed: ${err.message} — is webrtc_server.py running on port 8081?`);
+      return;
+    }
+
+    if (!response.ok) {
+      setStatus("failed", "Server returned an error.");
+      showError(`HTTP ${response.status}: ${await response.text()}`);
+      return;
+    }
+
+    const answer = await response.json();
+    await pc.setRemoteDescription(answer);
+    setStatus("connecting", "Negotiating connection…");
+  }
+
+  start();
+</script>
+
+</body>
+</html>
