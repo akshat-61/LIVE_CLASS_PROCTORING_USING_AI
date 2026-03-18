@@ -1,57 +1,9 @@
-"""
-=============================================================
-  AI Proctoring System — Batch Frame Processor
-  v3 — Extract-Then-Analyse Mode
-=============================================================
-
-  HOW IT WORKS:
-  ─────────────
-  PHASE 1 — EXTRACTION
-    Read every frame from the input video and save it to
-    frames/frame_000001.jpg, frames/frame_000002.jpg, …
-    No AI is run during this phase — pure fast extraction.
-
-  PHASE 2 — CALIBRATION
-    Run multi-snapshot calibration on frames at t=1s, 2s, 3s
-    to lock student IDs and seat zones before analysis begins.
-
-  PHASE 3 — ANALYSIS
-    Run run_ai_on_frame() on every saved frame.
-    Only frames where AI detects something suspicious are saved
-    to annotated/frame_000001.jpg, …
-    All events are logged to logs/alerts_<date>.json.
-
-  Run:
-      python process_video.py <video_path> [exam_id] [room_id]
-
-  Examples:
-      python process_video.py exam_footage.mp4
-      python process_video.py footage.mp4 EXAM_007 ROOM_B
-
-  Output:
-      frames/                    — all extracted raw frames
-      annotated/                 — suspicious frames with AI overlay
-      logs/alerts_<date>.json    — alert log
-      evidence/                  — saved evidence crops
-      evidence_output/<n>_report.txt — full timeline report
-
-  Controls during extraction preview:
-      Q / ESC  →  quit early
-=============================================================
-"""
-
 import os
 import sys
 
-# Fix OpenCV window rendering on Wayland (Ubuntu/GNOME).
 os.environ.setdefault("QT_QPA_PLATFORM", "xcb")
 
-# Auto-detect whether a display is available.
-# If DISPLAY and WAYLAND_DISPLAY are both unset we are running headless
-# (SSH session, cron job, server) — disable all cv2.imshow calls so
-# OpenCV never tries to open a window and crashes with the GTK error.
 def _has_display() -> bool:
-    """Return True only if a real GUI display is reachable."""
     if os.environ.get("DISPLAY") or os.environ.get("WAYLAND_DISPLAY"):
         try:
             import cv2 as _cv2
@@ -73,8 +25,6 @@ import numpy as np
 from datetime import datetime, timedelta
 from pathlib import Path
 
-# ─── Directories ──────────────────────────────────────────────────────────────
-
 FRAMES_DIR    = "frames"
 ANNOTATED_DIR = "annotated"
 OUTPUT_DIR    = "evidence_output"
@@ -82,8 +32,6 @@ OUTPUT_DIR    = "evidence_output"
 os.makedirs(FRAMES_DIR,    exist_ok=True)
 os.makedirs(ANNOTATED_DIR, exist_ok=True)
 os.makedirs(OUTPUT_DIR,    exist_ok=True)
-
-# ─── CLI ──────────────────────────────────────────────────────────────────────
 
 def parse_args():
     if len(sys.argv) < 2:
@@ -93,8 +41,6 @@ def parse_args():
     exam_id    = sys.argv[2] if len(sys.argv) > 2 else None
     room_id    = sys.argv[3] if len(sys.argv) > 3 else None
     return video_path, exam_id, room_id
-
-# ─── Alert interceptor (for report generation) ────────────────────────────────
 
 class AlertInterceptor:
     def __init__(self):
@@ -117,7 +63,7 @@ class AlertInterceptor:
 
 
 interceptor = AlertInterceptor()
-_video_ts   = [0.0]   # mutable container so nested closure can write to it
+_video_ts   = [0.0]   
 
 
 def make_patched_sender(ae):
@@ -149,17 +95,7 @@ def make_patched_sender(ae):
 
     return _patched
 
-# ─── Phase 1: Frame Extraction ────────────────────────────────────────────────
-
 def extract_frames(video_path: str, show_preview: bool = True) -> tuple[list[str], float, float]:
-    """
-    Read every frame from the video and save to frames/frame_XXXXXX.jpg.
-
-    Returns:
-        frame_paths  — ordered list of saved file paths
-        src_fps      — original video FPS
-        duration_s   — total video duration in seconds
-    """
     cap = cv2.VideoCapture(video_path)
     if not cap.isOpened():
         print(f"[ERROR] Cannot open video: {video_path}")
@@ -200,7 +136,6 @@ def extract_frames(video_path: str, show_preview: bool = True) -> tuple[list[str
         cv2.imwrite(path, frame, [cv2.IMWRITE_JPEG_QUALITY, 90])
         frame_paths.append(path)
 
-        # Progress every 300 frames
         if idx % 300 == 0:
             pct     = idx / total_frames * 100 if total_frames else 0
             elapsed = time.time() - t0
@@ -208,7 +143,6 @@ def extract_frames(video_path: str, show_preview: bool = True) -> tuple[list[str
             print(f"  Extracted {idx}/{total_frames}  ({pct:.0f}%)  "
                   f"|  {fps_est:.0f} frames/s")
 
-        # Live preview (every 10th frame to avoid slowing extraction)
         if show_preview and idx % 10 == 0:
             cv2.imshow("Extraction Preview", frame)
             key = cv2.waitKey(1) & 0xFF
@@ -227,10 +161,7 @@ def extract_frames(video_path: str, show_preview: bool = True) -> tuple[list[str
 
     return frame_paths, src_fps, duration_s
 
-# ─── Phase 2: Snapshot Calibration ────────────────────────────────────────────
-
 def _compute_adaptive_zone_radius(positions: dict) -> int:
-    """Camera-agnostic seat zone radius from nearest-neighbour distances."""
     if len(positions) < 2:
         return 35
     pts      = list(positions.values())
@@ -244,18 +175,6 @@ def _compute_adaptive_zone_radius(positions: dict) -> int:
 
 
 def snapshot_calibrate(frame_paths: list, est_fps: float, ae) -> None:
-    """
-    Multi-snapshot calibration directly from saved frame files.
-
-    Scans frames at t≈1s, 2s, 3s (±0.5s window each) to:
-      1. Detect all persons via YOLO person_model
-      2. Feed FaceMesh data into AdaptiveLearner so baselines are warm
-      3. Compute adaptive seat-zone radius
-      4. Assign student IDs and lock seat zones
-
-    This mirrors snapshot_calibrate() from the old process_video.py but
-    operates on frame_paths instead of re-opening the video file.
-    """
     import mediapipe as mp
 
     snap_seconds   = [1.0, 2.0, 3.0]
@@ -318,7 +237,6 @@ def snapshot_calibrate(frame_paths: list, est_fps: float, ae) -> None:
 
             snap_frames_rgb.append((img_rgb, dict(frame_positions)))
 
-        # Feed face-mesh calibration
         for img_rgb, frame_pos in snap_frames_rgb:
             if frame_pos:
                 ae.learner.on_calibration_frame(
@@ -326,7 +244,6 @@ def snapshot_calibrate(frame_paths: list, est_fps: float, ae) -> None:
                     snap_face_mesh, ae.pose_detector, iw, ih,
                 )
 
-        # Merge into accumulated positions
         new_count = 0
         for tid, pos in snap_positions.items():
             if tid not in accumulated:
@@ -345,12 +262,10 @@ def snapshot_calibrate(frame_paths: list, est_fps: float, ae) -> None:
         ae.locked = True
         return
 
-    # Adaptive zone radius
     radius           = _compute_adaptive_zone_radius(accumulated)
     ae.SEAT_ZONE_RADIUS = radius
     print(f"  📐 Adaptive zone radius : {radius}px")
 
-    # Assign IDs and lock
     ae.student_id_map.update(ae.assign_student_ids(accumulated))
     ae.learner.on_lock(ae.student_id_map)
     ae.init_seat_zones(accumulated)
@@ -368,7 +283,6 @@ def snapshot_calibrate(frame_paths: list, est_fps: float, ae) -> None:
     print(f"  🔒 Locked {len(ae.student_id_map)} students  |  "
           f"pre-calibrated: {n_cal}/{len(ae.student_id_map)}")
 
-    # Save seat-map snapshot from first frame
     if frame_paths:
         vis = cv2.imread(frame_paths[0])
         if vis is not None:
@@ -385,23 +299,13 @@ def snapshot_calibrate(frame_paths: list, est_fps: float, ae) -> None:
 
     print("=" * 62 + "\n")
 
-# ─── Phase 3: AI Analysis ──────────────────────────────────────────────────────
-
 def _frame_is_suspicious(annotated: np.ndarray) -> bool:
-    """
-    Detect whether ai_engine flagged an alert in this frame.
-
-    run_ai_on_frame draws a green banner (0,130,0) for All Clear
-    and a red banner (0,0,200) for any alert, blended with the frame.
-    We sample the banner region (row 25, col 5) and check which
-    channel dominates after blending.
-    """
     if annotated is None or annotated.shape[0] < 10:
         return False
     b = int(annotated[25, 5, 0])
     g = int(annotated[25, 5, 1])
     r = int(annotated[25, 5, 2])
-    return r > g and r > 60   # red dominant → alert banner
+    return r > g and r > 60
 
 
 def analyse_frames(
@@ -411,14 +315,6 @@ def analyse_frames(
     ae,
     show_preview: bool = True,
 ) -> tuple[int, int]:
-    """
-    Run run_ai_on_frame() on every saved frame.
-    Saves annotated output only for suspicious frames.
-
-    Returns:
-        processed_count   — total frames processed
-        suspicious_count  — frames saved to annotated/
-    """
     from ai_engine import run_ai_on_frame
 
     total = len(frame_paths)
@@ -443,7 +339,6 @@ def analyse_frames(
         if img is None:
             continue
 
-        # Update video timestamp for alert interceptor
         _video_ts[0] = (i / src_fps) if src_fps > 0 else 0.0
 
         annotated = run_ai_on_frame(img)
@@ -453,7 +348,6 @@ def analyse_frames(
             cv2.imwrite(out_path, annotated, [cv2.IMWRITE_JPEG_QUALITY, 90])
             suspicious_count += 1
 
-        # Preview every processed frame
         if show_preview:
             cv2.imshow("AI Analysis", annotated)
             key = cv2.waitKey(1) & 0xFF
@@ -461,7 +355,6 @@ def analyse_frames(
                 print("\n[!] Analysis quit early.")
                 break
 
-        # Progress log every 500 frames
         if (i + 1) % 500 == 0:
             pct     = (i + 1) / total * 100
             elapsed = time.time() - t0
@@ -480,8 +373,6 @@ def analyse_frames(
     print(f"  Suspicious frames : {suspicious_count}  →  {ANNOTATED_DIR}/\n")
 
     return total, suspicious_count
-
-# ─── Report ────────────────────────────────────────────────────────────────────
 
 def write_report(
     video_path       : str,

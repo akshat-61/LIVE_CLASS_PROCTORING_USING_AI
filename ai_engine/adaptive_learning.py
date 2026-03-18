@@ -7,28 +7,23 @@ from dataclasses import dataclass, field, asdict
 from typing import Dict, List, Optional, Tuple
 from datetime import datetime
 
-
-# ════════════════════════════════════════════════════════════════════════════════
-# CONFIGURATION
-# ════════════════════════════════════════════════════════════════════════════════
-
 class Config:
     BASELINE_ALPHA     = 0.008
-    CALIBRATION_FRAMES = 6    # was 90 — 20 frames (~1.5s at 12fps) is enough for a stable mean
+    CALIBRATION_FRAMES = 6
     COLLECT_EVERY_N    = 6
 
     REL_LOOK_DOWN = 0.022
     REL_YAW       = 0.045
-    REL_LEAN      = 0.040  # deviation from baseline to flag lean
-    CALIBRATION_FRAMES_LEAN = 6    # pose runs every 3rd frame; 6 samples ≈ 18 frames
+    REL_LEAN      = 0.040 
+    CALIBRATION_FRAMES_LEAN = 6
     REL_MAR = 0.040
     SEAT_DRIFT_ALPHA = 0.10
     SEAT_MATCH_THRESHOLD = 120
 
     FALLBACK_LOOK_DOWN = 0.042
-    FALLBACK_YAW_LEFT  = 0.45   # gaze < 0.42 -> subject's iris near outer corners -> looking LEFT
-    FALLBACK_YAW_RIGHT = 0.55   # gaze > 0.58 -> subject's iris near inner corners -> looking RIGHT
-    FALLBACK_LEAN      = 0.10   # lean = shoulder diff drops below this
+    FALLBACK_YAW_LEFT  = 0.45  
+    FALLBACK_YAW_RIGHT = 0.55  
+    FALLBACK_LEAN      = 0.10  
     FALLBACK_MAR       = 0.18
 
     PROFILES_PATH = "student_profiles.json"
@@ -56,17 +51,12 @@ class Config:
         "CRITICAL": 21,
     }
 
-
-# ════════════════════════════════════════════════════════════════════════════════
-# DATA STRUCTURES
-# ════════════════════════════════════════════════════════════════════════════════
-
 @dataclass
 class StudentBaseline:
     look_down : float = 0.042
     yaw       : float = 0.500
     mar       : float = 0.015
-    lean      : float = 0.15    # realistic normalized shoulder diff for CCTV
+    lean      : float = 0.15   
 
     sample_count      : int   = 0
     lean_sample_count : int   = 0
@@ -91,11 +81,6 @@ class BehaviorState:
     score: float = 0.0
     last_event_time: float = 0.0
     risk_level: str = "NORMAL"
-
-
-# ════════════════════════════════════════════════════════════════════════════════
-# MAIN CLASS
-# ════════════════════════════════════════════════════════════════════════════════
 
 class AdaptiveLearner:
 
@@ -137,10 +122,6 @@ class AdaptiveLearner:
         print(f"  Rel lean threshold:   {self.cfg.REL_LEAN}")
         print(f"  Fallback lean:        {self.cfg.FALLBACK_LEAN}")
 
-    # ════════════════════════════════════════════════════════════════════════════
-    # PUBLIC API
-    # ════════════════════════════════════════════════════════════════════════════
-
     def on_calibration_frame(
         self,
         img_rgb,
@@ -149,14 +130,14 @@ class AdaptiveLearner:
         pose_detector,
         iw: int,
         ih: int,
-        mesh_res=None,    # pass pre-computed result to avoid duplicate mediapipe call
-        pose_res=None,    # pass pre-computed result to avoid duplicate mediapipe call
+        mesh_res=None,
+        pose_res=None,
     ) -> int:
         self._frame_count += 1
         if self._frame_count % self.cfg.COLLECT_EVERY_N != 0:
             return self._total_calib_samples()
 
-        # Face mesh collection — use pre-computed result if provided
+        
         try:
             if mesh_res is None:
                 mesh_res = face_mesh.process(img_rgb)
@@ -172,12 +153,12 @@ class AdaptiveLearner:
                     buf["look_down"].append(self._get_look_down_score(pts))
                     left_iris   = pts[468].x
                     right_iris  = pts[473].x
-                    left_outer  = pts[33].x    # left eye outer (larger x, temple side)
-                    left_inner  = pts[133].x   # left eye inner (smaller x, nose side)
-                    right_outer = pts[263].x   # right eye outer (smaller x, temple side)
-                    right_inner = pts[362].x   # right eye inner (larger x, nose side)
+                    left_outer  = pts[33].x    
+                    left_inner  = pts[133].x   
+                    right_outer = pts[263].x   
+                    right_inner = pts[362].x   
                     left_ratio  = (left_iris  - left_outer)  / (left_inner  - left_outer  + 1e-6)
-                    # right_ratio uses SAME formula as left_ratio — both decrease when looking left
+                    
                     right_ratio = (right_iris - right_inner) / (right_outer - right_inner + 1e-6)
                     gaze_ratio  = (left_ratio + right_ratio) / 2
                     buf["yaw"].append(gaze_ratio)
@@ -228,7 +209,6 @@ class AdaptiveLearner:
                 new_map[tid] = best_sid
                 used_saved_ids.add(best_sid)
 
-                # 🔥 Drift update (EMA)
                 old_pos = self._seat_positions[best_sid]
                 alpha = self.cfg.SEAT_DRIFT_ALPHA
 
@@ -251,24 +231,18 @@ class AdaptiveLearner:
 
             bl = StudentBaseline()
 
-            # Face dimensions — set from calibration averages
             for key in ["look_down", "yaw", "mar"]:
                 values = measurements.get(key, [])
                 if values:
                     setattr(bl, key, sum(values) / len(values))
 
-            # Lean — handled separately with its own counter
             lean_values = measurements.get("lean", [])
             if lean_values:
                 bl.lean = sum(lean_values) / len(lean_values)
                 bl.lean_sample_count = len(lean_values)
             else:
-                # No pose data during calibration — keep default 0.490
-                # lean_sample_count stays 0 → will calibrate live in check_lean()
                 bl.lean_sample_count = 0
 
-            # FIX: sample_count only counts FACE dimensions (not lean)
-            # so face-based calibration completing doesn't depend on pose quality
             face_counts = [
                 len(measurements.get(k, []))
                 for k in ["look_down", "yaw", "mar"]
@@ -281,9 +255,6 @@ class AdaptiveLearner:
 
         self._calib_buffer.clear()
 
-        # FIX 3 (v12): compute classroom median for incomplete students.
-        # S018 (and any other student occluded during calibration) gets
-        # population-average baselines instead of hardcoded defaults.
         calibrated_baselines = [
             bl for bl in self._baselines.values()
             if bl.sample_count >= self.cfg.CALIBRATION_FRAMES
@@ -304,7 +275,6 @@ class AdaptiveLearner:
             else:
                 bl = self._baselines[sid]
                 if bl.sample_count < self.cfg.CALIBRATION_FRAMES:
-                    # FIX 3: patch incomplete entries with classroom median
                     if bl.sample_count == 0:
                         bl.look_down = median_look_down
                         bl.yaw       = median_yaw
@@ -338,14 +308,9 @@ class AdaptiveLearner:
 
         bl = self._baselines.get(sid)
         if bl is None:
-            # No baseline at all — return neutral result (no alerts).
-            # Fallback hardcoded thresholds cause mass false positives because
-            # they don't account for camera angle offset in CCTV rooms.
-            # Gaze data will be collected via on_calibration_frame until calibrated.
             self._last_results[sid] = result
             return result
 
-        # EMA updates — only when measurement looks "normal"
         if look_down_raw < bl.look_down + self.cfg.REL_LOOK_DOWN * 2:
             self._update_ema(bl, "look_down", look_down_raw)
         if abs(gaze_ratio - bl.yaw) < self.cfg.REL_YAW * 2:
@@ -363,8 +328,6 @@ class AdaptiveLearner:
 
         if result.is_calibrated:
             result.looking_down  = dev_down >  self.cfg.REL_LOOK_DOWN
-            # dev_yaw < 0 -> gaze shifted left (toward outer corners) -> LOOKING_LEFT
-            # dev_yaw > 0 -> gaze shifted right (toward inner corners) -> LOOKING_RIGHT
             result.looking_left  = dev_yaw  < -self.cfg.REL_YAW
             result.looking_right = dev_yaw  >  self.cfg.REL_YAW
             result.talking       = (dev_mar > self.cfg.REL_MAR
@@ -372,9 +335,6 @@ class AdaptiveLearner:
                                     and mar_variation > 0.008
                                     and mouth_open_vertical)
         else:
-            # Baseline exists but not yet fully calibrated (sample_count < CALIBRATION_FRAMES).
-            # Suppress gaze/lean alerts — still collecting data to build accurate baseline.
-            # Only allow talking detection since that's less affected by camera angle.
             result.looking_down  = False
             result.looking_left  = False
             result.looking_right = False
@@ -402,10 +362,6 @@ class AdaptiveLearner:
             return abs(shoulder_diff_x - bl.lean) > self.cfg.REL_LEAN
         else:
             return shoulder_diff_x < self.cfg.FALLBACK_LEAN
-
-    # ════════════════════════════════════════════════════════════════════════════
-    # UTILITY
-    # ════════════════════════════════════════════════════════════════════════════
 
     def is_calibrated(self, sid: str) -> bool:
         bl = self._baselines.get(sid)
@@ -479,7 +435,6 @@ class AdaptiveLearner:
                 burst_weight = self.cfg.BEHAVIOR_WEIGHTS.get("BURST_ACTIVITY", 4)
                 state.score += burst_weight
 
-                # Log event manually (avoid recursion)
                 self._session_events.append({
                     "timestamp": time.time(),
                     "student_id": sid,
@@ -523,9 +478,6 @@ class AdaptiveLearner:
         return self._behavior.get(sid, BehaviorState())
     
     def escalate_if_coordinated(self, sid_a: str, sid_b: str):
-        """
-        Escalate only if both HIGH risk AND cooldown passed.
-        """
         state_a = self._behavior.get(sid_a)
         state_b = self._behavior.get(sid_b)
 
@@ -541,7 +493,7 @@ class AdaptiveLearner:
         last_time = self._coordination_last_trigger.get(pair_key, 0)
 
         if now - last_time < self.COORDINATION_COOLDOWN:
-            return  # cooldown active
+            return  
 
         print(f"[Coordination Detected] {sid_a} & {sid_b}")
 
@@ -599,10 +551,6 @@ class AdaptiveLearner:
     
         return counter >= self.STABILITY_FRAMES
 
-    # ════════════════════════════════════════════════════════════════════════════
-    # DEBUG OVERLAY
-    # ════════════════════════════════════════════════════════════════════════════
-
     def draw_debug(self, frame, iw: int):
         if not self.cfg.DEBUG:
             return
@@ -646,13 +594,13 @@ class AdaptiveLearner:
             behavior = self._behavior.get(sid)
             if behavior:
                 if behavior.risk_level == "CRITICAL":
-                    risk_color = (0, 0, 255)       # Red
+                    risk_color = (0, 0, 255)       
                 elif behavior.risk_level == "HIGH":
-                    risk_color = (0, 165, 255)     # Orange
+                    risk_color = (0, 165, 255)     
                 elif behavior.risk_level == "LOW":
-                    risk_color = (0, 255, 255)     # Yellow
+                    risk_color = (0, 255, 255)     
                 else:
-                    risk_color = (0, 255, 0)       # Green
+                    risk_color = (0, 255, 0)       
 
                 cv2.putText(frame,
                             f"  RISK:{behavior.risk_level}  SCORE:{behavior.score:.1f}",
@@ -674,9 +622,6 @@ class AdaptiveLearner:
     def set_seat_positions(self, seat_positions: dict):
         self._seat_positions = seat_positions.copy()
 
-    # ════════════════════════════════════════════════════════════════════════════
-    # SAVE / LOAD
-    # ════════════════════════════════════════════════════════════════════════════
 
     def save_baselines(self, path: str = None):
         path = path or self.cfg.PROFILES_PATH
@@ -705,7 +650,6 @@ class AdaptiveLearner:
                     k: v for k, v in bl_dict.items()
                     if k in StudentBaseline.__dataclass_fields__
                 })
-                # Mark face dims as calibrated; lean uses its own counter
                 bl.sample_count      = self.cfg.CALIBRATION_FRAMES
                 bl.lean_sample_count = max(bl.lean_sample_count,
                                            self.cfg.CALIBRATION_FRAMES_LEAN)
@@ -744,10 +688,6 @@ class AdaptiveLearner:
             json.dump(session_data, f, indent=4)
 
         print(f"[Session Log Saved] → {log_path}")
-
-    # ════════════════════════════════════════════════════════════════════════════
-    # PRIVATE
-    # ════════════════════════════════════════════════════════════════════════════
 
     def _get_calib_buf(self, tid: int) -> Dict[str, List[float]]:
         if tid not in self._calib_buffer:

@@ -91,13 +91,11 @@ _evidence_writer_thread.start()
 learner = AdaptiveLearner()
 learner.load_baselines()
 
-
-# ── MODEL PATHS ───────────────────────────────────────────────────────────────
 MODEL_DIR          = "/home/tx0978/Documents/classroom-proctoring/ai-engine/models/production"
 BASE_DIR           = "/home/tx0978/Documents/classroom-proctoring/ai-engine"
 PERSON_MODEL_PATH  = f"{MODEL_DIR}/person_model.pt"
 GESTURE_MODEL_PATH = f"{MODEL_DIR}/gesture_model.pt"
-OBJECT_MODEL_PATH  = f"{MODEL_DIR}/object_model.pt"   # ← trained best.pt copied here
+OBJECT_MODEL_PATH  = f"{MODEL_DIR}/object_model.pt"   
 IDCARD_MODEL_PATH  = f"{MODEL_DIR}/id_model.pt"
 COCO_MODEL_PATH    = "yolov8n.pt"
 
@@ -107,15 +105,12 @@ ROOM_ID      = "ROOM_A"
 
 CUSTOM_CLASS = {"PERSON": 0}
 
-# ── OBJECT MODEL CLASS CONFIG (trained: calculator, paper, person) ────────────
-# FIX: per-class confidence thresholds for the new trained object model
 OBJECT_CLASS_CONF = {
-    "calculator": 0.55,   # key cheating device — lower threshold to catch it
-    "paper":      0.70,   # common item — higher threshold to reduce FP
-    "person":     0.99,   # skip entirely — handled by person_model
+    "calculator": 0.55,   
+    "paper":      0.70,   
+    "person":     0.99,   
 }
 
-# ── CONSTANTS ─────────────────────────────────────────────────────────────────
 INFERENCE_SKIP           = 2
 GESTURE_CONF_THRESHOLD   = 0.55
 PHONE_CLASS_ID           = 67
@@ -152,43 +147,28 @@ WRITE_MOTION_FRAMES      = 3
 HAND_CONFIRM_FRAMES      = 1
 PASS_DIST_THRESHOLD      = 75
 SIGNAL_CONFIRM_FRAMES    = 3
-SEAT_ZONE_RADIUS         = 28     # visual-only (circle drawn on HUD)
-SEAT_VACANCY_FRAMES      = 450   # FIX v11: was 300 (10s) → 450 (15s).
-                                 # Vacancy accumulates in fragments across multiple
-                                 # ByteTrack jitter windows and sums to 300 before
-                                 # any genuine 15s absence. 450 requires a true
-                                 # prolonged absence to fire — jitter bursts of
-                                 # 10-30 frames can no longer sum high enough.
-VACANCY_GRACE_FRAMES     = 45    # FIX I: was 20 → 45 (1.5s); covers invigilator transit
-MAX_VACANCY_DIST         = 100   # FIX E: lean drift absorption
-POST_LOCK_SETTLE_FRAMES  = 150   # FIX C (v9): was 90 (3s) → 150 (5s); pushes earliest
-                                 # possible SEAT_VACATED to t≈28s, past invigilator transit
+SEAT_ZONE_RADIUS         = 28   
+SEAT_VACANCY_FRAMES      = 450  
+VACANCY_GRACE_FRAMES     = 45   
+MAX_VACANCY_DIST         = 100  
+POST_LOCK_SETTLE_FRAMES  = 150  
 PROXIMITY_ONLY_DIST      = 40
 PROXIMITY_CONFIRM_FRAMES = 12
 SEAT_VACANCY_COOLDOWN    = 30.0
 MIN_SEAT_PAIR_DIST       = 80
-GAZE_LEFT_THRESHOLD      = 0.42  # FIX 5: widened for overhead camera angle
-GAZE_RIGHT_THRESHOLD     = 0.58  # FIX 5
+GAZE_LEFT_THRESHOLD      = 0.42 
+GAZE_RIGHT_THRESHOLD     = 0.58 
 
-# FIX 6: calculator persistence
-CALC_PERSIST_WINDOW      = 60    # rolling window in frames (~2 s at 30 fps)
-CALC_PERSIST_RATE        = 0.20  # calculator seen in >20 % of window → PERSISTENT alert
-CALC_PERSIST_COOLDOWN    = 60.0  # seconds between CALCULATOR_PERSISTENT re-alerts
+CALC_PERSIST_WINDOW      = 60    
+CALC_PERSIST_RATE        = 0.20  
+CALC_PERSIST_COOLDOWN    = 60.0  
 
-# FIX III: minimum margin for object-to-seat Voronoi assignment.
-# If the nearest seat and second-nearest seat are within this many px of each
-# other in distance-to-object, the assignment is ambiguous — return None and
-# suppress the alert rather than risk a cross-seat mis-attribution.
-SEAT_ASSIGN_MARGIN       = 35    # FIX B (v9): was 15px → 35px; S017/S018 seats ~60px apart
-SEAT_ASSIGN_ABS_CAP      = 65   # FIX B (v9): object must be <65px from assigned seat
+SEAT_ASSIGN_MARGIN       = 35
+SEAT_ASSIGN_ABS_CAP      = 65
 
-# FIX 2 (v12): invigilator suppression via bbox height ratio.
-# Standing adults are ~1.35x taller in bbox than seated students from overhead CCTV.
-# Any tracked person above this ratio is excluded from: Voronoi, hand processing,
-# face-mesh matching, and metrics. Eliminates the S??? ghost student entirely.
-INVIGILATOR_HEIGHT_RATIO = 1.35  # bbox_h / median_student_bbox_h threshold
-_median_student_bbox_h: float = 0.0   # computed after lock from calibration detections
-_invigilator_tids: set = set()        # tracking IDs flagged as invigilator this frame
+INVIGILATOR_HEIGHT_RATIO = 1.35
+_median_student_bbox_h: float = 0.0
+_invigilator_tids: set = set()     
 
 FRAME_MOD_BASE    = 1
 GESTURE_FRAME_MOD = 2
@@ -252,7 +232,7 @@ hand_mouth_counters   = {}
 hand_face_counters    = {}
 write_palm_counters   = {}
 write_tip_history     = {}
-_wrist_prev_positions: dict = {}  # FIX 5 (v12): sid -> deque of last 5 wrist positions for velocity check
+_wrist_prev_positions: dict = {}  
 signaling_counters    = {}
 phone_counters        = {}
 seat_positions        = {}
@@ -290,7 +270,7 @@ def reset_session():
     global id_visible_counters
     global _prev_gray, _motion_burst_counter
     global calc_seen_window
-    global _median_student_bbox_h, _invigilator_tids  # FIX 2
+    global _median_student_bbox_h, _invigilator_tids  
 
     locked                       = False
     stable_counter               = 0
@@ -312,7 +292,7 @@ def reset_session():
     hand_face_counters           = {}
     write_palm_counters          = {}
     write_tip_history            = {}
-    _wrist_prev_positions        = {}   # FIX 5
+    _wrist_prev_positions        = {}   
     signaling_counters           = {}
     phone_counters               = {}
     seat_positions               = {}
@@ -325,8 +305,8 @@ def reset_session():
     _prev_gray                   = None
     _motion_burst_counter        = 0
     calc_seen_window             = {}
-    _median_student_bbox_h       = 0.0  # FIX 2
-    _invigilator_tids            = set()  # FIX 2
+    _median_student_bbox_h       = 0.0  
+    _invigilator_tids            = set()
     print("[AI] Session reset complete.")
 
 
@@ -368,14 +348,8 @@ def center(x1, y1, x2, y2):
     return int((x1 + x2) / 2), int((y1 + y2) / 2)
 
 def can_send(key, cooldown=None):
-    # FIX E (v10): use VIDEO-TIME (frame_count / FPS) instead of wall-clock time.
-    # In batch mode the system processes ~6.7 frames/s of real time but the VIDEO
-    # runs at 30fps — wall-clock cooldowns fire too early because 15 real-seconds
-    # pass before the video has advanced 15 video-seconds. Frame-count cooldowns
-    # are invariant to processing speed: the same video always produces the same
-    # alert pattern regardless of batch vs live mode.
     cd = cooldown if cooldown is not None else ALERT_COOLDOWN_SEC
-    frames_required = int(cd * 30.0)  # convert cooldown seconds to frame count
+    frames_required = int(cd * 30.0)
     last_frame = last_alert_time.get(key, -999999)
     if (frame_count - last_frame) > frames_required:
         last_alert_time[key] = frame_count
@@ -407,7 +381,7 @@ def assign_student_ids(positions):
     return {tid: f"S{i:03d}" for i, (tid, _) in enumerate(sorted_list, 1)}
 
 def get_student_at(x, y, current_positions):
-    """Find tracking ID of the nearest person within FACE_MATCH_RADIUS."""
+    
     min_d, found = FACE_MATCH_RADIUS, None
     for tid, pos in current_positions.items():
         d = dist((x, y), pos)
@@ -417,18 +391,9 @@ def get_student_at(x, y, current_positions):
 
 
 def get_seat_at(x, y):
-    """
-    FIX III (v8): Voronoi seat assignment for static objects (calculators, phones).
-    Requires the nearest seat to be at least SEAT_ASSIGN_MARGIN px closer than the
-    second-nearest. If the margin is too thin (object sits between two adjacent desks),
-    returns None and suppresses the alert rather than risk cross-seat mis-attribution.
-    This eliminates the S017 false positive when a calculator sits on the border
-    between S017 and S018's desks.
-    """
     if not seat_positions:
         return None
 
-    # Collect all (distance, sid) pairs sorted ascending
     ranked = sorted(
         ((dist((x, y), seat_pos), sid) for sid, seat_pos in seat_positions.items())
     )
@@ -438,16 +403,9 @@ def get_seat_at(x, y):
 
     best_d, best_sid = ranked[0]
 
-    # FIX B (v9): absolute desk-width cap — object must be within SEAT_ASSIGN_ABS_CAP
-    # of the nearest seat. Beyond this, fall back to person-track assignment instead
-    # of suppressing entirely (allows objects near walls/aisles to still be caught).
     if best_d > SEAT_ASSIGN_ABS_CAP:
         return None
 
-    # FIX B (v9): ambiguity margin raised to 35px — require the nearest seat to be
-    # clearly closer than the second-nearest. S017/S018 desks are ~60px apart, so a
-    # calculator sitting genuinely on S017's desk will be ~30px+ nearer to S017 than
-    # S018. The 35px bar means the object must be unambiguously on one side.
     if len(ranked) >= 2:
         second_d = ranked[1][0]
         if second_d - best_d < SEAT_ASSIGN_MARGIN:
@@ -551,12 +509,7 @@ def init_seat_zones(positions):
         sid = student_id_map.get(tid, "S???")
         seat_positions[sid] = pos
 
-    # FIX 11 (v12): deduplicate seats that are within 10px of each other.
-    # S002 (167,47) and S003 (170,47) are only 3px apart — effectively one
-    # detection point. Two Voronoi zones this close oscillate on every YOLO
-    # frame, generating spurious vacancy events for whichever SID "loses" the
-    # assignment. Keep the first, log a warning, remove the duplicate.
-    DEDUP_THRESHOLD = 10  # px — seats closer than this are the same physical point
+    DEDUP_THRESHOLD = 10  
     dedup_sids = list(seat_positions.keys())
     removed = set()
     for i in range(len(dedup_sids)):
@@ -590,12 +543,6 @@ def init_seat_zones(positions):
     print(f"📍 Seat zones locked: {seat_positions}")
 
 def assign_seats_voronoi(current_positions):
-    """
-    Voronoi one-to-one seat assignment.
-    Each detected person claims their nearest seat.
-    Each seat can be claimed by at most one person (nearest wins).
-    A seat is occupied only when its winning detection is ≤ MAX_VACANCY_DIST px.
-    """
     detection_to_seat = {}
     for tid, pos in current_positions.items():
         best_sid, best_d = None, float("inf")
@@ -621,7 +568,6 @@ def assign_seats_voronoi(current_positions):
 
 
 def find_occupant(seat_pos, current_positions):
-    """Legacy helper kept for proximity (STUDENTS_TOO_CLOSE) checks."""
     best_tid, best_d = None, MAX_VACANCY_DIST
     for tid, pos in current_positions.items():
         d = dist(seat_pos, pos)
@@ -649,7 +595,6 @@ def check_seat_zones(current_positions, frame):
         occupant = occupancy.get(sid)
 
         if occupant is not None:
-            # Student present — reset both counters
             seat_grace_counters[sid]   = 0
             seat_vacancy_counters[sid] = 0
             if seat_was_vacant.get(sid, False):
@@ -668,22 +613,15 @@ def check_seat_zones(current_positions, frame):
                 alert = f"STUDENT RETURNED: {sid}"
                 cv2.circle(frame, seat_pos, SEAT_ZONE_RADIUS, (0, 255, 0), 2)
         else:
-            # FIX A: freeze both counters during post-lock settle window.
-            # Previously grace incremented unconditionally, so by the time
-            # post_lock_settled became True it was already 90+ — vacancy started
-            # immediately. Resetting both here guarantees a clean start.
             post_lock_settled = (frame_count - _lock_frame) > POST_LOCK_SETTLE_FRAMES
 
             if not post_lock_settled:
                 seat_grace_counters[sid]   = 0
                 seat_vacancy_counters[sid] = 0
             else:
-                # FIX I: grace window now 45 frames (1.5s) — covers the invigilator
-                # transit through the dense cluster at t≈14-16s
                 seat_grace_counters[sid] = seat_grace_counters.get(sid, 0) + 1
 
                 if seat_grace_counters[sid] >= VACANCY_GRACE_FRAMES:
-                    # Cap at threshold — never resets until student returns (FIX 1)
                     if seat_vacancy_counters.get(sid, 0) < SEAT_VACANCY_FRAMES:
                         seat_vacancy_counters[sid] = seat_vacancy_counters.get(sid, 0) + 1
 
@@ -711,8 +649,6 @@ def check_seat_zones(current_positions, frame):
     for i in range(len(seat_ids)):
         for j in range(i + 1, len(seat_ids)):
             sid_a, sid_b = seat_ids[i], seat_ids[j]
-            # FIX II: always sort the pair so "S017-S012" and "S012-S017" map to
-            # the same cooldown key — eliminates double-firing on reversed pairs
             pair_key = (min(sid_a, sid_b), max(sid_a, sid_b))
             if seat_initial_pair_dists.get(pair_key, 9999) < MIN_SEAT_PAIR_DIST:
                 continue
@@ -725,7 +661,6 @@ def check_seat_zones(current_positions, frame):
             if d < PROXIMITY_ONLY_DIST:
                 proximity_counters[pair_key] = proximity_counters.get(pair_key, 0) + 1
                 if proximity_counters[pair_key] >= PROXIMITY_CONFIRM_FRAMES:
-                    # FIX II: sorted pair key used in can_send too
                     close_key = f"prox_{pair_key[0]}_{pair_key[1]}"
                     if can_send(close_key, cooldown=15.0):
                         logger.log_event(
@@ -748,8 +683,6 @@ def process_hands(hand_res, face_landmarks_list, current_positions, iw, ih, fram
     current_alert = None
     if not hand_res or not hand_res.multi_hand_landmarks:
         return current_alert
-    # FIX A (v9): per-frame dedup set — prevents the same pair firing twice in one
-    # frame when multiple hand combos (left+right permutations) are detected.
     fired_this_frame: set = set()
 
     face_centers = get_all_face_centers(face_landmarks_list, iw, ih)
@@ -847,27 +780,22 @@ def process_hands(hand_res, face_landmarks_list, current_positions, iw, ih, fram
                 if pair_key in fired_this_frame:
                     continue
 
-                # FIX 5 (v12): require both wrists to be moving toward each other.
-                # Static wrists within 75px are just students sitting close — not a pass.
-                # Update rolling position history for each student's wrist.
                 from collections import deque as _dq
                 for _sid, _wrist in [(sid1, h1["wrist"]), (sid2, h2["wrist"])]:
                     if _sid not in _wrist_prev_positions:
                         _wrist_prev_positions[_sid] = _dq(maxlen=5)
                     _wrist_prev_positions[_sid].append(_wrist)
 
-                _wrists_moving = True  # default: fire if no history yet
+                _wrists_moving = True  
                 hist1 = _wrist_prev_positions.get(sid1)
                 hist2 = _wrist_prev_positions.get(sid2)
                 if hist1 and hist2 and len(hist1) >= 3 and len(hist2) >= 3:
-                    # Compute total displacement of each wrist over last 5 frames
                     move1 = dist(hist1[0], hist1[-1])
                     move2 = dist(hist2[0], hist2[-1])
-                    # At least one wrist must have moved >8px — static pair = writing
                     _wrists_moving = (move1 > 8 or move2 > 8)
 
                 if not _wrists_moving:
-                    continue  # skip — both wrists static, not a genuine pass
+                    continue
 
                 if can_send(pair_key, cooldown=30.0):
                     fired_this_frame.add(pair_key)
@@ -903,11 +831,6 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
     frame_count += 1
     frame = cv2.resize(frame, AI_FRAME_SIZE)
 
-    # FIX D (v10): self-heal _lock_frame when batch snapshot-calibration pre-sets
-    # locked=True without going through run_ai_on_frame (so _lock_frame stays -999).
-    # In that scenario post_lock_settled = frame_count - (-999) = 1000+ from frame 1,
-    # bypassing the settle window entirely.  Anchoring _lock_frame to the first AI
-    # frame guarantees the settle window fires correctly in both live and batch modes.
     if locked and _lock_frame == -999:
         _lock_frame = frame_count
         print(f"[SettleFix] _lock_frame anchored to frame {frame_count} "
@@ -1022,7 +945,6 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
         hand_res = None
 
     if last_custom_results is not None and last_custom_results.boxes is not None:
-        # FIX 2: compute median bbox height once per frame to detect invigilator
         _invigilator_tids = set()
         all_bbox_heights = [
             int(box.xyxy[0][3]) - int(box.xyxy[0][1])
@@ -1033,10 +955,8 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
         ]
         if all_bbox_heights:
             if _median_student_bbox_h == 0.0:
-                # First frame — seed the median
                 _median_student_bbox_h = float(np.median(all_bbox_heights))
             else:
-                # Slow EMA so one tall frame doesn't reset the reference
                 _median_student_bbox_h = (
                     0.98 * _median_student_bbox_h
                     + 0.02 * float(np.median(all_bbox_heights))
@@ -1050,17 +970,14 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
             cx, cy = center(x1, y1, x2, y2)
             if cls == CUSTOM_CLASS["PERSON"] and box.id is not None:
                 tid = int(box.id[0])
-
-                # FIX 2: flag as invigilator if significantly taller than seated students
                 bbox_h = y2 - y1
                 if (_median_student_bbox_h > 0
                         and bbox_h > _median_student_bbox_h * INVIGILATOR_HEIGHT_RATIO):
                     _invigilator_tids.add(tid)
-                    # Draw differently so it's visible in HUD but skip student processing
                     cv2.rectangle(frame, (x1, y1), (x2, y2), (128, 128, 0), 1)
                     cv2.putText(frame, "INVIG", (x1, y1 - 10),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.45, (128, 128, 0), 1)
-                    continue  # skip Voronoi, hand, face, metrics entirely
+                    continue  
 
                 old_pos = current_positions.get(tid)
                 if old_pos is None:
@@ -1077,9 +994,6 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
                 current_ids.add(tid)
                 sid = student_id_map.get(tid, None)
 
-                # FIX 4 (v12): tightened ReAcquire — 70px max (was 100px), requires the
-                # seat to currently be showing vacancy (counter > 0), and enforces a
-                # per-SID cooldown of 45 frames to prevent churn on the same seat.
                 if sid is None and locked:
                     pos = current_positions.get(tid)
                     if pos is not None:
@@ -1090,10 +1004,8 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
                                 continue
                             if dist(pos, s_pos) > REACQUIRE_DIST:
                                 continue
-                            # Only reacquire if the seat is actually showing as vacant
                             if seat_vacancy_counters.get(s_sid, 0) == 0:
                                 continue
-                            # Cooldown: don't reacquire same SID within 45 frames
                             last_ra = last_alert_time.get(f"_reacquire_{s_sid}", -999)
                             if frame_count - last_ra < 45:
                                 continue
@@ -1285,7 +1197,6 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
         except Exception:
             pass
 
-    # ── POSE / BODY LEAN ──────────────────────────────────────────────────────
     if pose_res and pose_res.pose_landmarks:
         lms = pose_res.pose_landmarks.landmark
         tid = get_student_at(int(lms[0].x * iw), int(lms[0].y * ih), current_positions)
@@ -1298,7 +1209,7 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
             leaning_detected  = learner.check_lean(sid, smooth_lean)
             if _settled and learner._stable_trigger(sid, "BODY_LEANING", leaning_detected):
                 current_alert = f"LEANING: {sid}"
-                if can_send(f"lean_{sid}", cooldown=20.0):  # FIX 7 (v12): was 1s → 20s; prevents double-fire on same lean
+                if can_send(f"lean_{sid}", cooldown=20.0):
                     save_evidence(frame, sid, "BODY_LEANING")
                     learner.register_event(sid, "BODY_LEANING")
                     logger.log_event(
@@ -1312,7 +1223,6 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
                     if score > 80:
                         print(f"🚨 CHEATING HIGH RISK: {sid} | score={score}")
 
-    # ── FACE MESH / GAZE / TALKING ────────────────────────────────────────────
     if mesh_res and mesh_res.multi_face_landmarks:
         last_face_landmarks       = mesh_res.multi_face_landmarks
         last_face_landmarks_frame = frame_count
@@ -1363,7 +1273,6 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
             result.looking_left  = result.looking_left  or looking_left
             result.looking_right = result.looking_right or looking_right
 
-            # ── LOOKING DOWN ─────────────────────────────────────────────────
             if _settled and learner._stable_trigger(sid, "LOOKING_DOWN", result.looking_down):
                 current_alert = f"LOOKING DOWN: {sid}"
                 if can_send(f"down_{sid}"):
@@ -1396,7 +1305,6 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
                                 if score > 80:
                                     print(f"🚨 CHEATING HIGH RISK: {sid} | score={score}")
 
-            # ── LOOKING LEFT ─────────────────────────────────────────────────
             if _settled and learner._stable_trigger(sid, "LOOKING_LEFT", result.looking_left):
                 current_alert = f"LOOKING LEFT: {sid}"
                 if can_send(f"left_{sid}"):
@@ -1413,7 +1321,6 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
                     if score > 80:
                         print(f"🚨 CHEATING HIGH RISK: {sid} | score={score}")
 
-            # ── LOOKING RIGHT ────────────────────────────────────────────────
             elif _settled and learner._stable_trigger(sid, "LOOKING_RIGHT", result.looking_right):
                 current_alert = f"LOOKING RIGHT: {sid}"
                 if can_send(f"right_{sid}"):
@@ -1430,7 +1337,6 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
                     if score > 80:
                         print(f"🚨 CHEATING HIGH RISK: {sid} | score={score}")
 
-            # ── TALKING ──────────────────────────────────────────────────────
             if result.talking:
                 mouth_counters[sid] = mouth_counters.get(sid, 0) + TALK_COUNTER_INCREMENT
             else:
@@ -1467,7 +1373,6 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
 
     face_landmarks_list = last_face_landmarks if last_face_landmarks else []
 
-    # ── PHONE PROXIMITY ───────────────────────────────────────────────────────
     for tid in current_ids:
         sid = student_id_map.get(tid, "Unknown")
         pos = current_positions[tid]
@@ -1492,7 +1397,6 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
             else:
                 phone_counters[sid] = 0
 
-        # ── WHISPER DETECTION ─────────────────────────────────────────────────
         for other_tid in current_ids:
             if tid >= other_tid:
                 continue
@@ -1519,7 +1423,6 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
                         print(f"🚨 CHEATING HIGH RISK: {sid} | score={score}")
                     learner.escalate_if_coordinated(sid, sid_other)
 
-    # ── OBJECT DETECTION ──────────────────────────────────────────────────────
     if object_results is not None and object_results.boxes is not None:
         for box in object_results.boxes:
             cls, conf = int(box.cls[0]), float(box.conf[0])
@@ -1534,7 +1437,6 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
             x1, y1, x2, y2 = map(int, box.xyxy[0].tolist())
             obj_cx, obj_cy = center(x1, y1, x2, y2)
 
-            # FIX III: use margin-gated Voronoi for object assignment
             sid = get_seat_at(obj_cx, obj_cy) if seat_positions else None
             if sid is None:
                 tid = get_student_at(obj_cx, obj_cy, current_positions)
@@ -1583,7 +1485,6 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
 
                 current_alert = f"CALCULATOR DETECTED: {sid}"
 
-    # ── HAND DETECTION ────────────────────────────────────────────────────────
     if hand_res:
         hand_alert = process_hands(
             hand_res, face_landmarks_list, current_positions, iw, ih, frame, last_talking_students
@@ -1591,7 +1492,6 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
         if hand_alert and (current_alert == "All Clear" or "PASSING" in hand_alert):
             current_alert = hand_alert
 
-    # ── POST-LOCK CALIBRATION ─────────────────────────────────────────────────
     _all_calibrated = all(
         learner.is_calibrated(student_id_map[tid])
         for tid in current_ids if tid in student_id_map
@@ -1602,7 +1502,6 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
             mesh_res=mesh_res, pose_res=pose_res
         )
 
-    # ── METRICS & ANOMALY DETECTION ───────────────────────────────────────────
     head_direction = "forward"
     if "LOOKING LEFT" in current_alert:
         head_direction = "left"
@@ -1612,11 +1511,8 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
         head_direction = "down"
 
     hands_visible   = hand_res is not None and hand_res.multi_hand_landmarks is not None
-    # FIX 6 (v12): student-only hand visibility — exclude invigilator hand landmarks.
-    # Hand landmarks near an invigilator-flagged tracking bbox are not student activity.
-    student_hands_visible = hands_visible  # default: same as total
+    student_hands_visible = hands_visible  
     if hands_visible and _invigilator_tids and hand_res.multi_hand_landmarks:
-        # Check if any hand landmark center is far from all known student positions
         student_hands_visible = False
         student_positions_set = {
             current_positions[t] for t in current_ids
@@ -1658,7 +1554,6 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
         objects_detected=detected_objects,
         person_count=person_count
     )
-    # FIX 6: inject student-only hand flag for MetricsEngine
     features["student_hands_detected"] = student_hands_visible
 
     metrics = metrics_engine.update(features)
@@ -1692,7 +1587,6 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
                         )
                         send_event_async("BEHAVIOR_ANOMALY", f"room_{metric}")
 
-    # ── HUD ───────────────────────────────────────────────────────────────────
     if current_alert == "All Clear":
         draw_alert_banner(frame, "✅  All Clear", color=(0, 130, 0))
     else:

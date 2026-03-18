@@ -6,7 +6,6 @@ class CheatingScore:
 
         self.scores = {}
 
-        # Alert cooldown times (seconds)
         self.alert_cooldown = {
             "HANDS_ON_FACE": 4,
             "BODY_LEANING": 5,
@@ -17,10 +16,8 @@ class CheatingScore:
             "BEHAVIOR_ANOMALY": 5
         }
 
-        # Track last time alert fired
         self.last_alert_time = {}
 
-        # Event weights
         self.weights = {
             "PHONE_DETECTED": 40,
             "PASSING_OBJECT": 60,
@@ -53,7 +50,6 @@ class CheatingScore:
         if student_id not in self.scores:
             self.scores[student_id] = 0
 
-        # Check cooldown
         if not self.can_trigger(student_id, event):
             return self.scores[student_id]
 
@@ -74,5 +70,4 @@ class CheatingScore:
         return self.scores.get(student_id, 0)
 
     def get_all_scores(self):
-        """FIX 9 (v12): return all student scores sorted by risk, highest first."""
         return dict(sorted(self.scores.items(), key=lambda x: -x[1]))
