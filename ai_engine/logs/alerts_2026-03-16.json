@@ -1,0 +1,2039 @@
+[
+    {
+        "timestamp": "2026-03-16 10:37:19",
+        "student_id": "S019",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8814399838447571,
+        "frame": 6
+    },
+    {
+        "timestamp": "2026-03-16 10:37:19",
+        "student_id": "S018",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8296037316322327,
+        "frame": 6
+    },
+    {
+        "timestamp": "2026-03-16 10:37:19",
+        "student_id": "S006",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8017898201942444,
+        "frame": 6
+    },
+    {
+        "timestamp": "2026-03-16 10:37:19",
+        "student_id": "S009",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7864909768104553,
+        "frame": 6
+    },
+    {
+        "timestamp": "2026-03-16 10:37:19",
+        "student_id": "S013",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.7508627772331238,
+        "frame": 6
+    },
+    {
+        "timestamp": "2026-03-16 10:37:19",
+        "student_id": "S012",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7304467558860779,
+        "frame": 6
+    },
+    {
+        "timestamp": "2026-03-16 10:37:19",
+        "student_id": "S007",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.7233442068099976,
+        "frame": 6
+    },
+    {
+        "timestamp": "2026-03-16 10:37:20",
+        "student_id": "S019",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.883113443851471,
+        "frame": 12
+    },
+    {
+        "timestamp": "2026-03-16 10:37:20",
+        "student_id": "S018",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8048589825630188,
+        "frame": 12
+    },
+    {
+        "timestamp": "2026-03-16 10:37:20",
+        "student_id": "S006",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7972663640975952,
+        "frame": 12
+    },
+    {
+        "timestamp": "2026-03-16 10:37:20",
+        "student_id": "S009",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7578160166740417,
+        "frame": 12
+    },
+    {
+        "timestamp": "2026-03-16 10:37:20",
+        "student_id": "S013",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.7499387860298157,
+        "frame": 12
+    },
+    {
+        "timestamp": "2026-03-16 10:37:20",
+        "student_id": "S012",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.731222927570343,
+        "frame": 12
+    },
+    {
+        "timestamp": "2026-03-16 10:37:20",
+        "student_id": "S007",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7071487903594971,
+        "frame": 12
+    },
+    {
+        "timestamp": "2026-03-16 10:37:20",
+        "student_id": "S007",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.7018997669219971,
+        "frame": 12
+    },
+    {
+        "timestamp": "2026-03-16 10:37:21",
+        "student_id": "S019",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8804251551628113,
+        "frame": 18
+    },
+    {
+        "timestamp": "2026-03-16 10:37:21",
+        "student_id": "S018",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8137791752815247,
+        "frame": 18
+    },
+    {
+        "timestamp": "2026-03-16 10:37:21",
+        "student_id": "S006",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7972067594528198,
+        "frame": 18
+    },
+    {
+        "timestamp": "2026-03-16 10:37:21",
+        "student_id": "S013",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.7673358917236328,
+        "frame": 18
+    },
+    {
+        "timestamp": "2026-03-16 10:37:21",
+        "student_id": "S007",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7312570810317993,
+        "frame": 18
+    },
+    {
+        "timestamp": "2026-03-16 10:37:21",
+        "student_id": "S009",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7077893018722534,
+        "frame": 18
+    },
+    {
+        "timestamp": "2026-03-16 10:37:21",
+        "student_id": "S007",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.7014670968055725,
+        "frame": 18
+    },
+    {
+        "timestamp": "2026-03-16 10:37:22",
+        "student_id": "S019",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8763508200645447,
+        "frame": 24
+    },
+    {
+        "timestamp": "2026-03-16 10:37:22",
+        "student_id": "S018",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8246130347251892,
+        "frame": 24
+    },
+    {
+        "timestamp": "2026-03-16 10:37:22",
+        "student_id": "S006",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.789219081401825,
+        "frame": 24
+    },
+    {
+        "timestamp": "2026-03-16 10:37:22",
+        "student_id": "S013",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.775908887386322,
+        "frame": 24
+    },
+    {
+        "timestamp": "2026-03-16 10:37:22",
+        "student_id": "S007",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7340916991233826,
+        "frame": 24
+    },
+    {
+        "timestamp": "2026-03-16 10:37:22",
+        "student_id": "S009",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7161332964897156,
+        "frame": 24
+    },
+    {
+        "timestamp": "2026-03-16 10:37:22",
+        "student_id": "S007",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.7048050761222839,
+        "frame": 24
+    },
+    {
+        "timestamp": "2026-03-16 10:37:24",
+        "student_id": "S019",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8613458275794983,
+        "frame": 30
+    },
+    {
+        "timestamp": "2026-03-16 10:37:24",
+        "student_id": "S018",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8170106410980225,
+        "frame": 30
+    },
+    {
+        "timestamp": "2026-03-16 10:37:24",
+        "student_id": "S006",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7815443873405457,
+        "frame": 30
+    },
+    {
+        "timestamp": "2026-03-16 10:37:24",
+        "student_id": "S013",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.7557918429374695,
+        "frame": 30
+    },
+    {
+        "timestamp": "2026-03-16 10:37:24",
+        "student_id": "S007",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7049612998962402,
+        "frame": 30
+    },
+    {
+        "timestamp": "2026-03-16 10:37:24",
+        "student_id": "S007",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.695198118686676,
+        "frame": 30
+    },
+    {
+        "timestamp": "2026-03-16 10:37:25",
+        "student_id": "S019",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8452848196029663,
+        "frame": 36
+    },
+    {
+        "timestamp": "2026-03-16 10:37:25",
+        "student_id": "S018",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8174949288368225,
+        "frame": 36
+    },
+    {
+        "timestamp": "2026-03-16 10:37:25",
+        "student_id": "S006",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7910701632499695,
+        "frame": 36
+    },
+    {
+        "timestamp": "2026-03-16 10:37:25",
+        "student_id": "S012",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7889260649681091,
+        "frame": 36
+    },
+    {
+        "timestamp": "2026-03-16 10:37:25",
+        "student_id": "S013",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.7677136063575745,
+        "frame": 36
+    },
+    {
+        "timestamp": "2026-03-16 10:37:25",
+        "student_id": "S007",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7624752521514893,
+        "frame": 36
+    },
+    {
+        "timestamp": "2026-03-16 10:37:26",
+        "student_id": "S019",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8910112380981445,
+        "frame": 42
+    },
+    {
+        "timestamp": "2026-03-16 10:37:26",
+        "student_id": "S018",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.830612301826477,
+        "frame": 42
+    },
+    {
+        "timestamp": "2026-03-16 10:37:26",
+        "student_id": "S006",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8211986422538757,
+        "frame": 42
+    },
+    {
+        "timestamp": "2026-03-16 10:37:26",
+        "student_id": "S007",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8005287647247314,
+        "frame": 42
+    },
+    {
+        "timestamp": "2026-03-16 10:37:26",
+        "student_id": "S009",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7439823150634766,
+        "frame": 42
+    },
+    {
+        "timestamp": "2026-03-16 10:37:26",
+        "student_id": "S013",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.7118516564369202,
+        "frame": 42
+    },
+    {
+        "timestamp": "2026-03-16 10:37:26",
+        "student_id": "S010",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7109423279762268,
+        "frame": 42
+    },
+    {
+        "timestamp": "2026-03-16 10:37:27",
+        "student_id": "S019",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8927862644195557,
+        "frame": 48
+    },
+    {
+        "timestamp": "2026-03-16 10:37:27",
+        "student_id": "S018",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8302797079086304,
+        "frame": 48
+    },
+    {
+        "timestamp": "2026-03-16 10:37:27",
+        "student_id": "S006",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8075023293495178,
+        "frame": 48
+    },
+    {
+        "timestamp": "2026-03-16 10:37:27",
+        "student_id": "S009",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7179368734359741,
+        "frame": 48
+    },
+    {
+        "timestamp": "2026-03-16 10:37:27",
+        "student_id": "S007",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7176879644393921,
+        "frame": 48
+    },
+    {
+        "timestamp": "2026-03-16 10:37:27",
+        "student_id": "S013",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.646190881729126,
+        "frame": 48
+    },
+    {
+        "timestamp": "2026-03-16 10:37:27",
+        "student_id": "S007",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.5623440146446228,
+        "frame": 48
+    },
+    {
+        "timestamp": "2026-03-16 10:37:28",
+        "student_id": "S018",
+        "event": "HANDS_ON_FACE",
+        "confidence": 0.9,
+        "frame": 50
+    },
+    {
+        "timestamp": "2026-03-16 10:37:29",
+        "student_id": "S018",
+        "event": "LOOKING_LEFT",
+        "confidence": 0.9,
+        "frame": 54
+    },
+    {
+        "timestamp": "2026-03-16 10:37:29",
+        "student_id": "S019",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8853808045387268,
+        "frame": 54
+    },
+    {
+        "timestamp": "2026-03-16 10:37:29",
+        "student_id": "S018",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8510378003120422,
+        "frame": 54
+    },
+    {
+        "timestamp": "2026-03-16 10:37:29",
+        "student_id": "S006",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8283466696739197,
+        "frame": 54
+    },
+    {
+        "timestamp": "2026-03-16 10:37:29",
+        "student_id": "S018",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.8261242508888245,
+        "frame": 54
+    },
+    {
+        "timestamp": "2026-03-16 10:37:29",
+        "student_id": "S013",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7077775597572327,
+        "frame": 54
+    },
+    {
+        "timestamp": "2026-03-16 10:37:29",
+        "student_id": "S007",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7019476890563965,
+        "frame": 54
+    },
+    {
+        "timestamp": "2026-03-16 10:37:29",
+        "student_id": "S013",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.5990992784500122,
+        "frame": 54
+    },
+    {
+        "timestamp": "2026-03-16 10:37:29",
+        "student_id": "S018",
+        "event": "HANDS_ON_FACE",
+        "confidence": 0.9,
+        "frame": 55
+    },
+    {
+        "timestamp": "2026-03-16 10:37:30",
+        "student_id": "S018",
+        "event": "LOOKING_LEFT",
+        "confidence": 0.9,
+        "frame": 60
+    },
+    {
+        "timestamp": "2026-03-16 10:37:30",
+        "student_id": "S006",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8620370030403137,
+        "frame": 60
+    },
+    {
+        "timestamp": "2026-03-16 10:37:30",
+        "student_id": "S018",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.852019727230072,
+        "frame": 60
+    },
+    {
+        "timestamp": "2026-03-16 10:37:30",
+        "student_id": "S018",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8495882153511047,
+        "frame": 60
+    },
+    {
+        "timestamp": "2026-03-16 10:37:30",
+        "student_id": "S019",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.848015308380127,
+        "frame": 60
+    },
+    {
+        "timestamp": "2026-03-16 10:37:30",
+        "student_id": "S013",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.6099680662155151,
+        "frame": 60
+    },
+    {
+        "timestamp": "2026-03-16 10:37:30",
+        "student_id": "S018",
+        "event": "HANDS_ON_FACE",
+        "confidence": 0.9,
+        "frame": 60
+    },
+    {
+        "timestamp": "2026-03-16 10:37:30",
+        "student_id": "S018",
+        "event": "WRITING_ON_PALM",
+        "confidence": 0.9,
+        "frame": 62
+    },
+    {
+        "timestamp": "2026-03-16 10:37:31",
+        "student_id": "S018",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.8765106201171875,
+        "frame": 66
+    },
+    {
+        "timestamp": "2026-03-16 10:37:31",
+        "student_id": "S019",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8698962926864624,
+        "frame": 66
+    },
+    {
+        "timestamp": "2026-03-16 10:37:31",
+        "student_id": "S018",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8263556361198425,
+        "frame": 66
+    },
+    {
+        "timestamp": "2026-03-16 10:37:31",
+        "student_id": "S006",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7897229790687561,
+        "frame": 66
+    },
+    {
+        "timestamp": "2026-03-16 10:37:31",
+        "student_id": "S013",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.6145218014717102,
+        "frame": 66
+    },
+    {
+        "timestamp": "2026-03-16 10:37:31",
+        "student_id": "S018",
+        "event": "HANDS_ON_FACE",
+        "confidence": 0.9,
+        "frame": 66
+    },
+    {
+        "timestamp": "2026-03-16 10:37:33",
+        "student_id": "S019",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8925451636314392,
+        "frame": 72
+    },
+    {
+        "timestamp": "2026-03-16 10:37:33",
+        "student_id": "S018",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.7915882468223572,
+        "frame": 72
+    },
+    {
+        "timestamp": "2026-03-16 10:37:33",
+        "student_id": "S012",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.758436918258667,
+        "frame": 72
+    },
+    {
+        "timestamp": "2026-03-16 10:37:33",
+        "student_id": "S009",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7465834617614746,
+        "frame": 72
+    },
+    {
+        "timestamp": "2026-03-16 10:37:33",
+        "student_id": "S019",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.6234347820281982,
+        "frame": 72
+    },
+    {
+        "timestamp": "2026-03-16 10:37:33",
+        "student_id": "S018",
+        "event": "HANDS_ON_FACE",
+        "confidence": 0.9,
+        "frame": 72
+    },
+    {
+        "timestamp": "2026-03-16 10:37:34",
+        "student_id": "S006",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7455348968505859,
+        "frame": 78
+    },
+    {
+        "timestamp": "2026-03-16 10:37:34",
+        "student_id": "S019",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7451866865158081,
+        "frame": 78
+    },
+    {
+        "timestamp": "2026-03-16 10:37:34",
+        "student_id": "S018",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7389550805091858,
+        "frame": 78
+    },
+    {
+        "timestamp": "2026-03-16 10:37:34",
+        "student_id": "S018",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.7041019797325134,
+        "frame": 78
+    },
+    {
+        "timestamp": "2026-03-16 10:37:34",
+        "student_id": "S019",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.5885312557220459,
+        "frame": 78
+    },
+    {
+        "timestamp": "2026-03-16 10:37:34",
+        "student_id": "S012",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.5646142363548279,
+        "frame": 78
+    },
+    {
+        "timestamp": "2026-03-16 10:37:34",
+        "student_id": "S018",
+        "event": "HANDS_ON_FACE",
+        "confidence": 0.9,
+        "frame": 78
+    },
+    {
+        "timestamp": "2026-03-16 10:37:35",
+        "student_id": "S019",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8161047101020813,
+        "frame": 84
+    },
+    {
+        "timestamp": "2026-03-16 10:37:35",
+        "student_id": "S006",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.749565839767456,
+        "frame": 84
+    },
+    {
+        "timestamp": "2026-03-16 10:37:35",
+        "student_id": "S018",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7086737751960754,
+        "frame": 84
+    },
+    {
+        "timestamp": "2026-03-16 10:37:35",
+        "student_id": "S018",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.6972420811653137,
+        "frame": 84
+    },
+    {
+        "timestamp": "2026-03-16 10:37:36",
+        "student_id": "S012",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7569348812103271,
+        "frame": 90
+    },
+    {
+        "timestamp": "2026-03-16 10:37:36",
+        "student_id": "S019",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.7513658404350281,
+        "frame": 90
+    },
+    {
+        "timestamp": "2026-03-16 10:37:36",
+        "student_id": "S018",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.749518632888794,
+        "frame": 90
+    },
+    {
+        "timestamp": "2026-03-16 10:37:36",
+        "student_id": "S019",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.744566023349762,
+        "frame": 90
+    },
+    {
+        "timestamp": "2026-03-16 10:37:36",
+        "student_id": "S010",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.739154040813446,
+        "frame": 90
+    },
+    {
+        "timestamp": "2026-03-16 10:37:36",
+        "student_id": "S006",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7072803378105164,
+        "frame": 90
+    },
+    {
+        "timestamp": "2026-03-16 10:37:36",
+        "student_id": "ROOM(hand_activity_rate)",
+        "event": "BEHAVIOR_ANOMALY",
+        "confidence": 1.0,
+        "frame": 90
+    },
+    {
+        "timestamp": "2026-03-16 10:37:36",
+        "student_id": "ROOM(gesture_rate)",
+        "event": "BEHAVIOR_ANOMALY",
+        "confidence": 0.24444444444444444,
+        "frame": 90
+    },
+    {
+        "timestamp": "2026-03-16 10:37:37",
+        "student_id": "S019",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8042857050895691,
+        "frame": 96
+    },
+    {
+        "timestamp": "2026-03-16 10:37:37",
+        "student_id": "S018",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.7547036409378052,
+        "frame": 96
+    },
+    {
+        "timestamp": "2026-03-16 10:37:37",
+        "student_id": "S019",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.7133487462997437,
+        "frame": 96
+    },
+    {
+        "timestamp": "2026-03-16 10:37:39",
+        "student_id": "S019",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.8060951828956604,
+        "frame": 102
+    },
+    {
+        "timestamp": "2026-03-16 10:37:39",
+        "student_id": "S019",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7979666590690613,
+        "frame": 102
+    },
+    {
+        "timestamp": "2026-03-16 10:37:39",
+        "student_id": "S018",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7970561385154724,
+        "frame": 102
+    },
+    {
+        "timestamp": "2026-03-16 10:37:39",
+        "student_id": "S007",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7208684086799622,
+        "frame": 102
+    },
+    {
+        "timestamp": "2026-03-16 10:37:39",
+        "student_id": "S006",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7114111185073853,
+        "frame": 102
+    },
+    {
+        "timestamp": "2026-03-16 10:37:39",
+        "student_id": "S018",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.6588686108589172,
+        "frame": 102
+    },
+    {
+        "timestamp": "2026-03-16 10:37:40",
+        "student_id": "S019",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8239272832870483,
+        "frame": 108
+    },
+    {
+        "timestamp": "2026-03-16 10:37:40",
+        "student_id": "S019",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.7721523642539978,
+        "frame": 108
+    },
+    {
+        "timestamp": "2026-03-16 10:37:40",
+        "student_id": "S006",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.722241222858429,
+        "frame": 108
+    },
+    {
+        "timestamp": "2026-03-16 10:37:40",
+        "student_id": "S007",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7177082300186157,
+        "frame": 108
+    },
+    {
+        "timestamp": "2026-03-16 10:37:40",
+        "student_id": "S018",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.702430248260498,
+        "frame": 108
+    },
+    {
+        "timestamp": "2026-03-16 10:37:40",
+        "student_id": "S018",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.68790602684021,
+        "frame": 108
+    },
+    {
+        "timestamp": "2026-03-16 10:37:41",
+        "student_id": "S018",
+        "event": "LOOKING_LEFT",
+        "confidence": 0.9,
+        "frame": 114
+    },
+    {
+        "timestamp": "2026-03-16 10:37:41",
+        "student_id": "S018",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8787201642990112,
+        "frame": 114
+    },
+    {
+        "timestamp": "2026-03-16 10:37:41",
+        "student_id": "S019",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8419920206069946,
+        "frame": 114
+    },
+    {
+        "timestamp": "2026-03-16 10:37:41",
+        "student_id": "S019",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.8376045823097229,
+        "frame": 114
+    },
+    {
+        "timestamp": "2026-03-16 10:37:41",
+        "student_id": "S007",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7799172401428223,
+        "frame": 114
+    },
+    {
+        "timestamp": "2026-03-16 10:37:41",
+        "student_id": "S006",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7479259967803955,
+        "frame": 114
+    },
+    {
+        "timestamp": "2026-03-16 10:37:41",
+        "student_id": "S018",
+        "event": "HANDS_ON_FACE",
+        "confidence": 0.9,
+        "frame": 114
+    },
+    {
+        "timestamp": "2026-03-16 10:37:42",
+        "student_id": "S018",
+        "event": "WRITING_ON_PALM",
+        "confidence": 0.9,
+        "frame": 118
+    },
+    {
+        "timestamp": "2026-03-16 10:37:42",
+        "student_id": "S018-S019",
+        "event": "PASSING_OBJECT",
+        "confidence": 0.9,
+        "frame": 118
+    },
+    {
+        "timestamp": "2026-03-16 10:37:42",
+        "student_id": "S018",
+        "event": "LOOKING_LEFT",
+        "confidence": 0.9,
+        "frame": 119
+    },
+    {
+        "timestamp": "2026-03-16 10:37:42",
+        "student_id": "S018",
+        "event": "HANDS_ON_FACE",
+        "confidence": 0.9,
+        "frame": 119
+    },
+    {
+        "timestamp": "2026-03-16 10:37:43",
+        "student_id": "S018",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8907020688056946,
+        "frame": 120
+    },
+    {
+        "timestamp": "2026-03-16 10:37:43",
+        "student_id": "S019",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.8263960480690002,
+        "frame": 120
+    },
+    {
+        "timestamp": "2026-03-16 10:37:43",
+        "student_id": "S007",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.799185574054718,
+        "frame": 120
+    },
+    {
+        "timestamp": "2026-03-16 10:37:43",
+        "student_id": "S019",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7635448575019836,
+        "frame": 120
+    },
+    {
+        "timestamp": "2026-03-16 10:37:43",
+        "student_id": "S006",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7054575085639954,
+        "frame": 120
+    },
+    {
+        "timestamp": "2026-03-16 10:37:43",
+        "student_id": "S018",
+        "event": "WRITING_ON_PALM",
+        "confidence": 0.9,
+        "frame": 122
+    },
+    {
+        "timestamp": "2026-03-16 10:37:43",
+        "student_id": "S012",
+        "event": "LOOKING_LEFT",
+        "confidence": 0.9,
+        "frame": 123
+    },
+    {
+        "timestamp": "2026-03-16 10:37:43",
+        "student_id": "S018",
+        "event": "HANDS_ON_FACE",
+        "confidence": 0.9,
+        "frame": 123
+    },
+    {
+        "timestamp": "2026-03-16 10:37:44",
+        "student_id": "S018",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.863821268081665,
+        "frame": 126
+    },
+    {
+        "timestamp": "2026-03-16 10:37:44",
+        "student_id": "S013",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.8178346753120422,
+        "frame": 126
+    },
+    {
+        "timestamp": "2026-03-16 10:37:44",
+        "student_id": "S019",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7807700037956238,
+        "frame": 126
+    },
+    {
+        "timestamp": "2026-03-16 10:37:44",
+        "student_id": "S007",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.739177942276001,
+        "frame": 126
+    },
+    {
+        "timestamp": "2026-03-16 10:37:44",
+        "student_id": "S006",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7007384896278381,
+        "frame": 126
+    },
+    {
+        "timestamp": "2026-03-16 10:37:44",
+        "student_id": "S018",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.6653974056243896,
+        "frame": 126
+    },
+    {
+        "timestamp": "2026-03-16 10:37:44",
+        "student_id": "S012",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.601902425289154,
+        "frame": 126
+    },
+    {
+        "timestamp": "2026-03-16 10:37:44",
+        "student_id": "S012",
+        "event": "LOOKING_LEFT",
+        "confidence": 0.9,
+        "frame": 127
+    },
+    {
+        "timestamp": "2026-03-16 10:37:44",
+        "student_id": "S018",
+        "event": "HANDS_ON_FACE",
+        "confidence": 0.9,
+        "frame": 127
+    },
+    {
+        "timestamp": "2026-03-16 10:37:45",
+        "student_id": "S012",
+        "event": "LOOKING_LEFT",
+        "confidence": 0.9,
+        "frame": 132
+    },
+    {
+        "timestamp": "2026-03-16 10:37:45",
+        "student_id": "S019",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8876328468322754,
+        "frame": 132
+    },
+    {
+        "timestamp": "2026-03-16 10:37:45",
+        "student_id": "S018",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8627826571464539,
+        "frame": 132
+    },
+    {
+        "timestamp": "2026-03-16 10:37:45",
+        "student_id": "S013",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.7913135886192322,
+        "frame": 132
+    },
+    {
+        "timestamp": "2026-03-16 10:37:45",
+        "student_id": "S006",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7085978388786316,
+        "frame": 132
+    },
+    {
+        "timestamp": "2026-03-16 10:37:45",
+        "student_id": "S018",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.6612604856491089,
+        "frame": 132
+    },
+    {
+        "timestamp": "2026-03-16 10:37:45",
+        "student_id": "S018",
+        "event": "HANDS_ON_FACE",
+        "confidence": 0.9,
+        "frame": 132
+    },
+    {
+        "timestamp": "2026-03-16 10:37:47",
+        "student_id": "S012",
+        "event": "LOOKING_LEFT",
+        "confidence": 0.9,
+        "frame": 138
+    },
+    {
+        "timestamp": "2026-03-16 10:37:47",
+        "student_id": "S019",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8878146409988403,
+        "frame": 138
+    },
+    {
+        "timestamp": "2026-03-16 10:37:47",
+        "student_id": "S018",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8476396203041077,
+        "frame": 138
+    },
+    {
+        "timestamp": "2026-03-16 10:37:47",
+        "student_id": "S018",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.7522813677787781,
+        "frame": 138
+    },
+    {
+        "timestamp": "2026-03-16 10:37:47",
+        "student_id": "S006",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7304427623748779,
+        "frame": 138
+    },
+    {
+        "timestamp": "2026-03-16 10:37:47",
+        "student_id": "S019",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.724833071231842,
+        "frame": 138
+    },
+    {
+        "timestamp": "2026-03-16 10:37:47",
+        "student_id": "S018",
+        "event": "HANDS_ON_FACE",
+        "confidence": 0.9,
+        "frame": 138
+    },
+    {
+        "timestamp": "2026-03-16 10:37:47",
+        "student_id": "S018",
+        "event": "LOOKING_LEFT",
+        "confidence": 0.9,
+        "frame": 139
+    },
+    {
+        "timestamp": "2026-03-16 10:37:48",
+        "student_id": "S018",
+        "event": "LOOKING_LEFT",
+        "confidence": 0.9,
+        "frame": 144
+    },
+    {
+        "timestamp": "2026-03-16 10:37:48",
+        "student_id": "S019",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8931472897529602,
+        "frame": 144
+    },
+    {
+        "timestamp": "2026-03-16 10:37:48",
+        "student_id": "S018",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.8719910383224487,
+        "frame": 144
+    },
+    {
+        "timestamp": "2026-03-16 10:37:48",
+        "student_id": "S018",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.866603434085846,
+        "frame": 144
+    },
+    {
+        "timestamp": "2026-03-16 10:37:48",
+        "student_id": "S006",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7572981119155884,
+        "frame": 144
+    },
+    {
+        "timestamp": "2026-03-16 10:37:48",
+        "student_id": "S003",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7481917142868042,
+        "frame": 144
+    },
+    {
+        "timestamp": "2026-03-16 10:37:48",
+        "student_id": "S013",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7184719443321228,
+        "frame": 144
+    },
+    {
+        "timestamp": "2026-03-16 10:37:48",
+        "student_id": "S013",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.6540027260780334,
+        "frame": 144
+    },
+    {
+        "timestamp": "2026-03-16 10:37:48",
+        "student_id": "S018",
+        "event": "HANDS_ON_FACE",
+        "confidence": 0.9,
+        "frame": 144
+    },
+    {
+        "timestamp": "2026-03-16 10:37:49",
+        "student_id": "S018",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8948490619659424,
+        "frame": 150
+    },
+    {
+        "timestamp": "2026-03-16 10:37:49",
+        "student_id": "S019",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.887789249420166,
+        "frame": 150
+    },
+    {
+        "timestamp": "2026-03-16 10:37:49",
+        "student_id": "S013",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7725469470024109,
+        "frame": 150
+    },
+    {
+        "timestamp": "2026-03-16 10:37:49",
+        "student_id": "S006",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7660382986068726,
+        "frame": 150
+    },
+    {
+        "timestamp": "2026-03-16 10:37:49",
+        "student_id": "S013",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.6648769974708557,
+        "frame": 150
+    },
+    {
+        "timestamp": "2026-03-16 10:37:50",
+        "student_id": "S018",
+        "event": "HANDS_ON_FACE",
+        "confidence": 0.9,
+        "frame": 150
+    },
+    {
+        "timestamp": "2026-03-16 10:37:51",
+        "student_id": "S018",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.9250913262367249,
+        "frame": 156
+    },
+    {
+        "timestamp": "2026-03-16 10:37:51",
+        "student_id": "S019",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.9004309177398682,
+        "frame": 156
+    },
+    {
+        "timestamp": "2026-03-16 10:37:51",
+        "student_id": "S006",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.831028163433075,
+        "frame": 156
+    },
+    {
+        "timestamp": "2026-03-16 10:37:51",
+        "student_id": "S013",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.6743404865264893,
+        "frame": 156
+    },
+    {
+        "timestamp": "2026-03-16 10:37:51",
+        "student_id": "S018",
+        "event": "HANDS_ON_FACE",
+        "confidence": 0.9,
+        "frame": 156
+    },
+    {
+        "timestamp": "2026-03-16 10:37:51",
+        "student_id": "S018",
+        "event": "WRITING_ON_PALM",
+        "confidence": 0.9,
+        "frame": 157
+    },
+    {
+        "timestamp": "2026-03-16 10:37:51",
+        "student_id": "S018",
+        "event": "LOOKING_LEFT",
+        "confidence": 0.9,
+        "frame": 158
+    },
+    {
+        "timestamp": "2026-03-16 10:37:51",
+        "student_id": "ROOM(hand_activity_rate)",
+        "event": "BEHAVIOR_ANOMALY",
+        "confidence": 1.0,
+        "frame": 159
+    },
+    {
+        "timestamp": "2026-03-16 10:37:51",
+        "student_id": "ROOM(gesture_rate)",
+        "event": "BEHAVIOR_ANOMALY",
+        "confidence": 0.3888888888888889,
+        "frame": 159
+    },
+    {
+        "timestamp": "2026-03-16 10:37:52",
+        "student_id": "S018",
+        "event": "HANDS_ON_FACE",
+        "confidence": 0.9,
+        "frame": 161
+    },
+    {
+        "timestamp": "2026-03-16 10:37:52",
+        "student_id": "S018",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8980341553688049,
+        "frame": 162
+    },
+    {
+        "timestamp": "2026-03-16 10:37:52",
+        "student_id": "S019",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8925617933273315,
+        "frame": 162
+    },
+    {
+        "timestamp": "2026-03-16 10:37:52",
+        "student_id": "S006",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8313300013542175,
+        "frame": 162
+    },
+    {
+        "timestamp": "2026-03-16 10:37:52",
+        "student_id": "S013",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.6489650011062622,
+        "frame": 162
+    },
+    {
+        "timestamp": "2026-03-16 10:37:52",
+        "student_id": "S018",
+        "event": "LOOKING_LEFT",
+        "confidence": 0.9,
+        "frame": 163
+    },
+    {
+        "timestamp": "2026-03-16 10:37:53",
+        "student_id": "S018",
+        "event": "HANDS_ON_FACE",
+        "confidence": 0.9,
+        "frame": 166
+    },
+    {
+        "timestamp": "2026-03-16 10:37:54",
+        "student_id": "S018",
+        "event": "LOOKING_LEFT",
+        "confidence": 0.9,
+        "frame": 168
+    },
+    {
+        "timestamp": "2026-03-16 10:37:54",
+        "student_id": "S019",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8835939168930054,
+        "frame": 168
+    },
+    {
+        "timestamp": "2026-03-16 10:37:54",
+        "student_id": "S018",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.88227379322052,
+        "frame": 168
+    },
+    {
+        "timestamp": "2026-03-16 10:37:54",
+        "student_id": "S006",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8228475451469421,
+        "frame": 168
+    },
+    {
+        "timestamp": "2026-03-16 10:37:54",
+        "student_id": "S013",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.6845108270645142,
+        "frame": 168
+    },
+    {
+        "timestamp": "2026-03-16 10:37:54",
+        "student_id": "S018",
+        "event": "HANDS_ON_FACE",
+        "confidence": 0.9,
+        "frame": 171
+    },
+    {
+        "timestamp": "2026-03-16 10:37:55",
+        "student_id": "S018",
+        "event": "LOOKING_LEFT",
+        "confidence": 0.9,
+        "frame": 173
+    },
+    {
+        "timestamp": "2026-03-16 10:37:55",
+        "student_id": "S018",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8827794194221497,
+        "frame": 174
+    },
+    {
+        "timestamp": "2026-03-16 10:37:55",
+        "student_id": "S019",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.882124125957489,
+        "frame": 174
+    },
+    {
+        "timestamp": "2026-03-16 10:37:55",
+        "student_id": "S006",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7874394059181213,
+        "frame": 174
+    },
+    {
+        "timestamp": "2026-03-16 10:37:55",
+        "student_id": "S013",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.6978098154067993,
+        "frame": 174
+    },
+    {
+        "timestamp": "2026-03-16 10:37:55",
+        "student_id": "S018",
+        "event": "HANDS_ON_FACE",
+        "confidence": 0.9,
+        "frame": 176
+    },
+    {
+        "timestamp": "2026-03-16 10:37:56",
+        "student_id": "S018",
+        "event": "LOOKING_LEFT",
+        "confidence": 0.9,
+        "frame": 178
+    },
+    {
+        "timestamp": "2026-03-16 10:37:56",
+        "student_id": "ROOM(lookaway_rate)",
+        "event": "BEHAVIOR_ANOMALY",
+        "confidence": 0.45555555555555555,
+        "frame": 179
+    },
+    {
+        "timestamp": "2026-03-16 10:37:56",
+        "student_id": "S019",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8866022825241089,
+        "frame": 180
+    },
+    {
+        "timestamp": "2026-03-16 10:37:56",
+        "student_id": "S018",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8842698931694031,
+        "frame": 180
+    },
+    {
+        "timestamp": "2026-03-16 10:37:56",
+        "student_id": "S006",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7965304851531982,
+        "frame": 180
+    },
+    {
+        "timestamp": "2026-03-16 10:37:56",
+        "student_id": "S004",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7382933497428894,
+        "frame": 180
+    },
+    {
+        "timestamp": "2026-03-16 10:37:56",
+        "student_id": "S013",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.6973020434379578,
+        "frame": 180
+    },
+    {
+        "timestamp": "2026-03-16 10:37:56",
+        "student_id": "S012",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.5762878060340881,
+        "frame": 180
+    },
+    {
+        "timestamp": "2026-03-16 10:37:57",
+        "student_id": "S018",
+        "event": "HANDS_ON_FACE",
+        "confidence": 0.9,
+        "frame": 181
+    },
+    {
+        "timestamp": "2026-03-16 10:37:57",
+        "student_id": "S018",
+        "event": "LOOKING_LEFT",
+        "confidence": 0.9,
+        "frame": 182
+    },
+    {
+        "timestamp": "2026-03-16 10:37:58",
+        "student_id": "S018",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8877843618392944,
+        "frame": 186
+    },
+    {
+        "timestamp": "2026-03-16 10:37:58",
+        "student_id": "S019",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8765715956687927,
+        "frame": 186
+    },
+    {
+        "timestamp": "2026-03-16 10:37:58",
+        "student_id": "S006",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.832227349281311,
+        "frame": 186
+    },
+    {
+        "timestamp": "2026-03-16 10:37:58",
+        "student_id": "S013",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7073897123336792,
+        "frame": 186
+    },
+    {
+        "timestamp": "2026-03-16 10:37:58",
+        "student_id": "S013",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.633682906627655,
+        "frame": 186
+    },
+    {
+        "timestamp": "2026-03-16 10:37:58",
+        "student_id": "S018",
+        "event": "HANDS_ON_FACE",
+        "confidence": 0.9,
+        "frame": 186
+    },
+    {
+        "timestamp": "2026-03-16 10:37:58",
+        "student_id": "S018",
+        "event": "LOOKING_LEFT",
+        "confidence": 0.9,
+        "frame": 187
+    },
+    {
+        "timestamp": "2026-03-16 10:37:59",
+        "student_id": "S018",
+        "event": "LOOKING_LEFT",
+        "confidence": 0.9,
+        "frame": 192
+    },
+    {
+        "timestamp": "2026-03-16 10:37:59",
+        "student_id": "S019",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8870862722396851,
+        "frame": 192
+    },
+    {
+        "timestamp": "2026-03-16 10:37:59",
+        "student_id": "S018",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.8841977715492249,
+        "frame": 192
+    },
+    {
+        "timestamp": "2026-03-16 10:37:59",
+        "student_id": "S006",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.764896810054779,
+        "frame": 192
+    },
+    {
+        "timestamp": "2026-03-16 10:37:59",
+        "student_id": "S009",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7204297184944153,
+        "frame": 192
+    },
+    {
+        "timestamp": "2026-03-16 10:37:59",
+        "student_id": "S004",
+        "event": "UNAUTHORIZED_OBJECT",
+        "confidence": 0.7035402655601501,
+        "frame": 192
+    },
+    {
+        "timestamp": "2026-03-16 10:37:59",
+        "student_id": "S019",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.6583168506622314,
+        "frame": 192
+    },
+    {
+        "timestamp": "2026-03-16 10:37:59",
+        "student_id": "S018",
+        "event": "HANDS_ON_FACE",
+        "confidence": 0.9,
+        "frame": 192
+    },
+    {
+        "timestamp": "2026-03-16 17:12:01",
+        "student_id": "S019",
+        "event": "UNAUTHORIZED_OBJECT_paper",
+        "confidence": 0.7326874732971191,
+        "frame": 6
+    },
+    {
+        "timestamp": "2026-03-16 17:12:01",
+        "student_id": "S015",
+        "event": "UNAUTHORIZED_OBJECT_paper",
+        "confidence": 0.7156516313552856,
+        "frame": 6
+    },
+    {
+        "timestamp": "2026-03-16 17:12:03",
+        "student_id": "S015",
+        "event": "UNAUTHORIZED_OBJECT_paper",
+        "confidence": 0.71713787317276,
+        "frame": 12
+    },
+    {
+        "timestamp": "2026-03-16 17:12:03",
+        "student_id": "S022",
+        "event": "UNAUTHORIZED_OBJECT_paper",
+        "confidence": 0.7083327174186707,
+        "frame": 12
+    },
+    {
+        "timestamp": "2026-03-16 17:12:04",
+        "student_id": "S019",
+        "event": "UNAUTHORIZED_OBJECT_paper",
+        "confidence": 0.7501984238624573,
+        "frame": 18
+    },
+    {
+        "timestamp": "2026-03-16 17:12:04",
+        "student_id": "S022",
+        "event": "UNAUTHORIZED_OBJECT_paper",
+        "confidence": 0.7163919806480408,
+        "frame": 18
+    },
+    {
+        "timestamp": "2026-03-16 17:12:06",
+        "student_id": "S019",
+        "event": "UNAUTHORIZED_OBJECT_paper",
+        "confidence": 0.7542957663536072,
+        "frame": 24
+    },
+    {
+        "timestamp": "2026-03-16 17:12:06",
+        "student_id": "S022",
+        "event": "UNAUTHORIZED_OBJECT_paper",
+        "confidence": 0.7322916984558105,
+        "frame": 24
+    },
+    {
+        "timestamp": "2026-03-16 17:12:07",
+        "student_id": "S019",
+        "event": "UNAUTHORIZED_OBJECT_paper",
+        "confidence": 0.7813379764556885,
+        "frame": 30
+    },
+    {
+        "timestamp": "2026-03-16 17:12:07",
+        "student_id": "S022",
+        "event": "UNAUTHORIZED_OBJECT_paper",
+        "confidence": 0.742499053478241,
+        "frame": 30
+    },
+    {
+        "timestamp": "2026-03-16 17:12:09",
+        "student_id": "S022",
+        "event": "UNAUTHORIZED_OBJECT_paper",
+        "confidence": 0.7357375025749207,
+        "frame": 36
+    },
+    {
+        "timestamp": "2026-03-16 17:12:10",
+        "student_id": "S022",
+        "event": "UNAUTHORIZED_OBJECT_paper",
+        "confidence": 0.7055824398994446,
+        "frame": 42
+    },
+    {
+        "timestamp": "2026-03-16 17:12:11",
+        "student_id": "S022",
+        "event": "UNAUTHORIZED_OBJECT_paper",
+        "confidence": 0.7359591126441956,
+        "frame": 48
+    },
+    {
+        "timestamp": "2026-03-16 17:12:13",
+        "student_id": "S022",
+        "event": "UNAUTHORIZED_OBJECT_paper",
+        "confidence": 0.7369128465652466,
+        "frame": 54
+    },
+    {
+        "timestamp": "2026-03-16 17:14:01",
+        "student_id": "S012",
+        "event": "SEAT_VACATED",
+        "confidence": 1.0,
+        "frame": 337
+    },
+    {
+        "timestamp": "2026-03-16 17:14:12",
+        "student_id": "S008",
+        "event": "SEAT_VACATED",
+        "confidence": 1.0,
+        "frame": 387
+    },
+    {
+        "timestamp": "2026-03-16 17:14:46",
+        "student_id": "S012",
+        "event": "SEAT_VACATED",
+        "confidence": 1.0,
+        "frame": 537
+    },
+    {
+        "timestamp": "2026-03-16 17:14:56",
+        "student_id": "S008",
+        "event": "STUDENT_RETURNED",
+        "confidence": 1.0,
+        "frame": 580
+    },
+    {
+        "timestamp": "2026-03-16 17:15:09",
+        "student_id": "ROOM(hand_activity_rate)",
+        "event": "BEHAVIOR_ANOMALY",
+        "confidence": 0.6111111111111112,
+        "frame": 638
+    },
+    {
+        "timestamp": "2026-03-16 17:15:31",
+        "student_id": "S012",
+        "event": "SEAT_VACATED",
+        "confidence": 1.0,
+        "frame": 737
+    },
+    {
+        "timestamp": "2026-03-16 17:16:18",
+        "student_id": "S012",
+        "event": "SEAT_VACATED",
+        "confidence": 1.0,
+        "frame": 937
+    },
+    {
+        "timestamp": "2026-03-16 17:16:23",
+        "student_id": "S018",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.5527467727661133,
+        "frame": 960
+    },
+    {
+        "timestamp": "2026-03-16 17:16:32",
+        "student_id": "ROOM(hand_activity_rate)",
+        "event": "BEHAVIOR_ANOMALY",
+        "confidence": 0.6111111111111112,
+        "frame": 993
+    },
+    {
+        "timestamp": "2026-03-16 17:16:47",
+        "student_id": "ROOM(hand_activity_rate)",
+        "event": "BEHAVIOR_ANOMALY",
+        "confidence": 1.0,
+        "frame": 1050
+    },
+    {
+        "timestamp": "2026-03-16 17:16:59",
+        "student_id": "S008",
+        "event": "SEAT_VACATED",
+        "confidence": 1.0,
+        "frame": 1097
+    },
+    {
+        "timestamp": "2026-03-16 17:17:01",
+        "student_id": "S008",
+        "event": "STUDENT_RETURNED",
+        "confidence": 1.0,
+        "frame": 1106
+    },
+    {
+        "timestamp": "2026-03-16 17:17:09",
+        "student_id": "S012",
+        "event": "SEAT_VACATED",
+        "confidence": 1.0,
+        "frame": 1137
+    },
+    {
+        "timestamp": "2026-03-16 17:17:13",
+        "student_id": "S012",
+        "event": "STUDENT_RETURNED",
+        "confidence": 1.0,
+        "frame": 1152
+    },
+    {
+        "timestamp": "2026-03-16 17:17:40",
+        "student_id": "S001",
+        "event": "SEAT_VACATED",
+        "confidence": 1.0,
+        "frame": 1261
+    },
+    {
+        "timestamp": "2026-03-16 17:17:57",
+        "student_id": "S010",
+        "event": "BODY_LEANING",
+        "confidence": 0.9,
+        "frame": 1333
+    },
+    {
+        "timestamp": "2026-03-16 17:23:02",
+        "student_id": "S008",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.7505505681037903,
+        "frame": 6
+    },
+    {
+        "timestamp": "2026-03-16 17:23:02",
+        "student_id": "S010",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.7267657518386841,
+        "frame": 6
+    },
+    {
+        "timestamp": "2026-03-16 17:23:02",
+        "student_id": "S004",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.7117820978164673,
+        "frame": 6
+    },
+    {
+        "timestamp": "2026-03-16 17:23:03",
+        "student_id": "S010",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.7720752358436584,
+        "frame": 12
+    },
+    {
+        "timestamp": "2026-03-16 17:23:03",
+        "student_id": "S008",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.7606178522109985,
+        "frame": 12
+    },
+    {
+        "timestamp": "2026-03-16 17:23:03",
+        "student_id": "S004",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.7090902328491211,
+        "frame": 12
+    },
+    {
+        "timestamp": "2026-03-16 17:23:04",
+        "student_id": "S008",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.7679491639137268,
+        "frame": 18
+    },
+    {
+        "timestamp": "2026-03-16 17:23:04",
+        "student_id": "S004",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.7024999260902405,
+        "frame": 18
+    },
+    {
+        "timestamp": "2026-03-16 17:23:05",
+        "student_id": "S008",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.7790167331695557,
+        "frame": 24
+    },
+    {
+        "timestamp": "2026-03-16 17:23:05",
+        "student_id": "S004",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.682506799697876,
+        "frame": 24
+    },
+    {
+        "timestamp": "2026-03-16 17:23:06",
+        "student_id": "S005",
+        "event": "PHONE_DETECTED",
+        "confidence": 0.9,
+        "frame": 29
+    },
+    {
+        "timestamp": "2026-03-16 17:23:07",
+        "student_id": "S008",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.7719597816467285,
+        "frame": 30
+    },
+    {
+        "timestamp": "2026-03-16 17:23:07",
+        "student_id": "S009",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.5514035820960999,
+        "frame": 30
+    },
+    {
+        "timestamp": "2026-03-16 17:23:07",
+        "student_id": "Unknown",
+        "event": "PHONE_DETECTED",
+        "confidence": 0.9,
+        "frame": 31
+    },
+    {
+        "timestamp": "2026-03-16 17:23:07",
+        "student_id": "S005",
+        "event": "PHONE_DETECTED",
+        "confidence": 0.9,
+        "frame": 34
+    },
+    {
+        "timestamp": "2026-03-16 17:23:08",
+        "student_id": "S008",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.7594358325004578,
+        "frame": 36
+    },
+    {
+        "timestamp": "2026-03-16 17:23:08",
+        "student_id": "S009",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.6672220826148987,
+        "frame": 36
+    },
+    {
+        "timestamp": "2026-03-16 17:23:09",
+        "student_id": "S008",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.7754157185554504,
+        "frame": 42
+    },
+    {
+        "timestamp": "2026-03-16 17:23:09",
+        "student_id": "S009",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.686018168926239,
+        "frame": 42
+    },
+    {
+        "timestamp": "2026-03-16 17:23:11",
+        "student_id": "S008",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.7707098126411438,
+        "frame": 48
+    },
+    {
+        "timestamp": "2026-03-16 17:23:11",
+        "student_id": "S012",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.6613155007362366,
+        "frame": 48
+    },
+    {
+        "timestamp": "2026-03-16 17:23:12",
+        "student_id": "S008",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.7477005124092102,
+        "frame": 54
+    },
+    {
+        "timestamp": "2026-03-16 17:23:12",
+        "student_id": "S012",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.6923773288726807,
+        "frame": 54
+    },
+    {
+        "timestamp": "2026-03-16 17:23:13",
+        "student_id": "S005",
+        "event": "PHONE_DETECTED",
+        "confidence": 0.9,
+        "frame": 60
+    },
+    {
+        "timestamp": "2026-03-16 17:23:13",
+        "student_id": "S008",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.8720472455024719,
+        "frame": 60
+    },
+    {
+        "timestamp": "2026-03-16 17:23:13",
+        "student_id": "S009",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.591323733329773,
+        "frame": 60
+    },
+    {
+        "timestamp": "2026-03-16 17:23:14",
+        "student_id": "Unknown",
+        "event": "PHONE_DETECTED",
+        "confidence": 0.9,
+        "frame": 65
+    },
+    {
+        "timestamp": "2026-03-16 17:23:14",
+        "student_id": "S005",
+        "event": "PHONE_DETECTED",
+        "confidence": 0.9,
+        "frame": 65
+    },
+    {
+        "timestamp": "2026-03-16 17:23:14",
+        "student_id": "S008",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.8802012801170349,
+        "frame": 66
+    },
+    {
+        "timestamp": "2026-03-16 17:23:14",
+        "student_id": "S009",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.6463680863380432,
+        "frame": 66
+    },
+    {
+        "timestamp": "2026-03-16 17:23:15",
+        "student_id": "S005",
+        "event": "PHONE_DETECTED",
+        "confidence": 0.9,
+        "frame": 70
+    }
+]

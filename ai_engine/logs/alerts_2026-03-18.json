@@ -1,0 +1,322 @@
+[
+    {
+        "timestamp": "2026-03-18 10:24:14",
+        "student_id": "S012",
+        "event": "SEAT_VACATED",
+        "confidence": 1.0,
+        "frame": 337
+    },
+    {
+        "timestamp": "2026-03-18 10:24:22",
+        "student_id": "S008",
+        "event": "SEAT_VACATED",
+        "confidence": 1.0,
+        "frame": 387
+    },
+    {
+        "timestamp": "2026-03-18 10:24:47",
+        "student_id": "S012",
+        "event": "SEAT_VACATED",
+        "confidence": 1.0,
+        "frame": 537
+    },
+    {
+        "timestamp": "2026-03-18 10:24:55",
+        "student_id": "S008",
+        "event": "STUDENT_RETURNED",
+        "confidence": 1.0,
+        "frame": 580
+    },
+    {
+        "timestamp": "2026-03-18 10:25:05",
+        "student_id": "ROOM(hand_activity_rate)",
+        "event": "BEHAVIOR_ANOMALY",
+        "confidence": 0.6111111111111112,
+        "frame": 638
+    },
+    {
+        "timestamp": "2026-03-18 10:25:21",
+        "student_id": "S012",
+        "event": "SEAT_VACATED",
+        "confidence": 1.0,
+        "frame": 737
+    },
+    {
+        "timestamp": "2026-03-18 10:25:58",
+        "student_id": "S012",
+        "event": "SEAT_VACATED",
+        "confidence": 1.0,
+        "frame": 937
+    },
+    {
+        "timestamp": "2026-03-18 10:26:03",
+        "student_id": "S018",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.5542664527893066,
+        "frame": 960
+    },
+    {
+        "timestamp": "2026-03-18 10:26:09",
+        "student_id": "ROOM(hand_activity_rate)",
+        "event": "BEHAVIOR_ANOMALY",
+        "confidence": 0.6111111111111112,
+        "frame": 993
+    },
+    {
+        "timestamp": "2026-03-18 10:26:24",
+        "student_id": "ROOM(hand_activity_rate)",
+        "event": "BEHAVIOR_ANOMALY",
+        "confidence": 0.8555555555555555,
+        "frame": 1068
+    },
+    {
+        "timestamp": "2026-03-18 10:26:31",
+        "student_id": "S008",
+        "event": "SEAT_VACATED",
+        "confidence": 1.0,
+        "frame": 1097
+    },
+    {
+        "timestamp": "2026-03-18 10:26:35",
+        "student_id": "S008",
+        "event": "STUDENT_RETURNED",
+        "confidence": 1.0,
+        "frame": 1106
+    },
+    {
+        "timestamp": "2026-03-18 10:26:45",
+        "student_id": "S012",
+        "event": "SEAT_VACATED",
+        "confidence": 1.0,
+        "frame": 1137
+    },
+    {
+        "timestamp": "2026-03-18 10:26:49",
+        "student_id": "S012",
+        "event": "STUDENT_RETURNED",
+        "confidence": 1.0,
+        "frame": 1152
+    },
+    {
+        "timestamp": "2026-03-18 10:27:09",
+        "student_id": "S001",
+        "event": "SEAT_VACATED",
+        "confidence": 1.0,
+        "frame": 1261
+    },
+    {
+        "timestamp": "2026-03-18 10:27:22",
+        "student_id": "S010",
+        "event": "BODY_LEANING",
+        "confidence": 0.9,
+        "frame": 1333
+    },
+    {
+        "timestamp": "2026-03-18 10:27:38",
+        "student_id": "S010",
+        "event": "BODY_LEANING",
+        "confidence": 0.9,
+        "frame": 1424
+    },
+    {
+        "timestamp": "2026-03-18 10:27:44",
+        "student_id": "S001",
+        "event": "SEAT_VACATED",
+        "confidence": 1.0,
+        "frame": 1461
+    },
+    {
+        "timestamp": "2026-03-18 10:27:51",
+        "student_id": "S017",
+        "event": "SEAT_VACATED",
+        "confidence": 1.0,
+        "frame": 1501
+    },
+    {
+        "timestamp": "2026-03-18 10:28:18",
+        "student_id": "S001",
+        "event": "SEAT_VACATED",
+        "confidence": 1.0,
+        "frame": 1661
+    },
+    {
+        "timestamp": "2026-03-18 10:28:25",
+        "student_id": "S017",
+        "event": "SEAT_VACATED",
+        "confidence": 1.0,
+        "frame": 1701
+    },
+    {
+        "timestamp": "2026-03-18 10:28:52",
+        "student_id": "S001",
+        "event": "SEAT_VACATED",
+        "confidence": 1.0,
+        "frame": 1861
+    },
+    {
+        "timestamp": "2026-03-18 10:28:58",
+        "student_id": "S012",
+        "event": "SEAT_VACATED",
+        "confidence": 1.0,
+        "frame": 1897
+    },
+    {
+        "timestamp": "2026-03-18 10:28:59",
+        "student_id": "S017",
+        "event": "SEAT_VACATED",
+        "confidence": 1.0,
+        "frame": 1901
+    },
+    {
+        "timestamp": "2026-03-18 10:29:13",
+        "student_id": "ROOM(hand_activity_rate)",
+        "event": "BEHAVIOR_ANOMALY",
+        "confidence": 0.6111111111111112,
+        "frame": 1980
+    },
+    {
+        "timestamp": "2026-03-18 10:29:28",
+        "student_id": "S001",
+        "event": "SEAT_VACATED",
+        "confidence": 1.0,
+        "frame": 2061
+    },
+    {
+        "timestamp": "2026-03-18 10:29:28",
+        "student_id": "ROOM(hand_activity_rate)",
+        "event": "BEHAVIOR_ANOMALY",
+        "confidence": 1.0,
+        "frame": 2061
+    },
+    {
+        "timestamp": "2026-03-18 10:29:36",
+        "student_id": "S012",
+        "event": "SEAT_VACATED",
+        "confidence": 1.0,
+        "frame": 2097
+    },
+    {
+        "timestamp": "2026-03-18 10:29:37",
+        "student_id": "S017",
+        "event": "SEAT_VACATED",
+        "confidence": 1.0,
+        "frame": 2101
+    },
+    {
+        "timestamp": "2026-03-18 10:29:43",
+        "student_id": "ROOM(hand_activity_rate)",
+        "event": "BEHAVIOR_ANOMALY",
+        "confidence": 1.0,
+        "frame": 2133
+    },
+    {
+        "timestamp": "2026-03-18 10:29:44",
+        "student_id": "S012",
+        "event": "STUDENT_RETURNED",
+        "confidence": 1.0,
+        "frame": 2134
+    },
+    {
+        "timestamp": "2026-03-18 10:53:24",
+        "student_id": "S012",
+        "event": "SEAT_VACATED",
+        "confidence": 1.0,
+        "frame": 348
+    },
+    {
+        "timestamp": "2026-03-18 10:53:32",
+        "student_id": "S008",
+        "event": "SEAT_VACATED",
+        "confidence": 1.0,
+        "frame": 398
+    },
+    {
+        "timestamp": "2026-03-18 10:54:03",
+        "student_id": "S008",
+        "event": "STUDENT_RETURNED",
+        "confidence": 1.0,
+        "frame": 580
+    },
+    {
+        "timestamp": "2026-03-18 10:54:13",
+        "student_id": "ROOM(hand_activity_rate)",
+        "event": "BEHAVIOR_ANOMALY",
+        "confidence": 0.6111111111111112,
+        "frame": 638
+    },
+    {
+        "timestamp": "2026-03-18 10:55:10",
+        "student_id": "S018",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.5505789518356323,
+        "frame": 960
+    },
+    {
+        "timestamp": "2026-03-18 10:55:16",
+        "student_id": "ROOM(hand_activity_rate)",
+        "event": "BEHAVIOR_ANOMALY",
+        "confidence": 0.6111111111111112,
+        "frame": 993
+    },
+    {
+        "timestamp": "2026-03-18 10:55:31",
+        "student_id": "ROOM(hand_activity_rate)",
+        "event": "BEHAVIOR_ANOMALY",
+        "confidence": 0.7111111111111111,
+        "frame": 1082
+    },
+    {
+        "timestamp": "2026-03-18 10:55:43",
+        "student_id": "S012",
+        "event": "STUDENT_RETURNED",
+        "confidence": 1.0,
+        "frame": 1150
+    },
+    {
+        "timestamp": "2026-03-18 10:56:04",
+        "student_id": "S001",
+        "event": "SEAT_VACATED",
+        "confidence": 1.0,
+        "frame": 1272
+    },
+    {
+        "timestamp": "2026-03-18 10:56:15",
+        "student_id": "S010",
+        "event": "BODY_LEANING",
+        "confidence": 0.9,
+        "frame": 1333
+    },
+    {
+        "timestamp": "2026-03-18 10:56:30",
+        "student_id": "S010",
+        "event": "BODY_LEANING",
+        "confidence": 0.9,
+        "frame": 1424
+    },
+    {
+        "timestamp": "2026-03-18 10:56:45",
+        "student_id": "S017",
+        "event": "SEAT_VACATED",
+        "confidence": 1.0,
+        "frame": 1512
+    },
+    {
+        "timestamp": "2026-03-18 10:57:50",
+        "student_id": "S012",
+        "event": "SEAT_VACATED",
+        "confidence": 1.0,
+        "frame": 1908
+    },
+    {
+        "timestamp": "2026-03-18 10:58:03",
+        "student_id": "ROOM(hand_activity_rate)",
+        "event": "BEHAVIOR_ANOMALY",
+        "confidence": 0.6111111111111112,
+        "frame": 1980
+    },
+    {
+        "timestamp": "2026-03-18 10:58:18",
+        "student_id": "ROOM(hand_activity_rate)",
+        "event": "BEHAVIOR_ANOMALY",
+        "confidence": 1.0,
+        
