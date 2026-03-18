@@ -5,5 +5,54 @@
         "event": "BODY_LEANING",
         "confidence": 0.9,
         "frame": 149
+    },
+    {
+        "timestamp": "2026-03-18 15:54:14",
+        "student_id": "ROOM(hand_activity_rate)",
+        "event": "BEHAVIOR_ANOMALY",
+        "confidence": 0.6111111111111112,
+        "frame": 638
+    },
+    {
+        "timestamp": "2026-03-18 15:54:17",
+        "student_id": "S021",
+        "event": "SEAT_VACATED",
+        "confidence": 1.0,
+        "frame": 644
+    },
+    {
+        "timestamp": "2026-03-18 15:54:17",
+        "student_id": "S022",
+        "event": "SEAT_VACATED",
+        "confidence": 1.0,
+        "frame": 644
+    },
+    {
+        "timestamp": "2026-03-18 15:54:17",
+        "student_id": "S017",
+        "event": "SEAT_VACATED",
+        "confidence": 1.0,
+        "frame": 644
+    },
+    {
+        "timestamp": "2026-03-18 15:54:17",
+        "student_id": "S012",
+        "event": "SEAT_VACATED",
+        "confidence": 1.0,
+        "frame": 644
+    },
+    {
+        "timestamp": "2026-03-18 15:54:20",
+        "student_id": "S020",
+        "event": "SEAT_VACATED",
+        "confidence": 1.0,
+        "frame": 659
+    },
+    {
+        "timestamp": "2026-03-18 15:54:23",
+        "student_id": "S018",
+        "event": "SEAT_VACATED",
+        "confidence": 1.0,
+        "frame": 678
     }
 ]
