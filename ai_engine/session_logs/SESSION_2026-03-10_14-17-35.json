@@ -1,0 +1,34 @@
+{
+    "session_start": 1773132455.9218175,
+    "session_end": 1773132474.7070146,
+    "duration_seconds": 18.79,
+    "total_events": 2,
+    "events": [
+        {
+            "timestamp": 1773132473.51867,
+            "student_id": "S029",
+            "event_type": "PASSING_OBJECT",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773132473.518676,
+            "student_id": "S028",
+            "event_type": "PASSING_OBJECT",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        }
+    ],
+    "summary": {
+        "S029": {
+            "total_events": 1,
+            "final_risk_score": 0.0,
+            "final_risk_level": "NORMAL"
+        },
+        "S028": {
+            "total_events": 1,
+            "final_risk_score": 0.0,
+            "final_risk_level": "NORMAL"
+        }
+    }
+}

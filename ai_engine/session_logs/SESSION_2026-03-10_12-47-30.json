@@ -1,0 +1,62 @@
+{
+    "session_start": 1773127050.8291092,
+    "session_end": 1773127066.5747404,
+    "duration_seconds": 15.75,
+    "total_events": 6,
+    "events": [
+        {
+            "timestamp": 1773127057.6853065,
+            "student_id": "S023",
+            "event_type": "PASSING_OBJECT",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773127057.6853147,
+            "student_id": "S024",
+            "event_type": "PASSING_OBJECT",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773127058.7046773,
+            "student_id": "S024",
+            "event_type": "PASSING_OBJECT",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773127058.7046828,
+            "student_id": "S023",
+            "event_type": "PASSING_OBJECT",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773127062.1434062,
+            "student_id": "S024",
+            "event_type": "BODY_LEANING",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773127062.143423,
+            "student_id": "S024",
+            "event_type": "BURST_ACTIVITY",
+            "risk_score": 8.0,
+            "risk_level": "NORMAL"
+        }
+    ],
+    "summary": {
+        "S023": {
+            "total_events": 2,
+            "final_risk_score": 0.0,
+            "final_risk_level": "NORMAL"
+        },
+        "S024": {
+            "total_events": 4,
+            "final_risk_score": 7.42,
+            "final_risk_level": "LOW"
+        }
+    }
+}

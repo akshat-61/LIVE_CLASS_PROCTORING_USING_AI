@@ -1,0 +1,48 @@
+{
+    "session_start": 1773126909.5042324,
+    "session_end": 1773126923.6337054,
+    "duration_seconds": 14.13,
+    "total_events": 4,
+    "events": [
+        {
+            "timestamp": 1773126920.5021129,
+            "student_id": "S017",
+            "event_type": "PASSING_OBJECT",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773126920.5021179,
+            "student_id": "S018",
+            "event_type": "PASSING_OBJECT",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773126923.3523726,
+            "student_id": "S018",
+            "event_type": "PASSING_OBJECT",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773126923.3523777,
+            "student_id": "S017",
+            "event_type": "PASSING_OBJECT",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        }
+    ],
+    "summary": {
+        "S017": {
+            "total_events": 2,
+            "final_risk_score": 0.0,
+            "final_risk_level": "NORMAL"
+        },
+        "S018": {
+            "total_events": 2,
+            "final_risk_score": 0.0,
+            "final_risk_level": "NORMAL"
+        }
+    }
+}

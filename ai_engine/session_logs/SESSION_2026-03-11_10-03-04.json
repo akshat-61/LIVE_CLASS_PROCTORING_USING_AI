@@ -1,0 +1,109 @@
+{
+    "session_start": 1773203584.964361,
+    "session_end": 1773203621.7133775,
+    "duration_seconds": 36.75,
+    "total_events": 12,
+    "events": [
+        {
+            "timestamp": 1773203600.0381775,
+            "student_id": "S018",
+            "event_type": "LOOKING_LEFT",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773203606.891546,
+            "student_id": "S019",
+            "event_type": "PASSING_OBJECT",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773203606.891552,
+            "student_id": "S018",
+            "event_type": "PASSING_OBJECT",
+            "risk_score": 1.1399999999999992,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773203608.3871288,
+            "student_id": "S019",
+            "event_type": "PASSING_OBJECT",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773203608.3871346,
+            "student_id": "S018",
+            "event_type": "PASSING_OBJECT",
+            "risk_score": 0.9599999999999991,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773203608.687177,
+            "student_id": "S018",
+            "event_type": "LOOKING_LEFT",
+            "risk_score": 0.9399999999999991,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773203608.687197,
+            "student_id": "S018",
+            "event_type": "BURST_ACTIVITY",
+            "risk_score": 7.9399999999999995,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773203610.0320115,
+            "student_id": "S018",
+            "event_type": "PASSING_OBJECT",
+            "risk_score": 7.780000000000003,
+            "risk_level": "LOW"
+        },
+        {
+            "timestamp": 1773203610.0320182,
+            "student_id": "S019",
+            "event_type": "PASSING_OBJECT",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773203611.4503691,
+            "student_id": "S012",
+            "event_type": "LOOKING_LEFT",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773203615.193073,
+            "student_id": "S019",
+            "event_type": "PASSING_OBJECT",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773203615.1930795,
+            "student_id": "S018",
+            "event_type": "PASSING_OBJECT",
+            "risk_score": 7.180000000000016,
+            "risk_level": "LOW"
+        }
+    ],
+    "summary": {
+        "S018": {
+            "total_events": 7,
+            "final_risk_score": 6.36,
+            "final_risk_level": "LOW"
+        },
+        "S019": {
+            "total_events": 4,
+            "final_risk_score": 0.0,
+            "final_risk_level": "NORMAL"
+        },
+        "S012": {
+            "total_events": 1,
+            "final_risk_score": 0.74,
+            "final_risk_level": "NORMAL"
+        }
+    }
+}

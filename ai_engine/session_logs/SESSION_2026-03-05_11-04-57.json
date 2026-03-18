@@ -1,0 +1,29 @@
+{
+    "session_start": 1772688897.168642,
+    "session_end": 1772689361.18096,
+    "duration_seconds": 464.01,
+    "total_events": 2,
+    "events": [
+        {
+            "timestamp": 1772688917.32141,
+            "student_id": "S002",
+            "event_type": "BODY_LEANING",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1772688921.9829757,
+            "student_id": "S002",
+            "event_type": "LOOKING_LEFT",
+            "risk_score": 2.3799999999999994,
+            "risk_level": "NORMAL"
+        }
+    ],
+    "summary": {
+        "S002": {
+            "total_events": 2,
+            "final_risk_score": 2.3,
+            "final_risk_level": "NORMAL"
+        }
+    }
+}

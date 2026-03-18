@@ -1,0 +1,22 @@
+{
+    "session_start": 1773123727.4931839,
+    "session_end": 1773123745.25077,
+    "duration_seconds": 17.76,
+    "total_events": 1,
+    "events": [
+        {
+            "timestamp": 1773123740.9413667,
+            "student_id": "S022",
+            "event_type": "BODY_LEANING",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        }
+    ],
+    "summary": {
+        "S022": {
+            "total_events": 1,
+            "final_risk_score": 2.54,
+            "final_risk_level": "NORMAL"
+        }
+    }
+}

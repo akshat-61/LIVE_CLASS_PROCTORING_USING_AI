@@ -1,0 +1,29 @@
+{
+    "session_start": 1772693423.4348683,
+    "session_end": 1772693494.9044464,
+    "duration_seconds": 71.47,
+    "total_events": 2,
+    "events": [
+        {
+            "timestamp": 1772693479.205467,
+            "student_id": "S001",
+            "event_type": "LOOKING_LEFT",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1772693485.5264032,
+            "student_id": "S001",
+            "event_type": "LOOKING_LEFT",
+            "risk_score": 1.3999999999999995,
+            "risk_level": "NORMAL"
+        }
+    ],
+    "summary": {
+        "S001": {
+            "total_events": 2,
+            "final_risk_score": 2.32,
+            "final_risk_level": "NORMAL"
+        }
+    }
+}

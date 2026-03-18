@@ -1,0 +1,74 @@
+{
+    "session_start": 1773046380.8643486,
+    "session_end": 1773046395.2115088,
+    "duration_seconds": 14.35,
+    "total_events": 7,
+    "events": [
+        {
+            "timestamp": 1773046385.5518568,
+            "student_id": "S001",
+            "event_type": "LOOKING_LEFT",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773046385.5611734,
+            "student_id": "S???",
+            "event_type": "LOOKING_LEFT",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773046389.5713317,
+            "student_id": "S001",
+            "event_type": "LOOKING_LEFT",
+            "risk_score": 1.4599999999999995,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773046389.5762358,
+            "student_id": "S???",
+            "event_type": "LOOKING_LEFT",
+            "risk_score": 1.4599999999999995,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773046391.5867908,
+            "student_id": "Unknown",
+            "event_type": "LOOKING_RIGHT",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773046393.677771,
+            "student_id": "S001",
+            "event_type": "LOOKING_LEFT",
+            "risk_score": 2.879999999999999,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773046393.682232,
+            "student_id": "S???",
+            "event_type": "LOOKING_LEFT",
+            "risk_score": 2.879999999999999,
+            "risk_level": "NORMAL"
+        }
+    ],
+    "summary": {
+        "S001": {
+            "total_events": 3,
+            "final_risk_score": 4.66,
+            "final_risk_level": "NORMAL"
+        },
+        "S???": {
+            "total_events": 3,
+            "final_risk_score": 4.66,
+            "final_risk_level": "NORMAL"
+        },
+        "Unknown": {
+            "total_events": 1,
+            "final_risk_score": 1.46,
+            "final_risk_level": "NORMAL"
+        }
+    }
+}

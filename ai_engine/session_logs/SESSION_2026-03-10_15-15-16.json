@@ -1,0 +1,62 @@
+{
+    "session_start": 1773135916.70787,
+    "session_end": 1773135950.613254,
+    "duration_seconds": 33.91,
+    "total_events": 6,
+    "events": [
+        {
+            "timestamp": 1773135941.088155,
+            "student_id": "S009",
+            "event_type": "LOOKING_LEFT",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773135941.9284778,
+            "student_id": "S009",
+            "event_type": "BODY_LEANING",
+            "risk_score": 1.9,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773135946.357215,
+            "student_id": "S017",
+            "event_type": "LOOKING_LEFT",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773135947.8230622,
+            "student_id": "S017",
+            "event_type": "LOOKING_LEFT",
+            "risk_score": 1.8199999999999998,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773135949.2245488,
+            "student_id": "S017",
+            "event_type": "LOOKING_LEFT",
+            "risk_score": 1.6399999999999997,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773135949.2245626,
+            "student_id": "S017",
+            "event_type": "BURST_ACTIVITY",
+            "risk_score": 8.64,
+            "risk_level": "NORMAL"
+        }
+    ],
+    "summary": {
+        "S009": {
+            "total_events": 2,
+            "final_risk_score": 0.8,
+            "final_risk_level": "NORMAL"
+        },
+        "S017": {
+            "total_events": 4,
+            "final_risk_score": 8.46,
+            "final_risk_level": "LOW"
+        }
+    }
+}

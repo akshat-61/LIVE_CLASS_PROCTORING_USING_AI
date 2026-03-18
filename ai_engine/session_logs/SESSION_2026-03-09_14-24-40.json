@@ -1,0 +1,62 @@
+{
+    "session_start": 1773046480.0892475,
+    "session_end": 1773046491.8764226,
+    "duration_seconds": 11.79,
+    "total_events": 6,
+    "events": [
+        {
+            "timestamp": 1773046483.0689325,
+            "student_id": "S???",
+            "event_type": "LOOKING_LEFT",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773046483.074215,
+            "student_id": "S001",
+            "event_type": "LOOKING_LEFT",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773046487.0773602,
+            "student_id": "S???",
+            "event_type": "LOOKING_LEFT",
+            "risk_score": 1.2999999999999994,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773046487.0829663,
+            "student_id": "S001",
+            "event_type": "LOOKING_LEFT",
+            "risk_score": 1.2999999999999994,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773046491.1065252,
+            "student_id": "S???",
+            "event_type": "LOOKING_LEFT",
+            "risk_score": 2.5799999999999987,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773046491.1113343,
+            "student_id": "S001",
+            "event_type": "LOOKING_LEFT",
+            "risk_score": 2.5799999999999987,
+            "risk_level": "NORMAL"
+        }
+    ],
+    "summary": {
+        "S???": {
+            "total_events": 3,
+            "final_risk_score": 4.44,
+            "final_risk_level": "NORMAL"
+        },
+        "S001": {
+            "total_events": 3,
+            "final_risk_score": 4.44,
+            "final_risk_level": "NORMAL"
+        }
+    }
+}

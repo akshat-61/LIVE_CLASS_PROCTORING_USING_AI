@@ -1,0 +1,78 @@
+{
+    "session_start": 1772792343.365535,
+    "session_end": 1772792671.094464,
+    "duration_seconds": 327.73,
+    "total_events": 9,
+    "events": [
+        {
+            "timestamp": 1772792526.371167,
+            "student_id": "S001",
+            "event_type": "BODY_LEANING",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1772792536.2763321,
+            "student_id": "S001",
+            "event_type": "BODY_LEANING",
+            "risk_score": 2.3399999999999994,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1772792540.2636812,
+            "student_id": "S001",
+            "event_type": "BODY_LEANING",
+            "risk_score": 5.100000000000005,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1772792544.2829435,
+            "student_id": "S001",
+            "event_type": "BODY_LEANING",
+            "risk_score": 7.800000000000011,
+            "risk_level": "LOW"
+        },
+        {
+            "timestamp": 1772792592.783869,
+            "student_id": "S001",
+            "event_type": "LOOKING_LEFT",
+            "risk_score": 7.60000000000008,
+            "risk_level": "LOW"
+        },
+        {
+            "timestamp": 1772792617.7763011,
+            "student_id": "S001",
+            "event_type": "LOOKING_LEFT",
+            "risk_score": 7.920000000000115,
+            "risk_level": "LOW"
+        },
+        {
+            "timestamp": 1772792637.0565863,
+            "student_id": "S001",
+            "event_type": "LOOKING_LEFT",
+            "risk_score": 8.660000000000142,
+            "risk_level": "LOW"
+        },
+        {
+            "timestamp": 1772792646.007676,
+            "student_id": "S001",
+            "event_type": "LOOKING_LEFT",
+            "risk_score": 10.060000000000155,
+            "risk_level": "LOW"
+        },
+        {
+            "timestamp": 1772792649.5722232,
+            "student_id": "S001",
+            "event_type": "LOOKING_LEFT",
+            "risk_score": 11.82000000000016,
+            "risk_level": "LOW"
+        }
+    ],
+    "summary": {
+        "S001": {
+            "total_events": 9,
+            "final_risk_score": 12.5,
+            "final_risk_level": "LOW"
+        }
+    }
+}

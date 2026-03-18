@@ -1,0 +1,76 @@
+{
+    "session_start": 1773036228.3721058,
+    "session_end": 1773036541.5228007,
+    "duration_seconds": 313.15,
+    "total_events": 8,
+    "events": [
+        {
+            "timestamp": 1773036351.912845,
+            "student_id": "Unknown",
+            "event_type": "LOOKING_RIGHT",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773036355.9643238,
+            "student_id": "Unknown",
+            "event_type": "LOOKING_RIGHT",
+            "risk_score": 1.6399999999999997,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773036418.116856,
+            "student_id": "Unknown",
+            "event_type": "LOOKING_RIGHT",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773036422.5403962,
+            "student_id": "Unknown",
+            "event_type": "LOOKING_RIGHT",
+            "risk_score": 1.6999999999999997,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773036426.0098572,
+            "student_id": "S001",
+            "event_type": "LOOKING_LEFT",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773036474.2198482,
+            "student_id": "Unknown",
+            "event_type": "LOOKING_RIGHT",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773036516.4137084,
+            "student_id": "S001",
+            "event_type": "BODY_LEANING",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773036532.563737,
+            "student_id": "Unknown",
+            "event_type": "LOOKING_LEFT",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        }
+    ],
+    "summary": {
+        "Unknown": {
+            "total_events": 6,
+            "final_risk_score": 1.38,
+            "final_risk_level": "NORMAL"
+        },
+        "S001": {
+            "total_events": 2,
+            "final_risk_score": 1.28,
+            "final_risk_level": "NORMAL"
+        }
+    }
+}

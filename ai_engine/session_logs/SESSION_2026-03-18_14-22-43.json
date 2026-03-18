@@ -1,0 +1,157 @@
+{
+    "session_start": 1773823963.0629594,
+    "session_end": 1773824328.7874448,
+    "duration_seconds": 365.72,
+    "total_events": 16,
+    "events": [
+        {
+            "timestamp": 1773824129.3597314,
+            "student_id": "S018",
+            "event_type": "CALCULATOR_DETECTED",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773824133.686209,
+            "student_id": "S002",
+            "event_type": "PASSING_OBJECT",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773824133.686214,
+            "student_id": "S006",
+            "event_type": "PASSING_OBJECT",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773824134.0073142,
+            "student_id": "S002",
+            "event_type": "PASSING_OBJECT",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773824134.0073218,
+            "student_id": "S018",
+            "event_type": "PASSING_OBJECT",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773824181.4476957,
+            "student_id": "S017",
+            "event_type": "CALCULATOR_DETECTED",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773824190.61159,
+            "student_id": "S010",
+            "event_type": "BODY_LEANING",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773824205.776484,
+            "student_id": "S010",
+            "event_type": "BODY_LEANING",
+            "risk_score": 1.1799999999999984,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773824292.331301,
+            "student_id": "S007",
+            "event_type": "PASSING_OBJECT",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773824292.3313065,
+            "student_id": "S009",
+            "event_type": "PASSING_OBJECT",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773824292.762447,
+            "student_id": "S007",
+            "event_type": "PASSING_OBJECT",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773824292.7624521,
+            "student_id": "S006",
+            "event_type": "PASSING_OBJECT",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773824296.9939423,
+            "student_id": "S002",
+            "event_type": "PASSING_OBJECT",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773824296.9939482,
+            "student_id": "S007",
+            "event_type": "PASSING_OBJECT",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773824322.7938507,
+            "student_id": "S018",
+            "event_type": "PASSING_OBJECT",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773824322.7938569,
+            "student_id": "S006",
+            "event_type": "PASSING_OBJECT",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        }
+    ],
+    "summary": {
+        "S018": {
+            "total_events": 3,
+            "final_risk_score": 0.0,
+            "final_risk_level": "NORMAL"
+        },
+        "S002": {
+            "total_events": 3,
+            "final_risk_score": 0.0,
+            "final_risk_level": "NORMAL"
+        },
+        "S006": {
+            "total_events": 3,
+            "final_risk_score": 0.0,
+            "final_risk_level": "NORMAL"
+        },
+        "S017": {
+            "total_events": 1,
+            "final_risk_score": 0.0,
+            "final_risk_level": "NORMAL"
+        },
+        "S010": {
+            "total_events": 2,
+            "final_risk_score": 0.0,
+            "final_risk_level": "NORMAL"
+        },
+        "S007": {
+            "total_events": 3,
+            "final_risk_score": 0.0,
+            "final_risk_level": "NORMAL"
+        },
+        "S009": {
+            "total_events": 1,
+            "final_risk_score": 0.0,
+            "final_risk_level": "NORMAL"
+        }
+    }
+}

@@ -1,0 +1,140 @@
+{
+    "session_start": 1773209351.7076674,
+    "session_end": 1773209402.481007,
+    "duration_seconds": 50.77,
+    "total_events": 15,
+    "events": [
+        {
+            "timestamp": 1773209363.6538432,
+            "student_id": "S017",
+            "event_type": "BODY_LEANING",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773209370.850646,
+            "student_id": "S027",
+            "event_type": "PASSING_OBJECT",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773209370.8506503,
+            "student_id": "S021",
+            "event_type": "PASSING_OBJECT",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773209376.2845287,
+            "student_id": "S021",
+            "event_type": "BODY_LEANING",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773209378.3713906,
+            "student_id": "S021",
+            "event_type": "BODY_LEANING",
+            "risk_score": 2.8,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773209379.7798882,
+            "student_id": "S028",
+            "event_type": "BODY_LEANING",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773209380.7537525,
+            "student_id": "S016",
+            "event_type": "BODY_LEANING",
+            "risk_score": 0.0,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773209382.0651531,
+            "student_id": "S016",
+            "event_type": "BODY_LEANING",
+            "risk_score": 2.9,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773209383.0745275,
+            "student_id": "S016",
+            "event_type": "BODY_LEANING",
+            "risk_score": 2.82,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773209383.0745566,
+            "student_id": "S016",
+            "event_type": "BURST_ACTIVITY",
+            "risk_score": 10.82,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773209386.0715158,
+            "student_id": "S028",
+            "event_type": "BODY_LEANING",
+            "risk_score": 2.4999999999999996,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773209387.4863858,
+            "student_id": "S028",
+            "event_type": "BODY_LEANING",
+            "risk_score": 5.380000000000003,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773209388.5660367,
+            "student_id": "S028",
+            "event_type": "BODY_LEANING",
+            "risk_score": 5.300000000000004,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773209388.5660522,
+            "student_id": "S028",
+            "event_type": "BURST_ACTIVITY",
+            "risk_score": 13.300000000000004,
+            "risk_level": "NORMAL"
+        },
+        {
+            "timestamp": 1773209395.4096906,
+            "student_id": "S016",
+            "event_type": "BODY_LEANING",
+            "risk_score": 9.86000000000002,
+            "risk_level": "LOW"
+        }
+    ],
+    "summary": {
+        "S017": {
+            "total_events": 1,
+            "final_risk_score": 0.0,
+            "final_risk_level": "NORMAL"
+        },
+        "S027": {
+            "total_events": 1,
+            "final_risk_score": 0.0,
+            "final_risk_level": "NORMAL"
+        },
+        "S021": {
+            "total_events": 3,
+            "final_risk_score": 3.9,
+            "final_risk_level": "NORMAL"
+        },
+        "S028": {
+            "total_events": 5,
+            "final_risk_score": 12.24,
+            "final_risk_level": "LOW"
+        },
+        "S016": {
+            "total_events": 5,
+            "final_risk_score": 12.32,
+            "final_risk_level": "LOW"
+        }
+    }
+}
