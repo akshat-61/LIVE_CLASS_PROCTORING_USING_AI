@@ -1,0 +1,170 @@
+# ============================================================
+#  AI Proctoring System — Central Configuration
+# ============================================================
+
+system:
+  exam_id:   "EXAM_001"
+  room_id:   "ROOM_A"
+  alert_url: "http://localhost:8080/api/proctoring/alert"
+
+paths:
+  model_dir:      "models/production"
+  log_dir:        "logs"
+  evidence_dir:   "evidence"
+  output_dir:     "evidence_output"
+  annotated_dir:  "annotated"
+  frames_dir:     "frames"
+  session_logs:   "session_logs"
+  profiles:       "student_profiles.json"
+
+models:
+  person:   "person_model.pt"
+  gesture:  "gesture_model.pt"
+  object:   "object_model.pt"
+  idcard:   "id_model.pt"
+  coco:     "yolov8n.pt"
+
+inference:
+  ai_frame_size:         [480, 360]
+  custom_conf_threshold: 0.45
+  coco_conf_threshold:   0.45
+  gesture_conf_threshold: 0.55
+  idcard_conf_threshold: 0.72
+  phone_class_id:        67
+  phone_conf_threshold:  0.20
+  phone_min_area:        120
+  phone_max_area:        18000
+  phone_proximity_dist:  220
+  frame_mod_base:        1
+  gesture_frame_mod:     2
+  yolo_frame_mod:        2
+  stability_frames:      20
+  settle_frames:         8
+  face_match_radius:     120
+  object_class_conf:
+    calculator: 0.55
+    paper:      0.70
+    person:     0.99
+
+seat_zones:
+  zone_radius:           28      # visual only — not used for occupancy logic
+  vacancy_frames:        300     # frames of sustained absence before SEAT_VACATED fires
+  vacancy_grace_frames:  20      # consecutive empty frames before counter climbs
+  max_vacancy_dist:      100     # Voronoi assignment radius (px)
+  vacancy_cooldown:      30.0    # seconds between SEAT_VACATED alerts per student
+  post_lock_settle:      90      # frames after lock before vacancy counting starts
+  proximity_only_dist:   40      # wrist distance for STUDENTS_TOO_CLOSE
+  proximity_confirm_frames: 12
+  min_seat_pair_dist:    80
+  invigilator_height_ratio: 1.35 # bbox height ratio to classify as non-student
+
+reacquire:
+  dist:             70    # stricter than max_vacancy_dist
+  cooldown_frames:  45    # per-SID reacquire cooldown
+
+gaze:
+  left_threshold:   0.42
+  right_threshold:  0.58
+  head_left:        0.38
+  head_right:       0.62
+
+lean:
+  threshold:  0.8
+  confirm_frames: 6
+  cooldown:   20.0        # seconds between BODY_LEANING alerts per student
+
+mouth:
+  mar_variation_threshold: 0.004
+  hard_mar_threshold:      0.18
+  talk_frames:             3
+  window_size:             5
+  talk_counter_increment:  2.0
+  talk_counter_decay:      1.5
+
+hands:
+  hand_mouth_dist:      80
+  hand_face_dist:       120
+  palm_write_dist:      60
+  write_motion_frames:  3
+  hand_confirm_frames:  1
+  pass_dist_threshold:  75
+  pass_cooldown:        15.0    # seconds
+  write_palm_cooldown:  15.0    # seconds
+  signal_confirm_frames: 3
+  gesture_face_overlap_radius: 80
+  wrist_below_face_min_px:     20
+
+alerts:
+  cooldown_sec:         1       # default can_send cooldown
+  face_absent_threshold: 30     # frames before FACE_ABSENT fires
+  face_absent_cooldown: 20.0
+
+intelligence:
+  # Eye movement — sustained gaze before alert
+  gaze_sustained_frames:  30
+  gaze_cooldown:          10.0
+  # Multi-person
+  multi_person_cooldown:  15.0
+  # Phone persistence
+  phone_persist_frames:   45
+  phone_persist_cooldown: 20.0
+
+metrics:
+  window_size: 90   # rolling window frames for room-level rates
+  anomaly_thresholds:
+    lookaway_rate:        0.45
+    hand_activity_rate:   0.60
+    gesture_rate:         0.20
+    phone_presence_rate:  0.08
+    multiple_people_rate: 0.05
+  anomaly_cooldown: 15.0
+
+calculator:
+  persist_window:   60     # frames
+  persist_rate:     0.20   # fraction of window that must be detected
+  persist_cooldown: 60.0
+
+classifier:
+  window_seconds:   60
+  thresholds:
+    suspicious: 25
+    cheating:   60
+  feature_weights:
+    LOOKING_LEFT:          2
+    LOOKING_RIGHT:         2
+    LOOKING_DOWN:          3
+    BODY_LEANING:          4
+    HANDS_ON_FACE:         3
+    TALKING_DETECTED:      5
+    WHISPERING_DETECTED:   8
+    PHONE_DETECTED:        12
+    LOOKING_AT_PHONE:      10
+    CALCULATOR_DETECTED:   15
+    PASSING_OBJECT:        20
+    WRITING_ON_PALM:       18
+    SEAT_VACATED:          6
+    BEHAVIOR_ANOMALY:      4
+    FACE_ABSENT:           5
+    MULTIPLE_PERSONS:      10
+    EYE_MOVEMENT:          3
+  ml:
+    model_path:   "models/classifier/cheating_clf.pkl"
+    retrain_min_samples: 50
+
+report:
+  pdf_title:          "AI Proctoring — Exam Session Report"
+  logo_path:          ""          # leave empty to skip logo
+  include_evidence:   true
+  max_evidence_images: 3          # per student in report
+  risk_thresholds:
+    low:      5
+    medium:   15
+    high:     40
+    critical: 80
+
+logging:
+  level:        "INFO"           # DEBUG / INFO / WARNING / ERROR
+  console:      true
+  file:         true
+  max_bytes:    10485760         # 10 MB per log file
+  backup_count: 5
