@@ -22,6 +22,13 @@ import threading
 from concurrent.futures import ThreadPoolExecutor
 import torch
 frame_queue = Queue(maxsize=120)
+from core.event_manager import EventManager
+from tracking.student_state import StudentState
+from output.evidence_manager import EvidenceManager
+
+event_manager = EventManager()
+student_state = StudentState()
+evidence_manager = EvidenceManager()
 
 _YOLO_WORKERS = 3
 _MP_WORKERS   = 3
@@ -307,7 +314,11 @@ def reset_session():
     calc_seen_window             = {}
     _median_student_bbox_h       = 0.0  
     _invigilator_tids            = set()
+    event_manager.reset()
+    student_state.reset()
+    evidence_manager.reset()
     print("[AI] Session reset complete.")
+
 
 
 def save_evidence(frame, student_id, event):
@@ -334,9 +345,10 @@ def save_evidence(frame, student_id, event):
         except Exception:
             print(f"[EvidenceWriter] ⚠️  Queue full — dropped {event} ({student_id})")
 
+    evidence_manager.capture(frame, student_id, event)
+
     print(f"📸 Evidence queued → {ssd_path}")
     return ssd_path
-
 
 def _now():
     return time.time()
@@ -1022,6 +1034,16 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
 
     if len(current_ids) == 0:
         last_coco_results = None
+    
+    for tid in current_ids:
+        sid = student_id_map.get(tid)
+        if sid:
+            student_state.update(
+                sid,
+                face_present=True,
+                position=current_positions.get(tid),
+                gaze=gaze_history.get(sid)
+            )
 
     if gesture_results is not None and gesture_results.boxes is not None:
         face_centers_for_gesture = get_all_face_centers(last_face_landmarks, iw, ih)
@@ -1384,6 +1406,8 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
                     if can_send(f"phone_{sid}"):
                         save_evidence(frame, sid, "PHONE_DETECTED")
                         learner.register_event(sid, "PHONE_DETECTED")
+                        event = event_manager.emit(sid, "PHONE_DETECTED", 0.9)
+                        student_state.add_event(sid, event)
                         logger.log_event(
                             student_id=sid,
                             event="PHONE_DETECTED",
@@ -1631,6 +1655,15 @@ def process_video(cap, out):
             break
         processed = run_ai_on_frame(frame)
         out.write(processed)
+
+def get_all_events():
+    return event_manager.get_all_events()
+
+def get_all_states():
+    return student_state.get_all()
+
+def get_all_evidence():
+    return evidence_manager.get_all_evidence()
 
 
 def shutdown():
