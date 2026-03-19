@@ -151,3 +151,6 @@ def run_ai_on_frame(frame):
         )
 
     return annotated
+
+def shutdown():
+    print("[INFO] Pose detector shut down")
