@@ -452,22 +452,20 @@ def write_report(
 
 # ─── Main ──────────────────────────────────────────────────────────────────────
 
-def process_video(
-    video_path   : str,
-    exam_id      : str  = None,
-    room_id      : str  = None,
-    show_preview : bool = True,
-):
+def process_video(video_path, exam_id=None, room_id=None, show_preview=True):
     if not os.path.exists(video_path):
         print(f"[ERROR] File not found: {video_path}")
         sys.exit(1)
 
     t_total = time.time()
 
-    # ── Import and patch ai_engine ────────────────────────────────────────
     import ai_engine as ae
-    if exam_id: ae.EXAM_ID = exam_id
-    if room_id: ae.ROOM_ID = room_id
+
+    if exam_id:
+        ae.EXAM_ID = exam_id
+    if room_id:
+        ae.ROOM_ID = room_id
+
     ae.send_event_async = make_patched_sender(ae)
     ae.reset_session()
 

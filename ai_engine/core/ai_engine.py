@@ -131,11 +131,9 @@ PHONE_CLASS_ID           = 67
 PHONE_MIN_AREA           = 120
 PHONE_MAX_AREA           = 18000
 PHONE_MAX_AREA_OCCUPIED  = 18000
-PHONE_CONF_THRESHOLD     = 0.20
 PHONE_PROXIMITY_DIST     = 220
 PHONE_PROXIMITY_MIN_DIST = 15
 CUSTOM_CONF_THRESHOLD    = 0.45
-AI_FRAME_SIZE            = (480, 360)
 COCO_CONF_THRESHOLD      = 0.45
 STABILITY_FRAMES         = 20
 ALERT_COOLDOWN_SEC       = 1
@@ -170,7 +168,6 @@ PROXIMITY_ONLY_DIST      = 40
 PROXIMITY_CONFIRM_FRAMES = 12
 SEAT_VACANCY_COOLDOWN    = 30.0
 MIN_SEAT_PAIR_DIST       = 80
-GAZE_LEFT_THRESHOLD      = 0.42
 GAZE_RIGHT_THRESHOLD     = 0.58
 
 CALC_PERSIST_WINDOW      = 60
@@ -179,6 +176,9 @@ CALC_PERSIST_COOLDOWN    = 60.0
 
 SEAT_ASSIGN_MARGIN       = 35
 SEAT_ASSIGN_ABS_CAP      = 65
+PHONE_CONF_THRESHOLD = config.get("thresholds", "phone_conf")
+GAZE_LEFT_THRESHOLD = config.get("thresholds", "gaze_left")
+AI_FRAME_SIZE = tuple(config.get("system", "frame_size"))
 
 INVIGILATOR_HEIGHT_RATIO = 1.35
 _median_student_bbox_h: float = 0.0
@@ -1743,7 +1743,7 @@ def process_video(cap, out):
             break
         processed = run_ai_on_frame(frame)
         out.write(processed)
-        
+
 def generate_final_report():
     path = report_generator.generate(
         event_manager=event_manager,
