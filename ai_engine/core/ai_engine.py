@@ -22,17 +22,19 @@ from core.event_manager import EventManager
 from tracking.student_state import StudentState
 from output.evidence_manager import EvidenceManager
 from detection.intelligence_layer import IntelligenceLayer
+from classification.cheating_classifier import CheatingClassifier
+from output.report_generator import ReportGenerator
+
 
 log = logging.getLogger(__name__)
-
+classifier = CheatingClassifier()
 logger = AlertLogger()
 collector = FeatureCollector()
 metrics_engine = MetricsEngine(window_size=90)
 anomaly_detector = AnomalyDetector()
 score_engine = CheatingScore()
-
+report_generator = ReportGenerator()
 frame_queue = Queue(maxsize=120)
-
 event_manager = EventManager()
 student_state = StudentState()
 evidence_manager = EvidenceManager()
@@ -1637,6 +1639,34 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
         ev = event_manager.emit(sid, etype, conf)
         student_state.add_event(sid, ev)
 
+    classification_results = {}
+
+    for sid in student_id_map.values():
+        events = event_manager.get_recent_events(sid, 60)
+        result = classifier.classify(sid, events)
+
+        classification_results[sid] = result
+
+        if sid in current_positions:
+            x, y = current_positions[
+                next(t for t in student_id_map if student_id_map[t] == sid)
+            ]
+
+            color = (0, 255, 0)
+            if result["label"] == "SUSPICIOUS":
+                color = (0, 255, 255)
+            elif result["label"] == "CHEATING":
+                color = (0, 0, 255)
+
+            cv2.putText(
+                frame,
+                f'{result["label"]} ({result["score"]})',
+                (x, y + 50),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                0.5,
+                color,
+                2
+            )
 
     metrics = metrics_engine.update(features)
 
@@ -1713,6 +1743,15 @@ def process_video(cap, out):
             break
         processed = run_ai_on_frame(frame)
         out.write(processed)
+        
+def generate_final_report():
+    path = report_generator.generate(
+        event_manager=event_manager,
+        student_state=student_state,
+        classifier=classifier,
+        evidence_manager=evidence_manager
+    )
+    log.info("Final Report: %s", path)
 
 def get_all_events():
     return event_manager.get_all_events()
