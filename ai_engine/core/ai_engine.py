@@ -2,47 +2,52 @@ import cv2
 import numpy as np
 import time
 import requests
+import logging
 import threading
+import os
+import torch
 from ultralytics import YOLO
 import mediapipe as mp
 from adaptive_learning import AdaptiveLearner
 from alert_logger import AlertLogger
-logger = AlertLogger()
 from feature_collector import FeatureCollector
-collector = FeatureCollector()
 from metrics_engine import MetricsEngine
 from anomaly_detector import AnomalyDetector
-metrics_engine = MetricsEngine(window_size=90)
-anomaly_detector = AnomalyDetector()
 from model_loader import load_models
 from cheating_score import CheatingScore
-score_engine = CheatingScore()
 from queue import Queue, Empty
-import threading
 from concurrent.futures import ThreadPoolExecutor
-import torch
-frame_queue = Queue(maxsize=120)
+from collections import deque as _deque
 from core.event_manager import EventManager
 from tracking.student_state import StudentState
 from output.evidence_manager import EvidenceManager
+from detection.intelligence_layer import IntelligenceLayer
+
+log = logging.getLogger(__name__)
+
+logger = AlertLogger()
+collector = FeatureCollector()
+metrics_engine = MetricsEngine(window_size=90)
+anomaly_detector = AnomalyDetector()
+score_engine = CheatingScore()
+
+frame_queue = Queue(maxsize=120)
 
 event_manager = EventManager()
 student_state = StudentState()
 evidence_manager = EvidenceManager()
+intel = IntelligenceLayer()
 
 _YOLO_WORKERS = 3
 _MP_WORKERS   = 3
 _yolo_pool    = ThreadPoolExecutor(max_workers=_YOLO_WORKERS, thread_name_prefix="yolo")
 _mp_pool      = ThreadPoolExecutor(max_workers=_MP_WORKERS,   thread_name_prefix="mp")
 
-import os as _os
-_logical_cores    = _os.cpu_count() or 4
+_logical_cores    = os.cpu_count() or 4
 _torch_threads    = max(1, min(4, _logical_cores // _YOLO_WORKERS))
 torch.set_num_threads(_torch_threads)
-print(f"[ParallelAI] torch threads per worker: {_torch_threads}  "
-      f"(logical cores: {_logical_cores})")
+log.info("torch threads per worker: %d  (logical cores: %d)", _torch_threads, _logical_cores)
 
-import os
 os.makedirs("evidence", exist_ok=True)
 
 _RAM_DISK      = "/dev/shm/proctoring_evidence"
@@ -83,7 +88,7 @@ def _evidence_writer_loop():
                 shutil.move(src_path, dst_path)
 
         except Exception as e:
-            print(f"[EvidenceWriter] ❌ Error: {e}")
+            log.error("EvidenceWriter error: %s", e)
         finally:
             _evidence_queue.task_done()
 
@@ -102,7 +107,7 @@ MODEL_DIR          = "/home/tx0978/Documents/classroom-proctoring/ai-engine/mode
 BASE_DIR           = "/home/tx0978/Documents/classroom-proctoring/ai-engine"
 PERSON_MODEL_PATH  = f"{MODEL_DIR}/person_model.pt"
 GESTURE_MODEL_PATH = f"{MODEL_DIR}/gesture_model.pt"
-OBJECT_MODEL_PATH  = f"{MODEL_DIR}/object_model.pt"   
+OBJECT_MODEL_PATH  = f"{MODEL_DIR}/object_model.pt"
 IDCARD_MODEL_PATH  = f"{MODEL_DIR}/id_model.pt"
 COCO_MODEL_PATH    = "yolov8n.pt"
 
@@ -113,9 +118,9 @@ ROOM_ID      = "ROOM_A"
 CUSTOM_CLASS = {"PERSON": 0}
 
 OBJECT_CLASS_CONF = {
-    "calculator": 0.55,   
-    "paper":      0.70,   
-    "person":     0.99,   
+    "calculator": 0.55,
+    "paper":      0.70,
+    "person":     0.99,
 }
 
 INFERENCE_SKIP           = 2
@@ -154,28 +159,28 @@ WRITE_MOTION_FRAMES      = 3
 HAND_CONFIRM_FRAMES      = 1
 PASS_DIST_THRESHOLD      = 75
 SIGNAL_CONFIRM_FRAMES    = 3
-SEAT_ZONE_RADIUS         = 28   
-SEAT_VACANCY_FRAMES      = 450  
-VACANCY_GRACE_FRAMES     = 45   
-MAX_VACANCY_DIST         = 100  
-POST_LOCK_SETTLE_FRAMES  = 150  
+SEAT_ZONE_RADIUS         = 28
+SEAT_VACANCY_FRAMES      = 450
+VACANCY_GRACE_FRAMES     = 45
+MAX_VACANCY_DIST         = 100
+POST_LOCK_SETTLE_FRAMES  = 150
 PROXIMITY_ONLY_DIST      = 40
 PROXIMITY_CONFIRM_FRAMES = 12
 SEAT_VACANCY_COOLDOWN    = 30.0
 MIN_SEAT_PAIR_DIST       = 80
-GAZE_LEFT_THRESHOLD      = 0.42 
-GAZE_RIGHT_THRESHOLD     = 0.58 
+GAZE_LEFT_THRESHOLD      = 0.42
+GAZE_RIGHT_THRESHOLD     = 0.58
 
-CALC_PERSIST_WINDOW      = 60    
-CALC_PERSIST_RATE        = 0.20  
-CALC_PERSIST_COOLDOWN    = 60.0  
+CALC_PERSIST_WINDOW      = 60
+CALC_PERSIST_RATE        = 0.20
+CALC_PERSIST_COOLDOWN    = 60.0
 
 SEAT_ASSIGN_MARGIN       = 35
 SEAT_ASSIGN_ABS_CAP      = 65
 
 INVIGILATOR_HEIGHT_RATIO = 1.35
 _median_student_bbox_h: float = 0.0
-_invigilator_tids: set = set()     
+_invigilator_tids: set = set()
 
 FRAME_MOD_BASE    = 1
 GESTURE_FRAME_MOD = 2
@@ -191,14 +196,14 @@ WRIST_BELOW_FACE_MIN_PX     = 20
 
 _lean_smooth: dict = {}
 
-print("=" * 55)
-print("  AI Proctoring System — Loading Models")
-print("=" * 55)
+log.info("=" * 55)
+log.info("  AI Proctoring System — Loading Models")
+log.info("=" * 55)
 
 person_model, gesture_model, object_model, idcard_model = load_models()
 
 coco_model = YOLO(COCO_MODEL_PATH)
-print("✅ COCO model loaded.")
+log.info("COCO model loaded.")
 
 mp_face_mesh = mp.solutions.face_mesh
 face_mesh = mp_face_mesh.FaceMesh(
@@ -220,8 +225,8 @@ hand_detector = mp_hands.Hands(
     min_detection_confidence=0.5,
     min_tracking_confidence=0.4,
 )
-print("✅ MediaPipe loaded.")
-print("=" * 55)
+log.info("MediaPipe loaded.")
+log.info("=" * 55)
 
 last_custom_results   = None
 last_coco_results     = None
@@ -232,6 +237,7 @@ last_alert_time       = {}
 mouth_counters        = {}
 mar_history           = {}
 gaze_history          = {}
+head_ratio_history    = {}
 frame_count           = 0
 last_face_landmarks   = []
 last_talking_students = set()
@@ -239,7 +245,7 @@ hand_mouth_counters   = {}
 hand_face_counters    = {}
 write_palm_counters   = {}
 write_tip_history     = {}
-_wrist_prev_positions: dict = {}  
+_wrist_prev_positions: dict = {}
 signaling_counters    = {}
 phone_counters        = {}
 seat_positions        = {}
@@ -258,7 +264,6 @@ _SETTLE_FRAMES: int = 8
 _prev_gray: np.ndarray | None = None
 _motion_burst_counter: int    = 0
 
-from collections import deque as _deque
 calc_seen_window: dict = {}
 
 
@@ -277,7 +282,8 @@ def reset_session():
     global id_visible_counters
     global _prev_gray, _motion_burst_counter
     global calc_seen_window
-    global _median_student_bbox_h, _invigilator_tids  
+    global _median_student_bbox_h, _invigilator_tids
+    global intel
 
     locked                       = False
     stable_counter               = 0
@@ -299,7 +305,7 @@ def reset_session():
     hand_face_counters           = {}
     write_palm_counters          = {}
     write_tip_history            = {}
-    _wrist_prev_positions        = {}   
+    _wrist_prev_positions        = {}
     signaling_counters           = {}
     phone_counters               = {}
     seat_positions               = {}
@@ -312,13 +318,13 @@ def reset_session():
     _prev_gray                   = None
     _motion_burst_counter        = 0
     calc_seen_window             = {}
-    _median_student_bbox_h       = 0.0  
+    _median_student_bbox_h       = 0.0
     _invigilator_tids            = set()
     event_manager.reset()
     student_state.reset()
     evidence_manager.reset()
-    print("[AI] Session reset complete.")
-
+    intel.reset()
+    log.info("Session reset complete.")
 
 
 def save_evidence(frame, student_id, event):
@@ -338,16 +344,14 @@ def save_evidence(frame, student_id, event):
             try:
                 _evidence_queue.put_nowait(("write", ssd_folder, ssd_path, frame_copy, 85))
             except Exception:
-                print(f"[EvidenceWriter] ⚠️  Queue full — dropped {event} ({student_id})")
+                log.warning("EvidenceWriter queue full — dropped %s (%s)", event, student_id)
     else:
         try:
             _evidence_queue.put_nowait(("write", ssd_folder, ssd_path, frame_copy, 85))
         except Exception:
-            print(f"[EvidenceWriter] ⚠️  Queue full — dropped {event} ({student_id})")
+            log.warning("EvidenceWriter queue full — dropped %s (%s)", event, student_id)
 
-    evidence_manager.capture(frame, student_id, event)
-
-    print(f"📸 Evidence queued → {ssd_path}")
+    log.info("Evidence queued → %s", ssd_path)
     return ssd_path
 
 def _now():
@@ -381,7 +385,7 @@ def send_event_async(event_type, student_id=None, distance=None):
                 "distance": distance,
             }],
         }
-        print(f"  🚨 ALERT → {event_type} | Student: {student_id} | {time.strftime('%H:%M:%S')}")
+        log.info("ALERT → %s | Student: %s | %s", event_type, student_id, time.strftime('%H:%M:%S'))
         try:
             requests.post(ALERT_URL, json=payload, timeout=1)
         except Exception:
@@ -393,7 +397,6 @@ def assign_student_ids(positions):
     return {tid: f"S{i:03d}" for i, (tid, _) in enumerate(sorted_list, 1)}
 
 def get_student_at(x, y, current_positions):
-    
     min_d, found = FACE_MATCH_RADIUS, None
     for tid, pos in current_positions.items():
         d = dist((x, y), pos)
@@ -475,8 +478,8 @@ def get_gaze_direction(landmarks):
     iris_gaze = (left_ratio + right_ratio) / 2
     nose_x    = landmarks[1].x
     head_ratio = (nose_x - left_outer) / (right_outer - left_outer + 1e-6)
-    looking_left  = (iris_gaze  < GAZE_LEFT_THRESHOLD)  or (head_ratio < 0.35)   # FIX 8 (v12): was 0.38
-    looking_right = (iris_gaze  > GAZE_RIGHT_THRESHOLD) or (head_ratio > 0.65)   # FIX 8 (v12): was 0.62
+    looking_left  = (iris_gaze  < GAZE_LEFT_THRESHOLD)  or (head_ratio < 0.35)
+    looking_right = (iris_gaze  > GAZE_RIGHT_THRESHOLD) or (head_ratio > 0.65)
     return iris_gaze, looking_left, looking_right
 
 
@@ -521,7 +524,7 @@ def init_seat_zones(positions):
         sid = student_id_map.get(tid, "S???")
         seat_positions[sid] = pos
 
-    DEDUP_THRESHOLD = 10  
+    DEDUP_THRESHOLD = 10
     dedup_sids = list(seat_positions.keys())
     removed = set()
     for i in range(len(dedup_sids)):
@@ -532,8 +535,8 @@ def init_seat_zones(positions):
                 continue
             d = dist(seat_positions[dedup_sids[i]], seat_positions[dedup_sids[j]])
             if d < DEDUP_THRESHOLD:
-                print(f"⚠ [SeatDedup] {dedup_sids[j]} is {d:.1f}px from {dedup_sids[i]} "
-                      f"— merging into {dedup_sids[i]}")
+                log.warning("SeatDedup: %s is %.1fpx from %s — merging into %s",
+                            dedup_sids[j], d, dedup_sids[i], dedup_sids[i])
                 removed.add(dedup_sids[j])
     for sid in removed:
         del seat_positions[sid]
@@ -552,7 +555,7 @@ def init_seat_zones(positions):
             key  = (min(a, b), max(a, b))
             seat_initial_pair_dists[key] = dist(seat_positions[a], seat_positions[b])
             proximity_counters[key]      = 0
-    print(f"📍 Seat zones locked: {seat_positions}")
+    log.info("Seat zones locked: %s", seat_positions)
 
 def assign_seats_voronoi(current_positions):
     detection_to_seat = {}
@@ -621,7 +624,7 @@ def check_seat_zones(current_positions, frame):
                     send_event_async("STUDENT_RETURNED", sid)
                     score = score_engine.add_event(sid, "STUDENT_RETURNED")
                     if score > 80:
-                        print(f"🚨 CHEATING HIGH RISK: {sid} | score={score}")
+                        log.warning("CHEATING HIGH RISK: %s | score=%s", sid, score)
                 alert = f"STUDENT RETURNED: {sid}"
                 cv2.circle(frame, seat_pos, SEAT_ZONE_RADIUS, (0, 255, 0), 2)
         else:
@@ -651,7 +654,7 @@ def check_seat_zones(current_positions, frame):
                                 send_event_async("SEAT_VACATED", sid)
                                 score = score_engine.add_event(sid, "SEAT_VACATED")
                                 if score > 80:
-                                    print(f"🚨 CHEATING HIGH RISK: {sid} | score={score}")
+                                    log.warning("CHEATING HIGH RISK: %s | score=%s", sid, score)
                             if known_sid:
                                 alert = f"SEAT VACATED: {sid}"
 
@@ -684,7 +687,7 @@ def check_seat_zones(current_positions, frame):
                         send_event_async("STUDENTS_TOO_CLOSE", f"{sid_a}-{sid_b}", distance=int(d))
                         score = score_engine.add_event(sid_a, "STUDENTS_TOO_CLOSE")
                         if score > 80:
-                            print(f"🚨 CHEATING HIGH RISK: {sid_a} | score={score}")
+                            log.warning("CHEATING HIGH RISK: %s | score=%s", sid_a, score)
                     alert = f"STUDENTS TOO CLOSE: {sid_a} & {sid_b}"
                     learner.escalate_if_coordinated(sid_a, sid_b)
             else:
@@ -740,6 +743,8 @@ def process_hands(hand_res, face_landmarks_list, current_positions, iw, ih, fram
                 event = "HANDS_ON_FACE"
                 key   = f"handface_{sid}" if is_talking else f"faceonmouth_{sid}"
                 if can_send(key):
+                    ev = event_manager.emit(sid, "HANDS_ON_FACE", 0.9)
+                    student_state.add_event(sid, ev)
                     logger.log_event(
                         student_id=sid,
                         event="HANDS_ON_FACE",
@@ -749,7 +754,7 @@ def process_hands(hand_res, face_landmarks_list, current_positions, iw, ih, fram
                     send_event_async(event, sid)
                     score = score_engine.add_event(sid, "HANDS_ON_FACE")
                     if score > 80:
-                        print(f"🚨 CHEATING HIGH RISK: {sid} | score={score}")
+                        log.warning("CHEATING HIGH RISK: %s | score=%s", sid, score)
                 if current_alert is None:
                     current_alert = f"HANDS ON FACE: {sid}"
 
@@ -769,6 +774,8 @@ def process_hands(hand_res, face_landmarks_list, current_positions, iw, ih, fram
                     write_palm_counters[sid] = max(0, write_palm_counters.get(sid, 0) - 1)
                 if write_palm_counters.get(sid, 0) >= 6:
                     if can_send(f"writepalm_{sid}", cooldown=15.0):
+                        ev = event_manager.emit(sid, "WRITING_ON_PALM", 0.9)
+                        student_state.add_event(sid, ev)
                         logger.log_event(
                             student_id=sid,
                             event="WRITING_ON_PALM",
@@ -778,7 +785,7 @@ def process_hands(hand_res, face_landmarks_list, current_positions, iw, ih, fram
                         send_event_async("WRITING_ON_PALM", sid)
                         score = score_engine.add_event(sid, "WRITING_ON_PALM")
                         if score > 80:
-                            print(f"🚨 CHEATING HIGH RISK: {sid} | score={score}")
+                            log.warning("CHEATING HIGH RISK: %s | score=%s", sid, score)
                     current_alert = f"WRITING ON PALM: {sid}"
 
     for i, h1 in enumerate(hands_data):
@@ -798,7 +805,7 @@ def process_hands(hand_res, face_landmarks_list, current_positions, iw, ih, fram
                         _wrist_prev_positions[_sid] = _dq(maxlen=5)
                     _wrist_prev_positions[_sid].append(_wrist)
 
-                _wrists_moving = True  
+                _wrists_moving = True
                 hist1 = _wrist_prev_positions.get(sid1)
                 hist2 = _wrist_prev_positions.get(sid2)
                 if hist1 and hist2 and len(hist1) >= 3 and len(hist2) >= 3:
@@ -814,6 +821,8 @@ def process_hands(hand_res, face_landmarks_list, current_positions, iw, ih, fram
                     save_evidence(frame, sid1, "PASSING_OBJECT")
                     learner.register_event(sid1, "PASSING_OBJECT")
                     learner.register_event(sid2, "PASSING_OBJECT")
+                    ev = event_manager.emit(f"{sid1}-{sid2}", "PASSING_OBJECT", 0.9)
+                    student_state.add_event(sid1, ev)
                     logger.log_event(
                         student_id=f"{sid1}-{sid2}",
                         event="PASSING_OBJECT",
@@ -823,7 +832,7 @@ def process_hands(hand_res, face_landmarks_list, current_positions, iw, ih, fram
                     send_event_async("PASSING_OBJECT", f"{sid1}-{sid2}")
                     score = score_engine.add_event(sid1, "PASSING_OBJECT")
                     if score > 80:
-                        print(f"🚨 CHEATING HIGH RISK: {sid1} | score={score}")
+                        log.warning("CHEATING HIGH RISK: %s | score=%s", sid1, score)
                 current_alert = f"PASSING OBJECT: {sid1} & {sid2}"
 
     return current_alert
@@ -838,15 +847,14 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
     global face_based_positions
     global _fps_last_time, _fps_value
     global _lock_frame
-    global _median_student_bbox_h, _invigilator_tids  # FIX 2
+    global _median_student_bbox_h, _invigilator_tids
 
     frame_count += 1
     frame = cv2.resize(frame, AI_FRAME_SIZE)
 
     if locked and _lock_frame == -999:
         _lock_frame = frame_count
-        print(f"[SettleFix] _lock_frame anchored to frame {frame_count} "
-              f"(batch pre-lock detected)")
+        log.info("_lock_frame anchored to frame %d (batch pre-lock detected)", frame_count)
 
     ih, iw        = frame.shape[:2]
     img_rgb       = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -911,20 +919,20 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
             if _pr and len(_pr) > 0:
                 last_custom_results = _pr[0]
         except Exception as _e:
-            print(f"[YOLO-person] error: {_e}")
+            log.error("YOLO-person error: %s", _e)
 
     if _f_gesture is not None:
         try:
             gesture_results = _f_gesture.result()[0]
         except Exception as _e:
-            print(f"[YOLO-gesture] error: {_e}")
+            log.error("YOLO-gesture error: %s", _e)
             gesture_results = None
 
     if _f_phone is not None:
         try:
             last_coco_results = _f_phone.result()[0]
         except Exception as _e:
-            print(f"[YOLO-phone] error: {_e}")
+            log.error("YOLO-phone error: %s", _e)
 
     _parallel_obj_res    = None
     _parallel_idcard_res = None
@@ -932,28 +940,28 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
         try:
             _parallel_obj_res    = _f_obj.result()[0]
         except Exception as _e:
-            print(f"[YOLO-object] error: {_e}")
+            log.error("YOLO-object error: %s", _e)
         try:
             _parallel_idcard_res = _f_idcard.result()[0]
         except Exception as _e:
-            print(f"[YOLO-idcard] error: {_e}")
+            log.error("YOLO-idcard error: %s", _e)
 
     try:
         mesh_res  = _f_mesh.result()
     except Exception as _e:
-        print(f"[MP-mesh] error: {_e}")
+        log.error("MP-mesh error: %s", _e)
         mesh_res = None
 
     try:
         pose_res  = _f_pose.result()
     except Exception as _e:
-        print(f"[MP-pose] error: {_e}")
+        log.error("MP-pose error: %s", _e)
         pose_res = None
 
     try:
         hand_res  = _f_hands.result()
     except Exception as _e:
-        print(f"[MP-hands] error: {_e}")
+        log.error("MP-hands error: %s", _e)
         hand_res = None
 
     if last_custom_results is not None and last_custom_results.boxes is not None:
@@ -989,7 +997,7 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
                     cv2.rectangle(frame, (x1, y1), (x2, y2), (128, 128, 0), 1)
                     cv2.putText(frame, "INVIG", (x1, y1 - 10),
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.45, (128, 128, 0), 1)
-                    continue  
+                    continue
 
                 old_pos = current_positions.get(tid)
                 if old_pos is None:
@@ -1010,7 +1018,7 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
                     pos = current_positions.get(tid)
                     if pos is not None:
                         claimed_sids = {student_id_map.get(t) for t in current_ids if t != tid}
-                        REACQUIRE_DIST = 70   # tighter than MAX_VACANCY_DIST=100
+                        REACQUIRE_DIST = 70
                         for s_sid, s_pos in seat_positions.items():
                             if s_sid in claimed_sids or s_sid == "S???":
                                 continue
@@ -1024,7 +1032,8 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
                             student_id_map[tid] = s_sid
                             last_alert_time[f"_reacquire_{s_sid}"] = frame_count
                             sid = s_sid
-                            print(f"[ReAcquire] New tid={tid} → {s_sid} (dist={dist(pos, s_pos):.0f}px)")
+                            log.info("ReAcquire: New tid=%d → %s (dist=%.0fpx)",
+                                     tid, s_sid, dist(pos, s_pos))
                             break
 
                 sid_label = sid if sid else "Scanning..."
@@ -1034,7 +1043,7 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
 
     if len(current_ids) == 0:
         last_coco_results = None
-    
+
     for tid in current_ids:
         sid = student_id_map.get(tid)
         if sid:
@@ -1074,6 +1083,8 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
                 signaling_counters[sig_key] = signaling_counters.get(sig_key, 0) + 1
                 if signaling_counters[sig_key] >= SIGNAL_CONFIRM_FRAMES:
                     if can_send(f"gesture_{sig_key}", cooldown=2.0):
+                        ev = event_manager.emit(sid, "SUSPICIOUS_GESTURE", conf)
+                        student_state.add_event(sid, ev)
                         logger.log_event(
                             student_id=sid,
                             event="SUSPICIOUS_GESTURE",
@@ -1083,7 +1094,7 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
                         send_event_async("SUSPICIOUS_GESTURE", sid)
                         score = score_engine.add_event(sid, "SUSPICIOUS_GESTURE")
                         if score > 80:
-                            print(f"🚨 CHEATING HIGH RISK: {sid} | score={score}")
+                            log.warning("CHEATING HIGH RISK: %s | score=%s", sid, score)
                     current_alert = f"SUSPICIOUS GESTURE: {sid}"
             else:
                 signaling_counters[sig_key] = 0
@@ -1172,18 +1183,18 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
             matched_map   = learner.match_seats(all_positions)
             if matched_map:
                 student_id_map.update(matched_map)
-                print(f"🧠 Seat-based matching: {len(matched_map)} matched.")
+                log.info("Seat-based matching: %d matched.", len(matched_map))
             else:
                 student_id_map.update(assign_student_ids(all_positions))
-                print(f"🆕 Fresh IDs assigned to {len(all_positions)} students.")
+                log.info("Fresh IDs assigned to %d students.", len(all_positions))
             learner.on_lock(student_id_map)
 
             seat_anchor_positions = dict(_calib_accumulated_positions)
-            print(f"📌 Seat anchors: {len(seat_anchor_positions)} positions locked")
+            log.info("Seat anchors: %d positions locked", len(seat_anchor_positions))
             init_seat_zones(seat_anchor_positions)
             learner.set_seat_positions(seat_positions)
-            print(f"🔒 LOCKED — {len(student_id_map)} student(s): {list(student_id_map.values())}")
-            print(f"📍 Seat zones: {len(seat_positions)}")
+            log.info("LOCKED — %d student(s): %s", len(student_id_map), list(student_id_map.values()))
+            log.info("Seat zones: %d", len(seat_positions))
         return frame
 
     _settled = (frame_count - _lock_frame) > _SETTLE_FRAMES
@@ -1207,10 +1218,12 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
             id_visible_counters[sid] += 1
         if id_visible_counters[sid] >= ID_VISIBLE_THRESHOLD:
             if can_send(f"id_missing_{sid}", cooldown=30):
+                ev = event_manager.emit(sid, "ID_NOT_VISIBLE", 0.9)
+                student_state.add_event(sid, ev)
                 send_event_async("ID_NOT_VISIBLE", sid)
                 score = score_engine.add_event(sid, "ID_NOT_VISIBLE")
                 if score > 80:
-                    print(f"🚨 CHEATING HIGH RISK: {sid} | score={score}")
+                    log.warning("CHEATING HIGH RISK: %s | score=%s", sid, score)
             current_alert = f"ID NOT VISIBLE: {sid}"
 
     if mesh_res is None and (frame_count - last_face_landmarks_frame) > FACE_ABSENT_FRAMES_THRESHOLD:
@@ -1234,6 +1247,8 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
                 if can_send(f"lean_{sid}", cooldown=20.0):
                     save_evidence(frame, sid, "BODY_LEANING")
                     learner.register_event(sid, "BODY_LEANING")
+                    ev = event_manager.emit(sid, "BODY_LEANING", 0.9)
+                    student_state.add_event(sid, ev)
                     logger.log_event(
                         student_id=sid,
                         event="BODY_LEANING",
@@ -1243,7 +1258,7 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
                     send_event_async("BODY_LEANING", sid)
                     score = score_engine.add_event(sid, "BODY_LEANING")
                     if score > 80:
-                        print(f"🚨 CHEATING HIGH RISK: {sid} | score={score}")
+                        log.warning("CHEATING HIGH RISK: %s | score=%s", sid, score)
 
     if mesh_res and mesh_res.multi_face_landmarks:
         last_face_landmarks       = mesh_res.multi_face_landmarks
@@ -1278,6 +1293,8 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
 
             look_down_raw = get_look_down_score(pts)
             gaze_ratio, looking_left, looking_right = get_gaze_direction(pts)
+            head_ratio = pts[1].x
+            head_ratio_history[sid] = head_ratio
 
             prev_gaze    = gaze_history.get(sid, gaze_ratio)
             gaze_ratio   = 0.5 * prev_gaze + 0.5 * gaze_ratio
@@ -1300,6 +1317,8 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
                 if can_send(f"down_{sid}"):
                     save_evidence(frame, sid, "LOOKING_DOWN")
                     learner.register_event(sid, "LOOKING_DOWN")
+                    ev = event_manager.emit(sid, "LOOKING_DOWN", 0.9)
+                    student_state.add_event(sid, ev)
                     logger.log_event(
                         student_id=sid,
                         event="LOOKING_DOWN",
@@ -1309,13 +1328,15 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
                     send_event_async("LOOKING_DOWN", sid)
                     score = score_engine.add_event(sid, "LOOKING_DOWN")
                     if score > 80:
-                        print(f"🚨 CHEATING HIGH RISK: {sid} | score={score}")
+                        log.warning("CHEATING HIGH RISK: %s | score=%s", sid, score)
                 if tid in current_positions:
                     for p_pos in phones:
                         if dist(current_positions[tid], p_pos) < 80:
                             if can_send(f"phonegaze_{sid}"):
                                 save_evidence(frame, sid, "LOOKING_AT_PHONE")
                                 learner.register_event(sid, "LOOKING_AT_PHONE")
+                                ev = event_manager.emit(sid, "LOOKING_AT_PHONE", 0.9)
+                                student_state.add_event(sid, ev)
                                 logger.log_event(
                                     student_id=sid,
                                     event="LOOKING_AT_PHONE",
@@ -1325,13 +1346,15 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
                                 send_event_async("LOOKING_AT_PHONE", sid)
                                 score = score_engine.add_event(sid, "LOOKING_AT_PHONE")
                                 if score > 80:
-                                    print(f"🚨 CHEATING HIGH RISK: {sid} | score={score}")
+                                    log.warning("CHEATING HIGH RISK: %s | score=%s", sid, score)
 
             if _settled and learner._stable_trigger(sid, "LOOKING_LEFT", result.looking_left):
                 current_alert = f"LOOKING LEFT: {sid}"
                 if can_send(f"left_{sid}"):
                     save_evidence(frame, sid, "LOOKING_LEFT")
                     learner.register_event(sid, "LOOKING_LEFT")
+                    ev = event_manager.emit(sid, "LOOKING_LEFT", 0.9)
+                    student_state.add_event(sid, ev)
                     logger.log_event(
                         student_id=sid,
                         event="LOOKING_LEFT",
@@ -1341,13 +1364,15 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
                     send_event_async("LOOKING_LEFT", sid)
                     score = score_engine.add_event(sid, "LOOKING_LEFT")
                     if score > 80:
-                        print(f"🚨 CHEATING HIGH RISK: {sid} | score={score}")
+                        log.warning("CHEATING HIGH RISK: %s | score=%s", sid, score)
 
             elif _settled and learner._stable_trigger(sid, "LOOKING_RIGHT", result.looking_right):
                 current_alert = f"LOOKING RIGHT: {sid}"
                 if can_send(f"right_{sid}"):
                     save_evidence(frame, sid, "LOOKING_RIGHT")
                     learner.register_event(sid, "LOOKING_RIGHT")
+                    ev = event_manager.emit(sid, "LOOKING_RIGHT", 0.9)
+                    student_state.add_event(sid, ev)
                     logger.log_event(
                         student_id=sid,
                         event="LOOKING_RIGHT",
@@ -1357,7 +1382,7 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
                     send_event_async("LOOKING_RIGHT", sid)
                     score = score_engine.add_event(sid, "LOOKING_RIGHT")
                     if score > 80:
-                        print(f"🚨 CHEATING HIGH RISK: {sid} | score={score}")
+                        log.warning("CHEATING HIGH RISK: %s | score=%s", sid, score)
 
             if result.talking:
                 mouth_counters[sid] = mouth_counters.get(sid, 0) + TALK_COUNTER_INCREMENT
@@ -1367,6 +1392,8 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
             if mouth_counters.get(sid, 0) >= MAR_TALK_FRAMES:
                 current_talking.add(sid)
                 if _settled and can_send(f"talking_{sid}", cooldown=8.0):
+                    ev = event_manager.emit(sid, "TALKING_DETECTED", 0.85)
+                    student_state.add_event(sid, ev)
                     logger.log_event(
                         student_id=sid,
                         event="TALKING_DETECTED",
@@ -1406,8 +1433,8 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
                     if can_send(f"phone_{sid}"):
                         save_evidence(frame, sid, "PHONE_DETECTED")
                         learner.register_event(sid, "PHONE_DETECTED")
-                        event = event_manager.emit(sid, "PHONE_DETECTED", 0.9)
-                        student_state.add_event(sid, event)
+                        ev = event_manager.emit(sid, "PHONE_DETECTED", 0.9)
+                        student_state.add_event(sid, ev)
                         logger.log_event(
                             student_id=sid,
                             event="PHONE_DETECTED",
@@ -1417,7 +1444,7 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
                         send_event_async("PHONE_DETECTED", sid)
                         score = score_engine.add_event(sid, "PHONE_DETECTED")
                         if score > 80:
-                            print(f"🚨 CHEATING HIGH RISK: {sid} | score={score}")
+                            log.warning("CHEATING HIGH RISK: %s | score=%s", sid, score)
             else:
                 phone_counters[sid] = 0
 
@@ -1435,6 +1462,8 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
                 current_alert = f"WHISPER: {sid} & {sid_other}"
                 pair_key = f"whisp_{min(sid, sid_other)}_{max(sid, sid_other)}"
                 if can_send(pair_key):
+                    ev = event_manager.emit(f"{sid}-{sid_other}", "WHISPERING_DETECTED", 0.9)
+                    student_state.add_event(sid, ev)
                     logger.log_event(
                         student_id=f"{sid}-{sid_other}",
                         event="WHISPERING_DETECTED",
@@ -1444,7 +1473,7 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
                     send_event_async("WHISPERING_DETECTED", f"{sid}-{sid_other}")
                     score = score_engine.add_event(sid, "WHISPERING_DETECTED")
                     if score > 80:
-                        print(f"🚨 CHEATING HIGH RISK: {sid} | score={score}")
+                        log.warning("CHEATING HIGH RISK: %s | score=%s", sid, score)
                     learner.escalate_if_coordinated(sid, sid_other)
 
     if object_results is not None and object_results.boxes is not None:
@@ -1481,6 +1510,8 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
                 if can_send(f"calc_{sid}", cooldown=CALC_PERSIST_COOLDOWN):
                     save_evidence(frame, sid, "CALCULATOR_DETECTED")
                     learner.register_event(sid, "CALCULATOR_DETECTED")
+                    ev = event_manager.emit(sid, "CALCULATOR_DETECTED", conf)
+                    student_state.add_event(sid, ev)
                     logger.log_event(
                         student_id=sid,
                         event="CALCULATOR_DETECTED",
@@ -1490,12 +1521,14 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
                     send_event_async("CALCULATOR_DETECTED", sid)
                     score = score_engine.add_event(sid, "CALCULATOR_DETECTED")
                     if score > 80:
-                        print(f"🚨 CHEATING HIGH RISK: {sid} | score={score}")
+                        log.warning("CHEATING HIGH RISK: %s | score=%s", sid, score)
 
                 if (len(calc_seen_window[sid]) >= CALC_PERSIST_WINDOW
                         and presence_rate >= CALC_PERSIST_RATE):
                     if can_send(f"calc_persist_{sid}", cooldown=CALC_PERSIST_COOLDOWN):
                         save_evidence(frame, sid, "CALCULATOR_PERSISTENT")
+                        ev = event_manager.emit(sid, "CALCULATOR_PERSISTENT", round(presence_rate, 2))
+                        student_state.add_event(sid, ev)
                         logger.log_event(
                             student_id=sid,
                             event="CALCULATOR_PERSISTENT",
@@ -1505,7 +1538,7 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
                         send_event_async("CALCULATOR_PERSISTENT", sid)
                         score = score_engine.add_event(sid, "CALCULATOR_DETECTED")
                         if score > 80:
-                            print(f"🚨 CHEATING HIGH RISK: {sid} | score={score}")
+                            log.warning("CHEATING HIGH RISK: %s | score=%s", sid, score)
 
                 current_alert = f"CALCULATOR DETECTED: {sid}"
 
@@ -1535,7 +1568,7 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
         head_direction = "down"
 
     hands_visible   = hand_res is not None and hand_res.multi_hand_landmarks is not None
-    student_hands_visible = hands_visible  
+    student_hands_visible = hands_visible
     if hands_visible and _invigilator_tids and hand_res.multi_hand_landmarks:
         student_hands_visible = False
         student_positions_set = {
@@ -1580,20 +1613,45 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
     )
     features["student_hands_detected"] = student_hands_visible
 
+    intel_alerts = intel.update(
+        frame_count=frame_count,
+        locked=locked,
+        current_positions=current_positions,
+        student_id_map=student_id_map,
+        seat_positions=seat_positions,
+        invigilator_tids=_invigilator_tids,
+        face_landmarks=last_face_landmarks,
+        gaze_ratios=gaze_history,
+        head_ratios=head_ratio_history,
+        phones=phones,
+        iw=iw, ih=ih,
+        can_send_fn=can_send,
+        log_event_fn=logger.log_event,
+        send_async_fn=send_event_async,
+    )
+    for event in intel_alerts:
+        sid = event.get("student_id")
+        etype = event.get("event_type")
+        conf = event.get("confidence", 1.0)
+
+        ev = event_manager.emit(sid, etype, conf)
+        student_state.add_event(sid, ev)
+
+
     metrics = metrics_engine.update(features)
 
     if metrics:
         metrics["multiple_people_rate"] = 0.0
         anomalies = anomaly_detector.detect(metrics)
         if frame_count % 30 == 0 and metrics.get("phone_presence_rate", 0) > 0:
-            print("📊 Behavior Metrics:", {k: f"{v:.3f}" for k, v in metrics.items()})
+            log.debug("Behavior Metrics: %s", {k: f"{v:.3f}" for k, v in metrics.items()})
         if anomalies:
             for a in anomalies:
                 metric   = a["metric"]
                 severity = a["severity"]
                 value    = a["value"]
                 if frame_count % 30 == 0:
-                    print(f"⚠️ ANOMALY → {metric} | value={value:.3f} | severity={severity}")
+                    log.warning("ANOMALY → %s | value=%.3f | severity=%s", metric, value, severity)
                 room_key = f"anomaly_room_{metric}"
                 if can_send(room_key, cooldown=15):
                     target_sid = None
@@ -1612,9 +1670,9 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
                         send_event_async("BEHAVIOR_ANOMALY", f"room_{metric}")
 
     if current_alert == "All Clear":
-        draw_alert_banner(frame, "✅  All Clear", color=(0, 130, 0))
+        draw_alert_banner(frame, "All Clear", color=(0, 130, 0))
     else:
-        draw_alert_banner(frame, f"⚠️  {current_alert}", color=(0, 0, 200))
+        draw_alert_banner(frame, f"{current_alert}", color=(0, 0, 200))
 
     cv2.rectangle(frame, (0, ih - 25), (iw, ih), (30, 30, 30), -1)
     cv2.putText(
@@ -1667,26 +1725,26 @@ def get_all_evidence():
 
 
 def shutdown():
-    print("[AI] Shutdown — flushing alert logger...")
+    log.info("Shutdown — flushing alert logger...")
     try:
         logger.shutdown()
     except Exception as e:
-        print(f"[AI] AlertLogger shutdown error: {e}")
+        log.error("AlertLogger shutdown error: %s", e)
 
-    print("[AI] Shutdown — flushing evidence writer...")
+    log.info("Shutdown — flushing evidence writer...")
     try:
         _evidence_queue.join()
         _evidence_queue.put(None)
         _evidence_writer_thread.join(timeout=5.0)
     except Exception as e:
-        print(f"[AI] Evidence writer shutdown error: {e}")
+        log.error("Evidence writer shutdown error: %s", e)
 
     face_mesh.close()
     pose_detector.close()
     hand_detector.close()
     learner.shutdown()
 
-    print("[AI] Shutdown — closing executor pools...")
+    log.info("Shutdown — closing executor pools...")
     _yolo_pool.shutdown(wait=False)
     _mp_pool.shutdown(wait=False)
-    print("[AI] Shutdown complete.")
+    log.info("Shutdown complete.")
