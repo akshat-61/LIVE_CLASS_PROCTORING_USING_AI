@@ -208,7 +208,7 @@ class IntelligenceLayer:
             if self._face_absent_frames[sid] >= _FACE_FRAMES:
                 key = f"intel_face_absent_{sid}"
                 if can_send_fn(key, _FACE_CD):
-                    event = "FACE_ABSENT"
+                    event = "FACE_ABSENT_DISABLED"
                     log_event_fn(student_id=sid, event=event,
                                  confidence=1.0, frame=frame_count)
                     send_async_fn(event, sid)

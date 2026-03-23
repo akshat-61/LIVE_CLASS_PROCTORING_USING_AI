@@ -1,0 +1,11 @@
+__pycache__/
+runs/
+logs/
+session_logs/
+frames/
+annotated/
+evidence_output/
+output/
+reports/
+*.pyc
+*.log

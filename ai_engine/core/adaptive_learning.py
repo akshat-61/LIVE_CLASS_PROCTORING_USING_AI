@@ -12,8 +12,8 @@ class Config:
     CALIBRATION_FRAMES = 3
     COLLECT_EVERY_N    = 6
 
-    REL_LOOK_DOWN = 0.022
-    REL_YAW       = 0.045
+    REL_LOOK_DOWN = 0.015
+    REL_YAW       = 0.030
     REL_LEAN      = 0.040 
     CALIBRATION_FRAMES_LEAN = 3
     REL_MAR = 0.040
@@ -23,7 +23,7 @@ class Config:
     FALLBACK_LOOK_DOWN = 0.042
     FALLBACK_YAW_LEFT  = 0.45  
     FALLBACK_YAW_RIGHT = 0.55  
-    FALLBACK_LEAN      = 0.10  
+    FALLBACK_LEAN      = 0.07  
     FALLBACK_MAR       = 0.18
 
     PROFILES_PATH = "student_profiles.json"

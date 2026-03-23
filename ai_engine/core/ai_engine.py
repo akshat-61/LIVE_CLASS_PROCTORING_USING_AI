@@ -136,15 +136,15 @@ PHONE_PROXIMITY_MIN_DIST = 15
 CUSTOM_CONF_THRESHOLD    = 0.45
 COCO_CONF_THRESHOLD      = 0.45
 STABILITY_FRAMES         = 20
-ALERT_COOLDOWN_SEC       = 3
-WHISPER_PROXIMITY_THRESHOLD = 80
+ALERT_COOLDOWN_SEC       = 2
+WHISPER_PROXIMITY_THRESHOLD = 140
 MAR_VARIATION_THRESHOLD  = 0.004
 HARD_MAR_THRESHOLD       = 0.18
 MAR_TALK_FRAMES          = 3
 MAR_WINDOW_SIZE          = 5
 TALK_COUNTER_INCREMENT   = 2.0
 TALK_COUNTER_DECAY       = 1.5
-LOOK_DOWN_THRESHOLD      = 0.035
+LOOK_DOWN_THRESHOLD      = 0.020
 SIDE_GAZE_RATIO          = 2.8
 LEAN_THRESHOLD           = 0.8
 LEAN_CONFIRM_FRAMES      = 6
@@ -157,8 +157,8 @@ HAND_FACE_DIST           = 120
 PALM_WRITE_DIST          = 60
 WRITE_MOTION_FRAMES      = 3
 HAND_CONFIRM_FRAMES      = 1
-PASS_DIST_THRESHOLD      = 75
-SIGNAL_CONFIRM_FRAMES    = 3
+PASS_DIST_THRESHOLD      = 120
+SIGNAL_CONFIRM_FRAMES    = 2
 SEAT_ZONE_RADIUS         = 28
 SEAT_VACANCY_FRAMES      = 450
 VACANCY_GRACE_FRAMES     = 45
@@ -168,7 +168,7 @@ PROXIMITY_ONLY_DIST      = 40
 PROXIMITY_CONFIRM_FRAMES = 12
 SEAT_VACANCY_COOLDOWN    = 5.0
 MIN_SEAT_PAIR_DIST       = 80
-GAZE_RIGHT_THRESHOLD     = 0.58
+GAZE_RIGHT_THRESHOLD     = 0.56
 
 CALC_PERSIST_WINDOW      = 60
 CALC_PERSIST_RATE        = 0.20
@@ -177,7 +177,7 @@ CALC_PERSIST_COOLDOWN    = 5.0
 SEAT_ASSIGN_MARGIN       = 35
 SEAT_ASSIGN_ABS_CAP      = 65
 PHONE_CONF_THRESHOLD = 0.45
-GAZE_LEFT_THRESHOLD  = 0.42
+GAZE_LEFT_THRESHOLD  = 0.44
 AI_FRAME_SIZE        = (960, 540)
 
 INVIGILATOR_HEIGHT_RATIO = 1.35
@@ -188,7 +188,7 @@ FRAME_MOD_BASE    = 1
 GESTURE_FRAME_MOD = 2
 YOLO_FRAME_MOD    = 2
 
-FACE_ABSENT_FRAMES_THRESHOLD = 15
+FACE_ABSENT_FRAMES_THRESHOLD = 60
 IDCARD_CONF_THRESHOLD        = 0.72
 
 OBJECT_LABEL_EXCLUSIONS = {"hand", "arm", "fist", "pen", "open_palm", "person"}
@@ -1246,7 +1246,7 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
             leaning_detected  = learner.check_lean(sid, smooth_lean)
             if _settled and learner._stable_trigger(sid, "BODY_LEANING", leaning_detected):
                 current_alert = f"LEANING: {sid}"
-                if can_send(f"lean_{sid}", cooldown=20.0):
+                if can_send(f"lean_{sid}", cooldown=3.0):
                     save_evidence(frame, sid, "BODY_LEANING")
                     learner.register_event(sid, "BODY_LEANING")
                     ev = event_manager.emit(sid, "BODY_LEANING", 0.9)
@@ -1316,7 +1316,7 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
 
             if _settled and learner._stable_trigger(sid, "LOOKING_DOWN", result.looking_down):
                 current_alert = f"LOOKING DOWN: {sid}"
-                if can_send(f"down_{sid}"):
+                if can_send(f"down_{sid}", cooldown=2.0):
                     save_evidence(frame, sid, "LOOKING_DOWN")
                     learner.register_event(sid, "LOOKING_DOWN")
                     ev = event_manager.emit(sid, "LOOKING_DOWN", 0.9)
@@ -1352,7 +1352,7 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
 
             if _settled and learner._stable_trigger(sid, "LOOKING_LEFT", result.looking_left):
                 current_alert = f"LOOKING LEFT: {sid}"
-                if can_send(f"left_{sid}"):
+                if can_send(f"left_{sid}", cooldown=2.0):
                     save_evidence(frame, sid, "LOOKING_LEFT")
                     learner.register_event(sid, "LOOKING_LEFT")
                     ev = event_manager.emit(sid, "LOOKING_LEFT", 0.9)
@@ -1370,7 +1370,7 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
 
             elif _settled and learner._stable_trigger(sid, "LOOKING_RIGHT", result.looking_right):
                 current_alert = f"LOOKING RIGHT: {sid}"
-                if can_send(f"right_{sid}"):
+                if can_send(f"right_{sid}", cooldown=2.0):
                     save_evidence(frame, sid, "LOOKING_RIGHT")
                     learner.register_event(sid, "LOOKING_RIGHT")
                     ev = event_manager.emit(sid, "LOOKING_RIGHT", 0.9)
