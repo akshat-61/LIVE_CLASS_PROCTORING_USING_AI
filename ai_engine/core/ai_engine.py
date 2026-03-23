@@ -25,7 +25,6 @@ from detection.intelligence_layer import IntelligenceLayer
 from classification.cheating_classifier import CheatingClassifier
 from output.report_generator import ReportGenerator
 
-
 log = logging.getLogger(__name__)
 classifier = CheatingClassifier()
 logger = AlertLogger()
@@ -44,6 +43,7 @@ _YOLO_WORKERS = 3
 _MP_WORKERS   = 3
 _yolo_pool    = ThreadPoolExecutor(max_workers=_YOLO_WORKERS, thread_name_prefix="yolo")
 _mp_pool      = ThreadPoolExecutor(max_workers=_MP_WORKERS,   thread_name_prefix="mp")
+_event_pool   = ThreadPoolExecutor(max_workers=4, thread_name_prefix="event")
 
 _logical_cores    = os.cpu_count() or 4
 _torch_threads    = max(1, min(4, _logical_cores // _YOLO_WORKERS))
@@ -59,8 +59,8 @@ _USE_RAM_DISK  = os.path.exists("/dev/shm")
 if _USE_RAM_DISK:
     os.makedirs(_RAM_DISK, exist_ok=True)
 
-_evidence_queue: Queue = Queue(maxsize=500)
-
+_evidence_queue: Queue      = Queue(maxsize=2000)
+_evidence_drop_counter: int = 0
 
 def _evidence_writer_loop():
     import shutil
@@ -94,7 +94,6 @@ def _evidence_writer_loop():
             log.error("EvidenceWriter error: %s", e)
         finally:
             _evidence_queue.task_done()
-
 
 _evidence_writer_thread = threading.Thread(
     target=_evidence_writer_loop,
@@ -236,7 +235,7 @@ last_coco_results     = None
 locked                = False
 stable_counter        = 0
 student_id_map        = {}
-last_alert_time       = {}  
+last_alert_time       = {}
 mouth_counters        = {}
 mar_history           = {}
 gaze_history          = {}
@@ -268,7 +267,6 @@ _prev_gray: np.ndarray | None = None
 _motion_burst_counter: int    = 0
 
 calc_seen_window: dict = {}
-
 
 def reset_session():
     global locked, stable_counter, student_id_map, frame_count
@@ -331,31 +329,36 @@ def reset_session():
     intel.reset()
     log.info("Session reset complete.")
 
-
 def save_evidence(frame, student_id, event):
+    global _evidence_drop_counter
+
     timestamp  = time.strftime("%H-%M-%S")
     ssd_folder = f"{_SSD_EVIDENCE}/{event}"
     filename   = f"{student_id}_{timestamp}.jpg"
     ssd_path   = f"{ssd_folder}/{filename}"
     frame_copy = frame.copy()
 
+    def _enqueue(item):
+        global _evidence_drop_counter
+        try:
+            _evidence_queue.put_nowait(item)
+            return True
+        except Exception:
+            _evidence_drop_counter += 1
+            if _evidence_drop_counter % 10 == 1:
+                log.warning(
+                    "EvidenceWriter queue full — dropped %s (%s) [total drops: %d]",
+                    event, student_id, _evidence_drop_counter
+                )
+            return False
+
     if _USE_RAM_DISK:
         ram_folder = f"{_RAM_DISK}/{event}"
         ram_path   = f"{ram_folder}/{filename}"
-        try:
-            _evidence_queue.put_nowait(
-                ("write_and_move", ram_folder, ram_path, ssd_folder, frame_copy, 85)
-            )
-        except Exception:
-            try:
-                _evidence_queue.put_nowait(("write", ssd_folder, ssd_path, frame_copy, 85))
-            except Exception:
-                log.warning("EvidenceWriter queue full — dropped %s (%s)", event, student_id)
+        if not _enqueue(("write_and_move", ram_folder, ram_path, ssd_folder, frame_copy, 85)):
+            _enqueue(("write", ssd_folder, ssd_path, frame_copy, 85))
     else:
-        try:
-            _evidence_queue.put_nowait(("write", ssd_folder, ssd_path, frame_copy, 85))
-        except Exception:
-            log.warning("EvidenceWriter queue full — dropped %s (%s)", event, student_id)
+        _enqueue(("write", ssd_folder, ssd_path, frame_copy, 85))
 
     log.info("Evidence queued → %s", ssd_path)
     return ssd_path
@@ -378,7 +381,17 @@ def can_send(key, cooldown=None):
         return True
     return False
 
-def send_event_async(event_type, student_id=None, distance=None):
+def _sid(tid) -> str:
+    """Resolve a YOLO tracking ID to a stable student ID.
+
+    FIX (Stability 2): YOLO tracker IDs (tid) reset on occlusion or re-entry,
+    causing the same physical student to get a new tid and thus a new SID,
+    breaking event history and cheating scores. student_id_map is populated
+    at lock-time by learner.match_seats() with seat-anchored identities.
+    Falling back to f"S{tid:03}" is correct for fresh sessions where no
+    baseline match exists yet — behaviour is identical to before the fix.
+    """
+    return student_id_map.get(tid, f"S{tid:03}")
     def task():
         payload = {
             "examId": EXAM_ID,
@@ -396,7 +409,7 @@ def send_event_async(event_type, student_id=None, distance=None):
             requests.post(ALERT_URL, json=payload, timeout=1)
         except Exception:
             pass
-    threading.Thread(target=task, daemon=True).start()
+    _event_pool.submit(task)
 
 def get_student_at(x, y, current_positions):
     min_d, found = FACE_MATCH_RADIUS, None
@@ -405,7 +418,6 @@ def get_student_at(x, y, current_positions):
         if d < min_d:
             min_d, found = d, tid
     return found
-
 
 def get_seat_at(x, y):
     if not seat_positions:
@@ -430,9 +442,8 @@ def get_seat_at(x, y):
 
     return best_sid
 
-
 def prune_state(current_ids):
-    active = {f"S{tid:03}" for tid in current_ids}
+    active = {_sid(tid) for tid in current_ids}
     for d in [
         mouth_counters, mar_history,
         hand_mouth_counters, hand_face_counters,
@@ -485,7 +496,6 @@ def get_gaze_direction(landmarks):
     looking_right = (iris_gaze  > GAZE_RIGHT_THRESHOLD) or (head_ratio > 0.65)
     return iris_gaze, looking_left, looking_right
 
-
 def draw_alert_banner(frame, text, color=(0, 130, 0)):
     h, w = frame.shape[:2]
     overlay = frame.copy()
@@ -524,7 +534,7 @@ def init_seat_zones(positions):
            proximity_counters, seat_initial_pair_dists, seat_was_vacant
     seat_positions = {}
     for tid, pos in positions.items():
-        sid = f"S{tid:03}"
+        sid = _sid(tid)
         seat_positions[sid] = pos
 
     DEDUP_THRESHOLD = 10
@@ -584,7 +594,6 @@ def assign_seats_voronoi(current_positions):
             occupancy[sid] = None
     return occupancy
 
-
 def find_occupant(seat_pos, current_positions):
     best_tid, best_d = None, MAX_VACANCY_DIST
     for tid, pos in current_positions.items():
@@ -592,7 +601,6 @@ def find_occupant(seat_pos, current_positions):
         if d < best_d:
             best_d, best_tid = d, tid
     return best_tid
-
 
 def draw_seat_zones(frame):
     for sid, pos in seat_positions.items():
@@ -602,7 +610,6 @@ def draw_seat_zones(frame):
         cv2.putText(frame, sid,
                     (pos[0] - 20, pos[1] + SEAT_ZONE_RADIUS + 15),
                     cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 200, 0), 1)
-
 
 def check_seat_zones(current_positions, frame):
     alert = None
@@ -721,7 +728,7 @@ def process_hands(hand_res, face_landmarks_list, current_positions, iw, ih, fram
         tid = get_student_at(wrist[0], wrist[1], current_positions)
         if tid is None:
             tid = get_student_at(palm[0], palm[1], current_positions)
-        sid = f"S{tid:03}"
+        sid = _sid(tid)
         hands_data.append({"palm": palm, "tip": tip, "wrist": wrist, "sid": sid})
         mp.solutions.drawing_utils.draw_landmarks(frame, hand_lms, mp_hands.HAND_CONNECTIONS)
 
@@ -1010,18 +1017,17 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
                     )
 
                 current_ids.add(tid)
-                sid = f"S{tid:03}"
+                sid = _sid(tid)
 
-                sid_label = sid if sid else "Scanning..."
                 cv2.rectangle(frame, (x1, y1), (x2, y2), (200, 200, 200), 1)
-                cv2.putText(frame, sid_label, (x1, y1 - 10),
+                cv2.putText(frame, sid, (x1, y1 - 10),
                             cv2.FONT_HERSHEY_SIMPLEX, 0.55, (255, 255, 255), 2)
 
     if len(current_ids) == 0:
         last_coco_results = None
 
     for tid in current_ids:
-        sid = f"S{tid:03}"
+        sid = _sid(tid)
         if sid:
             student_state.update(
                 sid,
@@ -1047,9 +1053,7 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
             tid = get_student_at(gesture_cx, gesture_cy, current_positions)
             if tid is None:
                 continue
-            sid = f"S{tid:03}"
-            if sid is None:
-                continue
+            sid = _sid(tid)
             gesture_name = gesture_model.names[cls].lower()
             cv2.rectangle(frame, (x1, y1), (x2, y2), (255, 100, 0), 2)
             cv2.putText(frame, f"{gesture_name} {conf:.2f}", (x1, y1 - 10),
@@ -1118,9 +1122,7 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
             tid = get_student_at(*center(x1, y1, x2, y2), current_positions)
             if tid is None:
                 continue
-            sid = f"S{tid:03}"
-            if sid is None:
-                continue
+            sid = _sid(tid)
             id_detected_this_frame.add(sid)
             id_visible_counters[sid] = 0
             cv2.rectangle(frame, (x1, y1), (x2, y2), (0, 255, 255), 2)
@@ -1162,7 +1164,7 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
                 log.info("Seat-based matching: %d matched.", len(matched_map))
             else:
                 log.info("Fresh IDs assigned to %d students.", len(all_positions))
-            learner.on_lock({tid: f"S{tid:03}" for tid in current_ids})
+            learner.on_lock({tid: _sid(tid) for tid in current_ids})
 
             seat_anchor_positions = dict(_calib_accumulated_positions)
             log.info("Seat anchors: %d positions locked", len(seat_anchor_positions))
@@ -1170,7 +1172,7 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
             learner.set_seat_positions(seat_positions)
             log.info("LOCKED — %d student(s): %s",
                 len(current_ids),
-                [f"S{tid:03}" for tid in current_ids])
+                [_sid(tid) for tid in current_ids])
             log.info("Seat zones: %d", len(seat_positions))
         return frame
 
@@ -1183,11 +1185,9 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
     if zone_alert:
         current_alert = zone_alert
 
-    ID_VISIBLE_THRESHOLD = 99999
+    ID_VISIBLE_THRESHOLD = 120
     for tid in current_ids:
-        sid = f"S{tid:03}"
-        if sid is None:
-            continue
+        sid = _sid(tid)
         id_visible_counters.setdefault(sid, 0)
         if sid in id_detected_this_frame:
             id_visible_counters[sid] = 0
@@ -1212,7 +1212,7 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
     if pose_res and pose_res.pose_landmarks:
         lms = pose_res.pose_landmarks.landmark
         tid = get_student_at(int(lms[0].x * iw), int(lms[0].y * ih), current_positions)
-        sid = f"S{tid:03}" if tid is not None else None
+        sid = _sid(tid) if tid is not None else None
         if sid is not None:
             raw_lean  = abs(lms[11].x - lms[12].x)
             prev      = _lean_smooth.get(sid, raw_lean)
@@ -1254,9 +1254,7 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
                 int(0.2 * fy + 0.8 * prev[1]),
             )
 
-            sid = f"S{tid:03}"
-
-            mar = mouth_aspect_ratio(pts)
+            sid = _sid(tid)
             if hand_face_counters.get(sid, 0) > 0 or hand_mouth_counters.get(sid, 0) > 0:
                 mar = 0.0
             history = mar_history.get(sid, [])
@@ -1400,7 +1398,7 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
     face_landmarks_list = last_face_landmarks if last_face_landmarks else []
 
     for tid in current_ids:
-        sid = f"S{tid:03}"
+        sid = _sid(tid)
         pos = current_positions[tid]
 
         for p_pos in phones:
@@ -1428,7 +1426,7 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
         for other_tid in current_ids:
             if tid >= other_tid:
                 continue
-            sid_other = f"S{other_tid:03}"
+            sid_other = _sid(other_tid)
             d = dist(pos, current_positions[other_tid])
             _either_talking = (
                 mouth_counters.get(sid, 0)       >= MAR_TALK_FRAMES or
@@ -1453,7 +1451,7 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
                         log.warning("CHEATING HIGH RISK: %s | score=%s", sid, score)
                     learner.escalate_if_coordinated(sid, sid_other)
 
-    active_sids = {f"S{tid:03}" for tid in current_ids}
+    active_sids = {_sid(tid) for tid in current_ids}
 
     if object_results is not None and object_results.boxes is not None:
         for box in object_results.boxes:
@@ -1474,7 +1472,7 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
                 sid = None
             if sid is None:
                 tid = get_student_at(obj_cx, obj_cy, current_positions)
-                sid = f"S{tid:03}" if tid else None
+                sid = _sid(tid) if tid else None
             if sid is None:
                 continue
 
@@ -1531,7 +1529,7 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
             current_alert = hand_alert
 
     _all_calibrated = all(
-        learner.is_calibrated(f"S{tid:03}")
+        learner.is_calibrated(_sid(tid))
         for tid in current_ids
     ) if current_ids else False
     if not _all_calibrated and frame_count % 2 == 0 and frame_count < 300:
@@ -1575,11 +1573,11 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
     person_count = len(current_ids)
 
     calc_detected_this_frame = {
-        f"S{tid:03}"
+        _sid(tid)
         for tid in current_ids
-        if f"S{tid:03}" in calc_seen_window
-        and calc_seen_window[f"S{tid:03}"]
-        and calc_seen_window[f"S{tid:03}"][-1] == 1
+        if _sid(tid) in calc_seen_window
+        and calc_seen_window[_sid(tid)]
+        and calc_seen_window[_sid(tid)][-1] == 1
     }
     for sid_w, win in calc_seen_window.items():
         if sid_w not in calc_detected_this_frame:
@@ -1598,7 +1596,7 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
         frame_count=frame_count,
         locked=locked,
         current_positions=current_positions,
-        student_ids={tid: f"S{tid:03}" for tid in current_ids},
+        student_ids={tid: _sid(tid) for tid in current_ids},
         seat_positions=seat_positions,
         invigilator_tids=_invigilator_tids,
         face_landmarks=last_face_landmarks,
@@ -1669,12 +1667,9 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
                     log.warning("ANOMALY → %s | value=%.3f | severity=%s", metric, value, severity)
                 room_key = f"anomaly_room_{metric}"
                 if can_send(room_key, cooldown=15):
-                    target_sid = None
-                    for tid in current_ids:
-                        sid = f"S{tid:03}"
-                        if sid:
-                            target_sid = sid
-                            break
+                    target_sid = next(
+                        (_sid(tid) for tid in current_ids), None
+                    )
                     if target_sid:
                         logger.log_event(
                             student_id=f"ROOM({metric})",
@@ -1704,7 +1699,6 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
 
     return frame
 
-
 def start_frame_reader(cap):
     def reader():
         while True:
@@ -1715,7 +1709,6 @@ def start_frame_reader(cap):
             if not frame_queue.full():
                 frame_queue.put(frame)
     threading.Thread(target=reader, daemon=True).start()
-
 
 def process_video(cap, out):
     start_frame_reader(cap)
@@ -1747,7 +1740,6 @@ def get_all_states():
 def get_all_evidence():
     return evidence_manager.get_all_evidence()
 
-
 def shutdown():
     log.info("Shutdown — flushing alert logger...")
     try:
@@ -1769,6 +1761,7 @@ def shutdown():
     learner.shutdown()
 
     log.info("Shutdown — closing executor pools...")
+    _event_pool.shutdown(wait=True)
     _yolo_pool.shutdown(wait=False)
     _mp_pool.shutdown(wait=False)
     log.info("Shutdown complete.")
