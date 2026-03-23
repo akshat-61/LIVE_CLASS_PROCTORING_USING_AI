@@ -7,8 +7,8 @@ import numpy as np
 from concurrent.futures import ThreadPoolExecutor
 from aiohttp import web
 from aiortc import RTCPeerConnection, RTCSessionDescription
-import ai_engine
-from ai_engine import run_ai_on_frame
+import proctoring_engine
+from proctoring_engine import run_ai_on_frame
 
 # ─── Configuration ────────────────────────────────────────────────────────────
 

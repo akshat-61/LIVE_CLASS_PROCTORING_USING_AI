@@ -24,6 +24,8 @@ from output.evidence_manager import EvidenceManager
 from detection.intelligence_layer import IntelligenceLayer
 from classification.cheating_classifier import CheatingClassifier
 from output.report_generator import ReportGenerator
+from ai.feature_engine import FeatureEngine
+from ai.ai_engine import AIEngine
 
 log = logging.getLogger(__name__)
 classifier = CheatingClassifier()
@@ -857,6 +859,9 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
     global _lock_frame
     global _median_student_bbox_h, _invigilator_tids
 
+    feature_engine = FeatureEngine()
+    ai_engine = AIEngine()
+
     frame_count += 1
     frame = cv2.resize(frame, AI_FRAME_SIZE)
 
@@ -1652,6 +1657,27 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
             )
 
     metrics = metrics_engine.update(features)
+
+    if frame_count % 30 == 0:
+
+        for sid in student_id_map.values():
+
+            events = event_manager.get_recent_events(sid, 60)
+
+            if not events:
+                continue
+            
+            features = feature_engine.build_features(sid, events)
+
+            ai_result = ai_engine.analyze(features)
+
+            print(f"[AI] {sid} → {ai_result}")
+
+            if ai_result["score"] > 70:
+
+                send_event_async("AI_CHEATING_DETECTED", sid)
+
+                score_engine.add_event(sid, "AI_CHEATING_DETECTED")
 
     if metrics:
         metrics["multiple_people_rate"] = 0.0
