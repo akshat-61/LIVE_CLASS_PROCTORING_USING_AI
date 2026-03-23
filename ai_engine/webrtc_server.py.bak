@@ -7,24 +7,30 @@ import numpy as np
 from concurrent.futures import ThreadPoolExecutor
 from aiohttp import web
 from aiortc import RTCPeerConnection, RTCSessionDescription
+import proctoring_engine
+from proctoring_engine import run_ai_on_frame
 
-import ai.ai_engine as ai_engine
-from ai.ai_engine import run_ai_on_frame
+# ─── Configuration ────────────────────────────────────────────────────────────
 
-EXAM_DURATION_SECONDS = 30 * 60
-FRAMES_DIR            = "frames"
-ANNOTATED_DIR         = "annotated"
+EXAM_DURATION_SECONDS = 30 * 60        # 30 minutes — change as needed
+FRAMES_DIR            = "frames"       # raw frames saved here: frames/frame_0001.jpg
+ANNOTATED_DIR         = "annotated"    # suspicious annotated frames saved here
 os.makedirs(FRAMES_DIR,    exist_ok=True)
 os.makedirs(ANNOTATED_DIR, exist_ok=True)
 
+# ─── State ────────────────────────────────────────────────────────────────────
+
 pcs = set()
 
-_collected_frames  = []
-_frame_index       = 0
+# Frame collection state
+_collected_frames  = []        # list of saved file paths (in order)
+_frame_index       = 0         # global counter for naming frame files
 _collection_lock   = threading.Lock()
-_collection_active = False
-_exam_start_time   = None
-_exam_ended        = False
+_collection_active = False     # True once first WebRTC track arrives
+_exam_start_time   = None      # wall-clock time when collection started
+_exam_ended        = False     # True once timer fires or session ends
+
+# ─── Display thread (raw only — no AI overlay during collection) ──────────────
 
 _live_frame    = None
 _display_lock  = threading.Lock()
@@ -32,11 +38,13 @@ _display_stop  = threading.Event()
 
 
 def _display_thread():
+    """Shows the raw incoming video. No AI processing during collection."""
     while not _display_stop.is_set():
         with _display_lock:
             frame = _live_frame
         if frame is not None:
             cv2.imshow("Proctoring — Recording (Raw)", frame)
+        # ~30fps display loop
         if cv2.waitKey(33) & 0xFF == ord("q"):
             _display_stop.set()
             break
@@ -45,8 +53,10 @@ def _display_thread():
 
 threading.Thread(target=_display_thread, daemon=True).start()
 
+# ─── Exam timer ───────────────────────────────────────────────────────────────
 
 def _start_exam_timer():
+    """Fires once after EXAM_DURATION_SECONDS, triggers post-exam AI analysis."""
     global _exam_ended
     print(f"[TIMER] Exam timer started — {EXAM_DURATION_SECONDS}s remaining")
 
@@ -63,8 +73,9 @@ def _start_exam_timer():
     return timer
 
 
-_exam_timer = None
+_exam_timer = None  # holds the active Timer object so it can be cancelled
 
+# ─── CORS Middleware ───────────────────────────────────────────────────────────
 
 @web.middleware
 async def cors_middleware(request, handler):
@@ -77,6 +88,7 @@ async def cors_middleware(request, handler):
     response.headers["Access-Control-Allow-Headers"] = "Content-Type"
     return response
 
+# ─── WebRTC Offer Handler ──────────────────────────────────────────────────────
 
 async def offer(request):
     global _collection_active, _exam_start_time, _exam_timer
@@ -99,6 +111,7 @@ async def offer(request):
         global _collection_active, _exam_start_time, _exam_timer
         print(f"[WebRTC] Track received: {track.kind}")
         if track.kind == "video":
+            # Start collection + timer on first video track
             if not _collection_active:
                 _collection_active = True
                 _exam_start_time   = time.time()
@@ -115,7 +128,6 @@ async def offer(request):
         "type": pc.localDescription.type,
     })
 
-
 async def collect_frames(track):
     global _frame_index, _live_frame
 
@@ -128,16 +140,21 @@ async def collect_frames(track):
             print("[WebRTC] Track ended:", e)
             break
 
+        # Convert to numpy array (BGR)
         img = frame.to_ndarray(format="bgr24")
 
+        # Always update the live display
         with _display_lock:
             _live_frame = img
 
+        # Save frame to disk
         with _collection_lock:
             _frame_index += 1
             idx = _frame_index
 
         filename = os.path.join(FRAMES_DIR, f"frame_{idx:06d}.jpg")
+
+        # Write in a thread so we don't block the async event loop
         await loop.run_in_executor(None, _save_frame, filename, img)
 
         with _collection_lock:
@@ -150,8 +167,10 @@ async def collect_frames(track):
 
 
 def _save_frame(path: str, img: np.ndarray):
+    """Blocking JPEG write — runs in a thread pool executor."""
     cv2.imwrite(path, img, [cv2.IMWRITE_JPEG_QUALITY, 85])
 
+# ─── Post-Exam AI Analysis ─────────────────────────────────────────────────────
 
 _analysis_executor = ThreadPoolExecutor(max_workers=1, thread_name_prefix="ai_analysis")
 
@@ -174,18 +193,17 @@ def _analyse_all_frames():
 
     total = len(frame_paths)
     print(f"[ANALYSIS] {total} frames to process")
-
     ai_engine.reset_session()
-
     if _exam_start_time:
-        elapsed = time.time() - _exam_start_time
-        est_fps = total / elapsed if elapsed > 0 else 25.0
+        elapsed  = time.time() - _exam_start_time
+        est_fps  = total / elapsed if elapsed > 0 else 25.0
     else:
         est_fps = 25.0
 
     print(f"[ANALYSIS] Estimated collection FPS: {est_fps:.1f}")
     _snapshot_calibrate_from_frames(frame_paths, est_fps)
 
+    # ── Step 2: Process every frame ────────────────────────────────────────
     suspicious_count = 0
     t0 = time.time()
 
@@ -199,7 +217,6 @@ def _analyse_all_frames():
             out_path = os.path.join(ANNOTATED_DIR, os.path.basename(path))
             cv2.imwrite(out_path, annotated, [cv2.IMWRITE_JPEG_QUALITY, 90])
             suspicious_count += 1
-
         if (i + 1) % 500 == 0:
             pct     = (i + 1) / total * 100
             elapsed = time.time() - t0
@@ -214,6 +231,7 @@ def _analyse_all_frames():
     print("=" * 60)
     print(f"  Frames processed  : {total}")
     print(f"  Suspicious saved  : {suspicious_count}  →  {ANNOTATED_DIR}/")
+    print(f"  Alert log         : logs/")
     print(f"  Time taken        : {elapsed:.1f}s")
     print("=" * 60 + "\n")
 
@@ -223,9 +241,9 @@ def _analyse_all_frames():
 def _snapshot_calibrate_from_frames(frame_paths: list, est_fps: float):
     import mediapipe as mp
 
-    snap_seconds = [1.0, 2.0, 3.0]
-    iw, ih       = ai_engine.AI_FRAME_SIZE
-    accumulated  = {}
+    snap_seconds   = [1.0, 2.0, 3.0]
+    iw, ih         = ai_engine.AI_FRAME_SIZE
+    accumulated    = {}
 
     snap_face_mesh = mp.solutions.face_mesh.FaceMesh(
         max_num_faces=20,
@@ -234,7 +252,7 @@ def _snapshot_calibrate_from_frames(frame_paths: list, est_fps: float):
         min_tracking_confidence=0.3,
     )
 
-    print("[CALIB] Multi-snapshot calibration from saved frames...")
+    print("[CALIB] Multi-snapshot calibration from saved frames…")
 
     for snap_t in snap_seconds:
         target_idx = int(est_fps * snap_t)
@@ -248,12 +266,13 @@ def _snapshot_calibrate_from_frames(frame_paths: list, est_fps: float):
         snap_positions  = {}
         snap_frames_rgb = []
 
+        # Step through the window
         step = max(1, int(est_fps / 6))
         for fi in range(win_start, win_end + 1, step):
             img = cv2.imread(frame_paths[fi])
             if img is None:
                 continue
-            snap    = cv2.resize(img, ai_engine.AI_FRAME_SIZE)
+            snap = cv2.resize(img, ai_engine.AI_FRAME_SIZE)
             img_rgb = cv2.cvtColor(snap, cv2.COLOR_BGR2RGB)
 
             track_res = ai_engine.person_model.track(
@@ -281,6 +300,7 @@ def _snapshot_calibrate_from_frames(frame_paths: list, est_fps: float):
 
             snap_frames_rgb.append((img_rgb, dict(frame_positions)))
 
+        # Feed face-mesh calibration frames
         for img_rgb, frame_pos in snap_frames_rgb:
             if frame_pos:
                 ai_engine.learner.on_calibration_frame(
@@ -288,6 +308,7 @@ def _snapshot_calibrate_from_frames(frame_paths: list, est_fps: float):
                     snap_face_mesh, ai_engine.pose_detector, iw, ih,
                 )
 
+        # Merge into accumulated
         new_count = 0
         for tid, pos in snap_positions.items():
             if tid not in accumulated:
@@ -306,15 +327,8 @@ def _snapshot_calibrate_from_frames(frame_paths: list, est_fps: float):
         ai_engine.locked = True
         return
 
-    matched_map = ai_engine.learner.match_seats(accumulated)
-    if matched_map:
-        ai_engine.student_id_map.update(matched_map)
-        print(f"[CALIB] Seat-based matching: {len(matched_map)} matched.")
-    else:
-        for tid in accumulated:
-            ai_engine.student_id_map[tid] = f"S{tid:03}"
-        print(f"[CALIB] Fresh IDs assigned to {len(accumulated)} students.")
-
+    # Assign IDs and lock seat zones
+    ai_engine.student_id_map.update(ai_engine.assign_student_ids(accumulated))
     ai_engine.learner.on_lock(ai_engine.student_id_map)
     ai_engine.init_seat_zones(accumulated)
     ai_engine.learner.set_seat_positions(ai_engine.seat_positions)
@@ -326,26 +340,44 @@ def _snapshot_calibrate_from_frames(frame_paths: list, est_fps: float):
         1 for sid in ai_engine.student_id_map.values()
         if ai_engine.learner.is_calibrated(sid)
     )
-    print(f"  Locked {len(ai_engine.student_id_map)} students  |  "
+    print(f"  ✅ Locked {len(ai_engine.student_id_map)} students  |  "
           f"pre-calibrated: {n_cal}/{len(ai_engine.student_id_map)}\n")
 
 
 def _frame_is_suspicious(annotated: np.ndarray) -> bool:
+    """
+    Determine if ai_engine flagged something in this frame.
+
+    run_ai_on_frame draws a green banner (0,130,0) for All Clear and a red
+    banner (0,0,200) for alerts. We sample the top-left pixel of the banner
+    row (y=0..50) and check if it is predominantly green vs red.
+
+    Returns True  → suspicious (red/orange banner → save this frame)
+    Returns False → all clear  (green banner → skip)
+    """
     if annotated is None or annotated.shape[0] < 10:
         return False
-    b, g, r = int(annotated[25, 5, 0]), int(annotated[25, 5, 1]), int(annotated[25, 5, 2])
-    if r > g and r > 60:
-        return True
-    return False
 
+    # Sample the banner region: row 25, column 5  (centre-left of banner)
+    b, g, r = int(annotated[25, 5, 0]), int(annotated[25, 5, 1]), int(annotated[25, 5, 2])
+
+    # All-clear banner is drawn with color (0, 130, 0) → green channel dominant
+    # Alert banner is drawn with color (0, 0, 200) → red channel dominant
+    # Allow some blending tolerance (cv2.addWeighted blends with the frame)
+    if r > g and r > 60:
+        return True   # red/alert banner
+    return False      # green/clear banner
+
+# ─── Cleanup ──────────────────────────────────────────────────────────────────
 
 async def on_shutdown(app):
     global _exam_ended
     _display_stop.set()
 
+    # If the server shuts down before the timer fires, trigger analysis now
     if _collection_active and not _exam_ended:
         _exam_ended = True
-        print("[SHUTDOWN] Running analysis before exit...")
+        print("[SHUTDOWN] Running analysis before exit…")
         _run_post_exam_analysis()
 
     if _exam_timer:
@@ -357,12 +389,14 @@ async def on_shutdown(app):
     await asyncio.gather(*coros)
     pcs.clear()
 
+# ─── App Setup ────────────────────────────────────────────────────────────────
 
 app = web.Application(middlewares=[cors_middleware])
 app.router.add_route("POST",    "/offer", offer)
 app.router.add_route("OPTIONS", "/offer", lambda request: web.Response())
 app.on_shutdown.append(on_shutdown)
 
+# ─── Main Runner ──────────────────────────────────────────────────────────────
 
 if __name__ == "__main__":
     import ssl
