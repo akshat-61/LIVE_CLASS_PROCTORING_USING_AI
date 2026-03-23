@@ -356,7 +356,7 @@ class AutoThreshold:
 
         # Force mark as calibrated by bumping sample counts
         # (the AdaptiveLearner uses sample_count >= CALIBRATION_FRAMES to decide)
-        from adaptive_learning import Config as LearnerConfig
+        from core.adaptive_learning import Config as LearnerConfig
         cfg = LearnerConfig()
         baseline.sample_count      = max(baseline.sample_count,      cfg.CALIBRATION_FRAMES)
         baseline.lean_sample_count = max(baseline.lean_sample_count, cfg.CALIBRATION_FRAMES_LEAN)
@@ -569,7 +569,7 @@ def tick_auto_threshold(
     pose_results     : MediaPipe Pose results object (or None)
     iw, ih           : frame width / height in pixels
     """
-    from adaptive_learning import AdaptiveLearner  # avoid circular at module level
+    from core.adaptive_learning import AdaptiveLearner  # avoid circular at module level
 
     # ── Extract face signals ──────────────────────────────────────────────
     face_signals: Dict[str, Dict[str, float]] = {}

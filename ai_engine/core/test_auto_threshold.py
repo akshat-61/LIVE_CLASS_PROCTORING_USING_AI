@@ -90,7 +90,7 @@ def test_apply_to_learner_mock():
         CALIBRATION_FRAMES      = 6
         CALIBRATION_FRAMES_LEAN = 6
 
-    import adaptive_learning as al_mod
+    import core.adaptive_learning as al_mod
     # Temporarily patch Config
     _orig = al_mod.Config
     al_mod.Config = MockConfig
