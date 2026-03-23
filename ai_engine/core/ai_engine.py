@@ -83,11 +83,12 @@ def _evidence_writer_loop():
                 os.makedirs(folder, exist_ok=True)
                 cv2.imwrite(path, frame_data, [cv2.IMWRITE_JPEG_QUALITY, quality])
 
-            elif op == "move":
-                _, src_path, dst_folder = item
+            elif op == "write_and_move":
+                _, ram_folder, ram_path, dst_folder, frame_data, quality = item
+                os.makedirs(ram_folder, exist_ok=True)
+                cv2.imwrite(ram_path, frame_data, [cv2.IMWRITE_JPEG_QUALITY, quality])
                 os.makedirs(dst_folder, exist_ok=True)
-                dst_path = os.path.join(dst_folder, os.path.basename(src_path))
-                shutil.move(src_path, dst_path)
+                shutil.move(ram_path, os.path.join(dst_folder, os.path.basename(ram_path)))
 
         except Exception as e:
             log.error("EvidenceWriter error: %s", e)
@@ -235,7 +236,7 @@ last_coco_results     = None
 locked                = False
 stable_counter        = 0
 student_id_map        = {}
-last_alert_time       = {}
+last_alert_time       = {}  
 mouth_counters        = {}
 mar_history           = {}
 gaze_history          = {}
@@ -276,6 +277,7 @@ def reset_session():
     global face_based_positions
     global _calib_accumulated_positions, _lock_frame
     global last_alert_time, mouth_counters, mar_history, gaze_history
+    global head_ratio_history
     global hand_mouth_counters, hand_face_counters, write_palm_counters
     global write_tip_history, signaling_counters, phone_counters
     global seat_positions, seat_vacancy_counters, seat_grace_counters, \
@@ -285,6 +287,7 @@ def reset_session():
     global _prev_gray, _motion_burst_counter
     global calc_seen_window
     global _median_student_bbox_h, _invigilator_tids
+    global _wrist_prev_positions
     global intel
 
     locked                       = False
@@ -302,6 +305,7 @@ def reset_session():
     mouth_counters               = {}
     mar_history                  = {}
     gaze_history                 = {}
+    head_ratio_history           = {}
     hand_mouth_counters          = {}
     hand_face_counters           = {}
     write_palm_counters          = {}
@@ -339,8 +343,9 @@ def save_evidence(frame, student_id, event):
         ram_folder = f"{_RAM_DISK}/{event}"
         ram_path   = f"{ram_folder}/{filename}"
         try:
-            _evidence_queue.put_nowait(("write", ram_folder, ram_path, frame_copy, 85))
-            _evidence_queue.put_nowait(("move",  ram_path,   ssd_folder))
+            _evidence_queue.put_nowait(
+                ("write_and_move", ram_folder, ram_path, ssd_folder, frame_copy, 85)
+            )
         except Exception:
             try:
                 _evidence_queue.put_nowait(("write", ssd_folder, ssd_path, frame_copy, 85))
@@ -366,10 +371,10 @@ def center(x1, y1, x2, y2):
 
 def can_send(key, cooldown=None):
     cd = cooldown if cooldown is not None else ALERT_COOLDOWN_SEC
-    frames_required = int(cd * 30.0)
-    last_frame = last_alert_time.get(key, -999999)
-    if (frame_count - last_frame) > frames_required:
-        last_alert_time[key] = frame_count
+    last_time = last_alert_time.get(key, 0.0)
+    now = _now()
+    if (now - last_time) > cd:
+        last_alert_time[key] = now
         return True
     return False
 
@@ -433,6 +438,7 @@ def prune_state(current_ids):
         hand_mouth_counters, hand_face_counters,
         write_palm_counters, phone_counters,
         write_tip_history, signaling_counters,
+        gaze_history, head_ratio_history,
     ]:
         for k in list(d.keys()):
             if k not in active:
@@ -994,18 +1000,15 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
                                 cv2.FONT_HERSHEY_SIMPLEX, 0.45, (128, 128, 0), 1)
                     continue
 
-                old_pos = current_positions.get(tid)
-                if old_pos is None:
-                    if tid in current_positions:
-                        px, py = current_positions[tid]
-                        cx = int(px * 0.7 + cx * 0.3)
-                        cy = int(py * 0.7 + cy * 0.3)
+                if tid not in current_positions:
                     current_positions[tid] = (cx, cy)
-                elif dist(old_pos, (cx, cy)) < 150:
+                elif dist(current_positions[tid], (cx, cy)) < 150:
+                    old = current_positions[tid]
                     current_positions[tid] = (
-                        int(old_pos[0] * 0.6 + cx * 0.4),
-                        int(old_pos[1] * 0.6 + cy * 0.4),
+                        int(old[0] * 0.6 + cx * 0.4),
+                        int(old[1] * 0.6 + cy * 0.4),
                     )
+
                 current_ids.add(tid)
                 sid = f"S{tid:03}"
 
@@ -1450,6 +1453,8 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
                         log.warning("CHEATING HIGH RISK: %s | score=%s", sid, score)
                     learner.escalate_if_coordinated(sid, sid_other)
 
+    active_sids = {f"S{tid:03}" for tid in current_ids}
+
     if object_results is not None and object_results.boxes is not None:
         for box in object_results.boxes:
             cls, conf = int(box.cls[0]), float(box.conf[0])
@@ -1465,6 +1470,8 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
             obj_cx, obj_cy = center(x1, y1, x2, y2)
 
             sid = get_seat_at(obj_cx, obj_cy) if seat_positions else None
+            if sid is not None and sid not in active_sids:
+                sid = None
             if sid is None:
                 tid = get_student_at(obj_cx, obj_cy, current_positions)
                 sid = f"S{tid:03}" if tid else None
@@ -1604,10 +1611,9 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
         send_async_fn=send_event_async,
     )
     for event in intel_alerts:
-        # intel.update() may return dicts or plain strings — handle both
         if isinstance(event, dict):
             sid   = event.get("student_id")
-            etype = event.get("event_type")
+            etype = event.get("event_type") or event.get("event")
             conf  = event.get("confidence", 1.0)
         elif isinstance(event, str):
             sid   = None
@@ -1623,16 +1629,13 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
 
     classification_results = {}
 
-    for sid in student_id_map.values():
+    for tid, sid in student_id_map.items():
         events = event_manager.get_recent_events(sid, 60)
         result = classifier.classify(sid, events)
-
         classification_results[sid] = result
 
-        if sid in current_positions:
-            x, y = current_positions[
-                next(t for t in student_id_map if student_id_map[t] == sid)
-            ]
+        if tid in current_positions:
+            x, y = current_positions[tid]
 
             color = (0, 255, 0)
             if result["label"] == "SUSPICIOUS":
