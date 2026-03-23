@@ -289,7 +289,6 @@ def reset_session():
 
     locked                       = False
     stable_counter               = 0
-    student_id_map               = {}
     frame_count                  = 0
     last_custom_results          = None
     last_coco_results            = None
@@ -394,10 +393,6 @@ def send_event_async(event_type, student_id=None, distance=None):
             pass
     threading.Thread(target=task, daemon=True).start()
 
-def assign_student_ids(positions):
-    sorted_list = sorted(positions.items(), key=lambda item: (item[1][1], item[1][0]))
-    return {tid: f"S{i:03d}" for i, (tid, _) in enumerate(sorted_list, 1)}
-
 def get_student_at(x, y, current_positions):
     min_d, found = FACE_MATCH_RADIUS, None
     for tid, pos in current_positions.items():
@@ -432,7 +427,7 @@ def get_seat_at(x, y):
 
 
 def prune_state(current_ids):
-    active = set(student_id_map.get(tid, "") for tid in current_ids)
+    active = {f"S{tid:03}" for tid in current_ids}
     for d in [
         mouth_counters, mar_history,
         hand_mouth_counters, hand_face_counters,
@@ -523,7 +518,7 @@ def init_seat_zones(positions):
            proximity_counters, seat_initial_pair_dists, seat_was_vacant
     seat_positions = {}
     for tid, pos in positions.items():
-        sid = student_id_map.get(tid, "S???")
+        sid = f"S{tid:03}"
         seat_positions[sid] = pos
 
     DEDUP_THRESHOLD = 10
@@ -544,7 +539,7 @@ def init_seat_zones(positions):
         del seat_positions[sid]
 
     seat_vacancy_counters = {
-        sid: 0 for sid in seat_positions if sid in student_id_map.values()
+        sid: 0 for sid in seat_positions
     }
     seat_grace_counters = {sid: 0 for sid in seat_positions}
     seat_was_vacant     = {sid: False for sid in seat_positions}
@@ -645,7 +640,7 @@ def check_seat_zones(current_positions, frame):
                     if seat_vacancy_counters[sid] >= SEAT_VACANCY_FRAMES:
                         if not seat_was_vacant.get(sid, False):
                             seat_was_vacant[sid] = True
-                            known_sid = (sid != "S???" and sid in set(student_id_map.values()))
+                            known_sid = True
                             if known_sid and can_send(f"vacancy_{sid}", cooldown=SEAT_VACANCY_COOLDOWN):
                                 logger.log_event(
                                     student_id=sid,
@@ -720,9 +715,7 @@ def process_hands(hand_res, face_landmarks_list, current_positions, iw, ih, fram
         tid = get_student_at(wrist[0], wrist[1], current_positions)
         if tid is None:
             tid = get_student_at(palm[0], palm[1], current_positions)
-        sid = student_id_map.get(tid, None)
-        if sid is None:
-            continue
+        sid = f"S{tid:03}"
         hands_data.append({"palm": palm, "tip": tip, "wrist": wrist, "sid": sid})
         mp.solutions.drawing_utils.draw_landmarks(frame, hand_lms, mp_hands.HAND_CONNECTIONS)
 
@@ -1014,29 +1007,7 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
                         int(old_pos[1] * 0.6 + cy * 0.4),
                     )
                 current_ids.add(tid)
-                sid = student_id_map.get(tid, None)
-
-                if sid is None and locked:
-                    pos = current_positions.get(tid)
-                    if pos is not None:
-                        claimed_sids = {student_id_map.get(t) for t in current_ids if t != tid}
-                        REACQUIRE_DIST = 70
-                        for s_sid, s_pos in seat_positions.items():
-                            if s_sid in claimed_sids or s_sid == "S???":
-                                continue
-                            if dist(pos, s_pos) > REACQUIRE_DIST:
-                                continue
-                            if seat_vacancy_counters.get(s_sid, 0) == 0:
-                                continue
-                            last_ra = last_alert_time.get(f"_reacquire_{s_sid}", -999)
-                            if frame_count - last_ra < 45:
-                                continue
-                            student_id_map[tid] = s_sid
-                            last_alert_time[f"_reacquire_{s_sid}"] = frame_count
-                            sid = s_sid
-                            log.info("ReAcquire: New tid=%d → %s (dist=%.0fpx)",
-                                     tid, s_sid, dist(pos, s_pos))
-                            break
+                sid = f"S{tid:03}"
 
                 sid_label = sid if sid else "Scanning..."
                 cv2.rectangle(frame, (x1, y1), (x2, y2), (200, 200, 200), 1)
@@ -1047,7 +1018,7 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
         last_coco_results = None
 
     for tid in current_ids:
-        sid = student_id_map.get(tid)
+        sid = f"S{tid:03}"
         if sid:
             student_state.update(
                 sid,
@@ -1073,7 +1044,7 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
             tid = get_student_at(gesture_cx, gesture_cy, current_positions)
             if tid is None:
                 continue
-            sid = student_id_map.get(tid)
+            sid = f"S{tid:03}"
             if sid is None:
                 continue
             gesture_name = gesture_model.names[cls].lower()
@@ -1144,7 +1115,7 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
             tid = get_student_at(*center(x1, y1, x2, y2), current_positions)
             if tid is None:
                 continue
-            sid = student_id_map.get(tid)
+            sid = f"S{tid:03}"
             if sid is None:
                 continue
             id_detected_this_frame.add(sid)
@@ -1187,15 +1158,16 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
                 student_id_map.update(matched_map)
                 log.info("Seat-based matching: %d matched.", len(matched_map))
             else:
-                student_id_map.update(assign_student_ids(all_positions))
                 log.info("Fresh IDs assigned to %d students.", len(all_positions))
-            learner.on_lock(student_id_map)
+            learner.on_lock({tid: f"S{tid:03}" for tid in current_ids})
 
             seat_anchor_positions = dict(_calib_accumulated_positions)
             log.info("Seat anchors: %d positions locked", len(seat_anchor_positions))
             init_seat_zones(seat_anchor_positions)
             learner.set_seat_positions(seat_positions)
-            log.info("LOCKED — %d student(s): %s", len(student_id_map), list(student_id_map.values()))
+            log.info("LOCKED — %d student(s): %s",
+                len(current_ids),
+                [f"S{tid:03}" for tid in current_ids])
             log.info("Seat zones: %d", len(seat_positions))
         return frame
 
@@ -1210,7 +1182,7 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
 
     ID_VISIBLE_THRESHOLD = 99999
     for tid in current_ids:
-        sid = student_id_map.get(tid)
+        sid = f"S{tid:03}"
         if sid is None:
             continue
         id_visible_counters.setdefault(sid, 0)
@@ -1237,7 +1209,7 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
     if pose_res and pose_res.pose_landmarks:
         lms = pose_res.pose_landmarks.landmark
         tid = get_student_at(int(lms[0].x * iw), int(lms[0].y * ih), current_positions)
-        sid = student_id_map.get(tid) if tid is not None else None
+        sid = f"S{tid:03}" if tid is not None else None
         if sid is not None:
             raw_lean  = abs(lms[11].x - lms[12].x)
             prev      = _lean_smooth.get(sid, raw_lean)
@@ -1279,7 +1251,7 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
                 int(0.2 * fy + 0.8 * prev[1]),
             )
 
-            sid = student_id_map.get(tid, "Unknown")
+            sid = f"S{tid:03}"
 
             mar = mouth_aspect_ratio(pts)
             if hand_face_counters.get(sid, 0) > 0 or hand_mouth_counters.get(sid, 0) > 0:
@@ -1425,7 +1397,7 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
     face_landmarks_list = last_face_landmarks if last_face_landmarks else []
 
     for tid in current_ids:
-        sid = student_id_map.get(tid, "Unknown")
+        sid = f"S{tid:03}"
         pos = current_positions[tid]
 
         for p_pos in phones:
@@ -1453,7 +1425,7 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
         for other_tid in current_ids:
             if tid >= other_tid:
                 continue
-            sid_other = student_id_map.get(other_tid, "Unknown")
+            sid_other = f"S{other_tid:03}"
             d = dist(pos, current_positions[other_tid])
             _either_talking = (
                 mouth_counters.get(sid, 0)       >= MAR_TALK_FRAMES or
@@ -1495,7 +1467,7 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
             sid = get_seat_at(obj_cx, obj_cy) if seat_positions else None
             if sid is None:
                 tid = get_student_at(obj_cx, obj_cy, current_positions)
-                sid = student_id_map.get(tid) if tid else None
+                sid = f"S{tid:03}" if tid else None
             if sid is None:
                 continue
 
@@ -1552,11 +1524,9 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
             current_alert = hand_alert
 
     _all_calibrated = all(
-        learner.is_calibrated(student_id_map[tid])
-        for tid in current_ids if tid in student_id_map
+        learner.is_calibrated(f"S{tid:03}")
+        for tid in current_ids
     ) if current_ids else False
-    # Only top-up calibration if we have uncalibrated students AND
-    # we haven't already locked from an external snapshot phase
     if not _all_calibrated and frame_count % 2 == 0 and frame_count < 300:
         learner.on_calibration_frame(
             img_rgb, current_positions, face_mesh, pose_detector, iw, ih,
@@ -1598,11 +1568,11 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
     person_count = len(current_ids)
 
     calc_detected_this_frame = {
-        student_id_map.get(tid)
+        f"S{tid:03}"
         for tid in current_ids
-        if student_id_map.get(tid) in calc_seen_window
-        and calc_seen_window[student_id_map.get(tid)]
-        and calc_seen_window[student_id_map.get(tid)][-1] == 1
+        if f"S{tid:03}" in calc_seen_window
+        and calc_seen_window[f"S{tid:03}"]
+        and calc_seen_window[f"S{tid:03}"][-1] == 1
     }
     for sid_w, win in calc_seen_window.items():
         if sid_w not in calc_detected_this_frame:
@@ -1621,7 +1591,7 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
         frame_count=frame_count,
         locked=locked,
         current_positions=current_positions,
-        student_id_map=student_id_map,
+        student_ids={tid: f"S{tid:03}" for tid in current_ids},
         seat_positions=seat_positions,
         invigilator_tids=_invigilator_tids,
         face_landmarks=last_face_landmarks,
@@ -1698,7 +1668,7 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
                 if can_send(room_key, cooldown=15):
                     target_sid = None
                     for tid in current_ids:
-                        sid = student_id_map.get(tid)
+                        sid = f"S{tid:03}"
                         if sid:
                             target_sid = sid
                             break
