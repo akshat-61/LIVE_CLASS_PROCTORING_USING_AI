@@ -9,13 +9,13 @@ from datetime import datetime
 
 class Config:
     BASELINE_ALPHA     = 0.008
-    CALIBRATION_FRAMES = 6
+    CALIBRATION_FRAMES = 3
     COLLECT_EVERY_N    = 6
 
     REL_LOOK_DOWN = 0.022
     REL_YAW       = 0.045
     REL_LEAN      = 0.040 
-    CALIBRATION_FRAMES_LEAN = 6
+    CALIBRATION_FRAMES_LEAN = 3
     REL_MAR = 0.040
     SEAT_DRIFT_ALPHA = 0.10
     SEAT_MATCH_THRESHOLD = 120
@@ -270,8 +270,12 @@ class AdaptiveLearner:
 
         for tid, sid in student_id_map.items():
             if sid not in self._baselines:
-                self._baselines[sid] = StudentBaseline()
-                print(f"  [AdaptiveLearner] ⚠ No calib data for {sid} — using defaults")
+                bl = StudentBaseline()
+                # Mark as calibrated so detections fire even on fallback values
+                bl.sample_count      = self.cfg.CALIBRATION_FRAMES
+                bl.lean_sample_count = self.cfg.CALIBRATION_FRAMES_LEAN
+                self._baselines[sid] = bl
+                print(f"  [AdaptiveLearner] ⚠ No calib data for {sid} — using defaults (auto-marked calibrated)")
             else:
                 bl = self._baselines[sid]
                 if bl.sample_count < self.cfg.CALIBRATION_FRAMES:
@@ -279,9 +283,10 @@ class AdaptiveLearner:
                         bl.look_down = median_look_down
                         bl.yaw       = median_yaw
                         bl.mar       = median_mar
+                        # Mark as calibrated so detections fire
+                        bl.sample_count = self.cfg.CALIBRATION_FRAMES
                     print(f"  [AdaptiveLearner] ⚠ {sid} face incomplete "
-                          f"({bl.sample_count}/{self.cfg.CALIBRATION_FRAMES}) "
-                          f"— patched with classroom median")
+                          f"— patched with classroom median (auto-marked calibrated)")
 
         print(f"\n[AdaptiveLearner] ✅ Locked — baselines for {transferred} students:")
         for sid, bl in self._baselines.items():

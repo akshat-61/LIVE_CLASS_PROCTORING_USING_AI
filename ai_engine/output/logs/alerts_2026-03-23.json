@@ -1,0 +1,1017 @@
+[
+    {
+        "timestamp": "2026-03-23 10:54:27",
+        "student_id": "S018",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.5787203311920166,
+        "frame": 24
+    },
+    {
+        "timestamp": "2026-03-23 10:54:27",
+        "student_id": "S010",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.5703378915786743,
+        "frame": 24
+    },
+    {
+        "timestamp": "2026-03-23 10:54:30",
+        "student_id": "S014",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:54:30",
+        "student_id": "S015",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:54:30",
+        "student_id": "S012",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:54:30",
+        "student_id": "S022",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:54:30",
+        "student_id": "S006",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:54:30",
+        "student_id": "S010",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:54:30",
+        "student_id": "S005",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:54:30",
+        "student_id": "S009",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:54:30",
+        "student_id": "S019",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:54:30",
+        "student_id": "S011",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:54:30",
+        "student_id": "S008",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:54:30",
+        "student_id": "S024",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:54:30",
+        "student_id": "S016",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:54:30",
+        "student_id": "S003",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:54:30",
+        "student_id": "S018",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:54:30",
+        "student_id": "S023",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:54:30",
+        "student_id": "S025",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:54:30",
+        "student_id": "S017",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:54:30",
+        "student_id": "S004",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:54:30",
+        "student_id": "S020",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:54:30",
+        "student_id": "S021",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:54:30",
+        "student_id": "S002",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:54:30",
+        "student_id": "S013",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:54:30",
+        "student_id": "S001",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:56:11",
+        "student_id": "S018",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.5787203311920166,
+        "frame": 24
+    },
+    {
+        "timestamp": "2026-03-23 10:56:11",
+        "student_id": "S010",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.5703378915786743,
+        "frame": 24
+    },
+    {
+        "timestamp": "2026-03-23 10:56:14",
+        "student_id": "S014",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:56:14",
+        "student_id": "S015",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:56:14",
+        "student_id": "S012",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:56:14",
+        "student_id": "S022",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:56:14",
+        "student_id": "S006",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:56:14",
+        "student_id": "S010",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:56:14",
+        "student_id": "S005",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:56:14",
+        "student_id": "S009",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:56:14",
+        "student_id": "S019",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:56:14",
+        "student_id": "S011",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:56:14",
+        "student_id": "S008",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:56:14",
+        "student_id": "S024",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:56:14",
+        "student_id": "S016",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:56:14",
+        "student_id": "S003",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:56:14",
+        "student_id": "S018",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:56:14",
+        "student_id": "S023",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:56:14",
+        "student_id": "S025",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:56:14",
+        "student_id": "S017",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:56:14",
+        "student_id": "S004",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:56:14",
+        "student_id": "S020",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:56:14",
+        "student_id": "S021",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:56:14",
+        "student_id": "S002",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:56:14",
+        "student_id": "S013",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:56:14",
+        "student_id": "S001",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:56:20",
+        "student_id": "S015",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.57402104139328,
+        "frame": 90
+    },
+    {
+        "timestamp": "2026-03-23 10:56:23",
+        "student_id": "ROOM(gesture_rate)",
+        "event": "BEHAVIOR_ANOMALY",
+        "confidence": 0.24444444444444444,
+        "frame": 111
+    },
+    {
+        "timestamp": "2026-03-23 10:56:24",
+        "student_id": "S005",
+        "event": "BODY_LEANING",
+        "confidence": 0.9,
+        "frame": 120
+    },
+    {
+        "timestamp": "2026-03-23 10:56:25",
+        "student_id": "S014",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.6832846403121948,
+        "frame": 126
+    },
+    {
+        "timestamp": "2026-03-23 10:56:26",
+        "student_id": "S014",
+        "event": "LOOKING_LEFT",
+        "confidence": 0.9,
+        "frame": 129
+    },
+    {
+        "timestamp": "2026-03-23 10:56:29",
+        "student_id": "S008",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.5840104222297668,
+        "frame": 150
+    },
+    {
+        "timestamp": "2026-03-23 10:59:02",
+        "student_id": "S021",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.7130207419395447,
+        "frame": 24
+    },
+    {
+        "timestamp": "2026-03-23 10:59:02",
+        "student_id": "S019",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.6807535290718079,
+        "frame": 24
+    },
+    {
+        "timestamp": "2026-03-23 10:59:02",
+        "student_id": "S011",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.5950754880905151,
+        "frame": 24
+    },
+    {
+        "timestamp": "2026-03-23 10:59:04",
+        "student_id": "S014",
+        "event": "BODY_LEANING",
+        "confidence": 0.9,
+        "frame": 33
+    },
+    {
+        "timestamp": "2026-03-23 10:59:06",
+        "student_id": "S019",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:59:06",
+        "student_id": "S020",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:59:06",
+        "student_id": "S011",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:59:06",
+        "student_id": "S015",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:59:06",
+        "student_id": "S021",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:59:06",
+        "student_id": "S022",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:59:06",
+        "student_id": "S002",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:59:06",
+        "student_id": "S005",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:59:06",
+        "student_id": "S006",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:59:06",
+        "student_id": "S008",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:59:06",
+        "student_id": "S009",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:59:06",
+        "student_id": "S013",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:59:06",
+        "student_id": "S016",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:59:06",
+        "student_id": "S003",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:59:06",
+        "student_id": "S012",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:59:06",
+        "student_id": "S007",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:59:06",
+        "student_id": "S010",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:59:06",
+        "student_id": "S017",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:59:06",
+        "student_id": "S001",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:59:06",
+        "student_id": "S018",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:59:06",
+        "student_id": "S004",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:59:06",
+        "student_id": "S014",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 10:59:15",
+        "student_id": "S017",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.5739354491233826,
+        "frame": 108
+    },
+    {
+        "timestamp": "2026-03-23 10:59:16",
+        "student_id": "ROOM(hand_activity_rate)",
+        "event": "BEHAVIOR_ANOMALY",
+        "confidence": 0.6111111111111112,
+        "frame": 118
+    },
+    {
+        "timestamp": "2026-03-23 10:59:27",
+        "student_id": "S006",
+        "event": "BODY_LEANING",
+        "confidence": 0.9,
+        "frame": 183
+    },
+    {
+        "timestamp": "2026-03-23 11:01:33",
+        "student_id": "S016",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.578559935092926,
+        "frame": 24
+    },
+    {
+        "timestamp": "2026-03-23 11:01:33",
+        "student_id": "S008",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.5703675746917725,
+        "frame": 24
+    },
+    {
+        "timestamp": "2026-03-23 11:01:36",
+        "student_id": "S012",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 11:01:36",
+        "student_id": "S013",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 11:01:36",
+        "student_id": "S010",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 11:01:36",
+        "student_id": "S008",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 11:01:36",
+        "student_id": "S007",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 11:01:36",
+        "student_id": "S009",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 11:01:36",
+        "student_id": "S006",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 11:01:36",
+        "student_id": "S017",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 11:01:36",
+        "student_id": "S016",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 11:01:36",
+        "student_id": "S004",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 11:01:36",
+        "student_id": "S014",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 11:01:36",
+        "student_id": "S005",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 11:01:36",
+        "student_id": "S002",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 11:01:36",
+        "student_id": "S011",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 11:01:36",
+        "student_id": "S001",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 11:01:36",
+        "student_id": "S015",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 11:01:36",
+        "student_id": "S003",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 11:01:42",
+        "student_id": "S013",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.57402104139328,
+        "frame": 90
+    },
+    {
+        "timestamp": "2026-03-23 11:01:45",
+        "student_id": "ROOM(gesture_rate)",
+        "event": "BEHAVIOR_ANOMALY",
+        "confidence": 0.24444444444444444,
+        "frame": 111
+    },
+    {
+        "timestamp": "2026-03-23 11:01:47",
+        "student_id": "S012",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.6832846403121948,
+        "frame": 126
+    },
+    {
+        "timestamp": "2026-03-23 11:01:48",
+        "student_id": "S012",
+        "event": "LOOKING_LEFT",
+        "confidence": 0.9,
+        "frame": 129
+    },
+    {
+        "timestamp": "2026-03-23 11:01:48",
+        "student_id": "S012",
+        "event": "LOOKING_LEFT",
+        "confidence": 0.9,
+        "frame": 130
+    },
+    {
+        "timestamp": "2026-03-23 11:01:48",
+        "student_id": "S012",
+        "event": "LOOKING_LEFT",
+        "confidence": 0.9,
+        "frame": 131
+    },
+    {
+        "timestamp": "2026-03-23 11:01:48",
+        "student_id": "S012",
+        "event": "LOOKING_LEFT",
+        "confidence": 0.9,
+        "frame": 132
+    },
+    {
+        "timestamp": "2026-03-23 11:01:48",
+        "student_id": "S012",
+        "event": "LOOKING_LEFT",
+        "confidence": 0.9,
+        "frame": 133
+    },
+    {
+        "timestamp": "2026-03-23 11:01:49",
+        "student_id": "S012",
+        "event": "LOOKING_LEFT",
+        "confidence": 0.9,
+        "frame": 134
+    },
+    {
+        "timestamp": "2026-03-23 11:01:49",
+        "student_id": "S012",
+        "event": "LOOKING_LEFT",
+        "confidence": 0.9,
+        "frame": 135
+    },
+    {
+        "timestamp": "2026-03-23 11:01:49",
+        "student_id": "S012",
+        "event": "LOOKING_LEFT",
+        "confidence": 0.9,
+        "frame": 138
+    },
+    {
+        "timestamp": "2026-03-23 11:01:49",
+        "student_id": "S012",
+        "event": "LOOKING_LEFT",
+        "confidence": 0.9,
+        "frame": 139
+    },
+    {
+        "timestamp": "2026-03-23 11:01:51",
+        "student_id": "S011",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.5840480327606201,
+        "frame": 150
+    },
+    {
+        "timestamp": "2026-03-23 11:01:56",
+        "student_id": "S016",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.6066922545433044,
+        "frame": 180
+    },
+    {
+        "timestamp": "2026-03-23 11:03:32",
+        "student_id": "S016",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.578559935092926,
+        "frame": 24
+    },
+    {
+        "timestamp": "2026-03-23 11:03:32",
+        "student_id": "S008",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.5703675746917725,
+        "frame": 24
+    },
+    {
+        "timestamp": "2026-03-23 11:03:36",
+        "student_id": "S012",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 11:03:36",
+        "student_id": "S013",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 11:03:36",
+        "student_id": "S010",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 11:03:36",
+        "student_id": "S008",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 11:03:36",
+        "student_id": "S007",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 11:03:36",
+        "student_id": "S009",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 11:03:36",
+        "student_id": "S006",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 11:03:36",
+        "student_id": "S017",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 11:03:36",
+        "student_id": "S016",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 11:03:36",
+        "student_id": "S004",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 11:03:36",
+        "student_id": "S014",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 11:03:36",
+        "student_id": "S005",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 11:03:36",
+        "student_id": "S002",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 11:03:36",
+        "student_id": "S011",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 11:03:36",
+        "student_id": "S001",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 11:03:36",
+        "student_id": "S015",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 11:03:36",
+        "student_id": "S003",
+        "event": "FACE_ABSENT",
+        "confidence": 1.0,
+        "frame": 51
+    },
+    {
+        "timestamp": "2026-03-23 11:03:41",
+        "student_id": "S013",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.57402104139328,
+        "frame": 90
+    },
+    {
+        "timestamp": "2026-03-23 11:03:44",
+        "student_id": "ROOM(gesture_rate)",
+        "event": "BEHAVIOR_ANOMALY",
+        "confidence": 0.24444444444444444,
+        "frame": 111
+    },
+    {
+        "timestamp": "2026-03-23 11:03:47",
+        "student_id": "S012",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.6832846403121948,
+        "frame": 126
+    },
+    {
+        "timestamp": "2026-03-23 11:03:47",
+        "student_id": "S012",
+        "event": "LOOKING_LEFT",
+        "confidence": 0.9,
+        "frame": 129
+    },
+    {
+        "timestamp": "2026-03-23 11:03:51",
+        "student_id": "S011",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.5840480327606201,
+        "frame": 150
+    },
+    {
+        "timestamp": "2026-03-23 11:03:55",
+        "student_id": "S016",
+        "event": "CALCULATOR_DETECTED",
+        "confidence": 0.6066922545433044,
+        "frame": 180
+    }
+]

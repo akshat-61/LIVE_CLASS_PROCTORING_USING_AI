@@ -8,13 +8,13 @@ import os
 import torch
 from ultralytics import YOLO
 import mediapipe as mp
-from adaptive_learning import AdaptiveLearner
-from alert_logger import AlertLogger
-from feature_collector import FeatureCollector
-from metrics_engine import MetricsEngine
-from anomaly_detector import AnomalyDetector
+from core.adaptive_learning import AdaptiveLearner
+from output.alert_logger import AlertLogger
+from output.feature_collector import FeatureCollector
+from detection.metrics_engine import MetricsEngine
+from detection.anomaly_detector import AnomalyDetector
 from model_loader import load_models
-from cheating_score import CheatingScore
+from classification.cheating_score import CheatingScore
 from queue import Queue, Empty
 from concurrent.futures import ThreadPoolExecutor
 from collections import deque as _deque
@@ -136,7 +136,7 @@ PHONE_PROXIMITY_MIN_DIST = 15
 CUSTOM_CONF_THRESHOLD    = 0.45
 COCO_CONF_THRESHOLD      = 0.45
 STABILITY_FRAMES         = 20
-ALERT_COOLDOWN_SEC       = 1
+ALERT_COOLDOWN_SEC       = 3
 WHISPER_PROXIMITY_THRESHOLD = 80
 MAR_VARIATION_THRESHOLD  = 0.004
 HARD_MAR_THRESHOLD       = 0.18
@@ -163,22 +163,22 @@ SEAT_ZONE_RADIUS         = 28
 SEAT_VACANCY_FRAMES      = 450
 VACANCY_GRACE_FRAMES     = 45
 MAX_VACANCY_DIST         = 100
-POST_LOCK_SETTLE_FRAMES  = 150
+POST_LOCK_SETTLE_FRAMES  = 10
 PROXIMITY_ONLY_DIST      = 40
 PROXIMITY_CONFIRM_FRAMES = 12
-SEAT_VACANCY_COOLDOWN    = 30.0
+SEAT_VACANCY_COOLDOWN    = 5.0
 MIN_SEAT_PAIR_DIST       = 80
 GAZE_RIGHT_THRESHOLD     = 0.58
 
 CALC_PERSIST_WINDOW      = 60
 CALC_PERSIST_RATE        = 0.20
-CALC_PERSIST_COOLDOWN    = 60.0
+CALC_PERSIST_COOLDOWN    = 5.0
 
 SEAT_ASSIGN_MARGIN       = 35
 SEAT_ASSIGN_ABS_CAP      = 65
-PHONE_CONF_THRESHOLD = config.get("thresholds", "phone_conf")
-GAZE_LEFT_THRESHOLD = config.get("thresholds", "gaze_left")
-AI_FRAME_SIZE = tuple(config.get("system", "frame_size"))
+PHONE_CONF_THRESHOLD = 0.45
+GAZE_LEFT_THRESHOLD  = 0.42
+AI_FRAME_SIZE        = (960, 540)
 
 INVIGILATOR_HEIGHT_RATIO = 1.35
 _median_student_bbox_h: float = 0.0
@@ -211,8 +211,8 @@ mp_face_mesh = mp.solutions.face_mesh
 face_mesh = mp_face_mesh.FaceMesh(
     max_num_faces=16,
     refine_landmarks=True,
-    min_detection_confidence=0.4,
-    min_tracking_confidence=0.4,
+    min_detection_confidence=0.2,
+    min_tracking_confidence=0.2,
 )
 
 mp_pose = mp.solutions.pose
@@ -261,7 +261,7 @@ last_face_landmarks_frame = -999
 face_based_positions: dict = {}
 _calib_accumulated_positions: dict = {}
 _lock_frame: int = -999
-_SETTLE_FRAMES: int = 8
+_SETTLE_FRAMES: int = 2
 
 _prev_gray: np.ndarray | None = None
 _motion_burst_counter: int    = 0
@@ -1555,7 +1555,9 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
         learner.is_calibrated(student_id_map[tid])
         for tid in current_ids if tid in student_id_map
     ) if current_ids else False
-    if not _all_calibrated and frame_count % 2 == 0:
+    # Only top-up calibration if we have uncalibrated students AND
+    # we haven't already locked from an external snapshot phase
+    if not _all_calibrated and frame_count % 2 == 0 and frame_count < 300:
         learner.on_calibration_frame(
             img_rgb, current_positions, face_mesh, pose_detector, iw, ih,
             mesh_res=mesh_res, pose_res=pose_res
@@ -1632,12 +1634,22 @@ def run_ai_on_frame(frame: np.ndarray) -> np.ndarray:
         send_async_fn=send_event_async,
     )
     for event in intel_alerts:
-        sid = event.get("student_id")
-        etype = event.get("event_type")
-        conf = event.get("confidence", 1.0)
-
+        # intel.update() may return dicts or plain strings — handle both
+        if isinstance(event, dict):
+            sid   = event.get("student_id")
+            etype = event.get("event_type")
+            conf  = event.get("confidence", 1.0)
+        elif isinstance(event, str):
+            sid   = None
+            etype = event
+            conf  = 1.0
+        else:
+            continue
+        if not etype:
+            continue
         ev = event_manager.emit(sid, etype, conf)
-        student_state.add_event(sid, ev)
+        if sid:
+            student_state.add_event(sid, ev)
 
     classification_results = {}
 

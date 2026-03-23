@@ -184,8 +184,8 @@ def snapshot_calibrate(frame_paths: list, est_fps: float, ae) -> None:
     snap_face_mesh = mp.solutions.face_mesh.FaceMesh(
         max_num_faces=20,
         refine_landmarks=True,
-        min_detection_confidence=0.3,
-        min_tracking_confidence=0.3,
+        min_detection_confidence=0.15,
+        min_tracking_confidence=0.15,
     )
 
     print("=" * 62)
@@ -460,13 +460,14 @@ def process_video(video_path, exam_id=None, room_id=None, show_preview=True):
     t_total = time.time()
 
     import ai_engine as ae
+    import core.ai_engine as _ae_core  # patch the real module, not the shim
 
     if exam_id:
-        ae.EXAM_ID = exam_id
+        _ae_core.EXAM_ID = exam_id
     if room_id:
-        ae.ROOM_ID = room_id
+        _ae_core.ROOM_ID = room_id
 
-    ae.send_event_async = make_patched_sender(ae)
+    _ae_core.send_event_async = make_patched_sender(_ae_core)
     ae.reset_session()
 
     # ── Phase 1: Extract all frames ───────────────────────────────────────

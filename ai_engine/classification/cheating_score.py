@@ -24,7 +24,18 @@ class CheatingScore:
             "WHISPERING_DETECTED": 30,
             "UNAUTHORIZED_OBJECT": 50,
             "LOOKING_AT_PHONE": 35,
-            "BEHAVIOR_ANOMALY": 20
+            "BEHAVIOR_ANOMALY": 20,
+            "LOOKING_LEFT": 5,
+            "LOOKING_RIGHT": 5,
+            "LOOKING_DOWN": 8,
+            "BODY_LEANING": 10,
+            "TALKING_DETECTED": 8,
+            "HANDS_ON_FACE": 5,
+            "SUSPICIOUS_GESTURE": 15,
+            "SEAT_VACATED": 20,
+            "CALCULATOR_DETECTED": 25,
+            "WRITING_ON_PALM": 30,
+            "STUDENTS_TOO_CLOSE": 12,
         }
 
     def can_trigger(self, student_id, event):
